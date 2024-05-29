@@ -1,0 +1,51 @@
+{
+  "expo": {
+    "name": "BillboardSpaces",
+    "slug": "BillboardSpaces",
+    "version": "1.0.1",
+    "orientation": "portrait",
+    "icon": "./assets/icon.png",
+    "userInterfaceStyle": "light",
+    "splash": {
+      "image": "./assets/splashScreen.png",
+      "resizeMode": "contain",
+      "backgroundColor": "#ffffff"
+    },
+    "assetBundlePatterns": [
+      "**/*"
+    ],
+    "ios": {
+      "supportsTablet": true
+    },
+    "android": {
+      "versionCode": 1,
+      "adaptiveIcon": {
+        "foregroundImage": "./assets/adaptive-icon.png",
+        "backgroundColor": "#ffffff"
+      },
+      "package": "com.uku_joseph.BillboardSpaces"
+    },
+    "web": {
+      "favicon": "./assets/favicon.png"
+    },
+    "extra": {
+      "eas": {
+        "projectId": "759cf1cf-45cb-40fd-bfcb-40677dd4a2ab"
+      }
+    },
+    "plugins": [
+      [
+        "expo-updates",
+        {
+          "username": "uku_joseph"
+        }
+      ]
+    ],
+    "runtimeVersion": {
+      "policy": "nativeVersion"
+    },
+    "updates": {
+      "url": "https://u.expo.dev/759cf1cf-45cb-40fd-bfcb-40677dd4a2ab"
+    }
+  }
+}
