@@ -212,7 +212,15 @@ export default function CreatAccount({ navigation }) {
 
   const handleGoogleAuth = async () => {
     const endpointUrl = `${BASE_URL}/auth/google-signup/`;
-
+    // const signInWithGoogle = async () => {
+    //   try {
+    //     const authState = await authorize(config);
+    //     console.log(authState);
+    // Send the authState information to your backend for further processing
+    //   } catch (error) {
+    //     console.error(error);
+    //   }
+    // };
     try {
       setIsLoading(true);
 

@@ -112,7 +112,7 @@ export default function HomeScreen({ navigation }) {
 
   useEffect(() => {
     const fetchProducts = async () => {
-      const endpointUrl = `${BASE_URL}/billboards/new/`;
+      const endpointUrl = `${BASE_URL}/billboards/list/new/`;
       try {
         // Retrieve the access token from AsyncStorage
         const storedAccess = await AsyncStorage.getItem("access");
@@ -163,7 +163,7 @@ export default function HomeScreen({ navigation }) {
 
   useEffect(() => {
     const fetchPopular = async () => {
-      const endpointUrl = `${BASE_URL}/billboards/new/`;
+      const endpointUrl = `${BASE_URL}/billboards/list`;
       try {
         // Retrieve the access token from AsyncStorage
         const storedAccess = await AsyncStorage.getItem("access");
@@ -255,7 +255,7 @@ export default function HomeScreen({ navigation }) {
         setError(error.message);
       }
     };
-    fetchEvents();
+    // fetchEvents();
   }, []);
 
   if (error) {
