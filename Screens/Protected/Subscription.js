@@ -16,7 +16,7 @@ import {
   KeyboardAvoidingView,
 } from "react-native";
 import { Ionicons } from "@expo/vector-icons";
-import { BASE_URL } from "../apiConfig";
+import { BASE_URL } from "../../apiConfig";
 
 export default function Subscription({ navigation }) {
   const [showBillboardDetails, setShowBillboardDetails] = useState(false);
@@ -89,7 +89,7 @@ export default function Subscription({ navigation }) {
           <View>
             <Image
               style={{ width: "55%", height: 133.38, alignSelf: "center" }}
-              source={require("../assets/sub.png")}
+              source={require("../../assets/sub.png")}
             />
 
             <View style={{ marginTop: 20, width: "100%", height: 54 }}>
@@ -131,7 +131,7 @@ export default function Subscription({ navigation }) {
           <View>
             <Image
               style={{ width: "40%", height: 133.38, alignSelf: "center" }}
-              source={require("../assets/sub3.png")}
+              source={require("../../assets/sub3.png")}
             />
 
             <View style={{ marginTop: 20, width: "100%", height: 54 }}>
@@ -192,7 +192,7 @@ export default function Subscription({ navigation }) {
           <View>
             <Image
               style={{ width: "40%", height: 133.38, alignSelf: "center" }}
-              source={require("../assets/sub3.png")}
+              source={require("../../assets/sub3.png")}
             />
 
             <View style={{ marginTop: 20, width: "100%", height: 54 }}>

@@ -15,9 +15,9 @@ import {
   ActivityIndicator,
 } from "react-native";
 import { AntDesign } from "@expo/vector-icons";
-import { refreshToken } from "./authUtils";
+import { refreshToken } from "../authUtils";
 import AsyncStorage from "@react-native-async-storage/async-storage";
-import { BASE_URL } from "../apiConfig";
+import { BASE_URL } from "../../apiConfig";
 
 export default function About1({ navigation, route }) {
   const { userId } = route.params;

@@ -1,6 +1,6 @@
 import { StyleSheet, Text, View, Image, TouchableOpacity, StatusBar } from "react-native";
 import { createBottomTabNavigator } from "@react-navigation/bottom-tabs";
-import HomeScreen from "../Screens/HomeScreen";
+import HomeScreen from "../Screens/Protected/HomeScreen";
 import AddBillboard from "./AddBillboard"
 import Menu from "./Menu";
 import More from "./More"

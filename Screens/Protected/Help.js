@@ -61,7 +61,7 @@ export default function Help({ navigation }) {
             <Image
               resizeMode="contain"
               style={{ width: "6.5%", height: 24 }}
-              source={require("../assets/Phone.png")}
+              source={require("../../assets/Phone.png")}
             />
             <Text
               style={{ fontSize: 16, fontWeight: "500", alignSelf: "center" }}
@@ -73,7 +73,7 @@ export default function Help({ navigation }) {
             <Image
               resizeMode="contain"
               style={{ width: "6.5%", height: 24 }}
-              source={require("../assets/About.png")}
+              source={require("../../assets/About.png")}
             />
             <Text
               style={{ fontSize: 16, fontWeight: "500", alignSelf: "center" }}
@@ -85,7 +85,7 @@ export default function Help({ navigation }) {
             <Image
               resizeMode="contain"
               style={{ width: "6.5%", height: 24 }}
-              source={require("../assets/About.png")}
+              source={require("../../assets/About.png")}
             />
             <Text
               style={{ fontSize: 16, fontWeight: "500", alignSelf: "center" }}
