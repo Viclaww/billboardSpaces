@@ -13,11 +13,11 @@ import {
 import { MaterialIcons } from "@expo/vector-icons";
 import React, { useState, useEffect } from "react";
 import AsyncStorage from "@react-native-async-storage/async-storage";
-import { refreshToken } from "./authUtils"; // Import the refreshToken function
-import { BASE_URL } from "../apiConfig";
-import slide1 from "../assets/slide1.png";
-import slide2 from "../assets/slide2.png";
-import slide3 from "../assets/slide3.png";
+import { refreshToken } from "../authUtils"; // Import the refreshToken function
+import { BASE_URL } from "../../apiConfig";
+import slide1 from "../../assets/slide1.png";
+import slide2 from "../../assets/slide2.png";
+import slide3 from "../../assets/slide3.png";
 
 const WIDTH = Dimensions.get("window").width;
 const HEIGHT = Dimensions.get("window").height;
@@ -288,7 +288,7 @@ export default function HomeScreen({ navigation }) {
           <View>
             <Image
               style={{ width: 40, height: 40, borderRadius: 100 }}
-              source={require("../assets/profilePicture.jpeg")}
+              source={require("../../assets/profilePicture.jpeg")}
             />
           </View>
           <Text style={{ fontSize: 22, marginLeft: 5 }}>Welcome</Text>
@@ -351,7 +351,7 @@ export default function HomeScreen({ navigation }) {
 
         <Image
           resizeMode="contain"
-          source={require("../assets/Discover.png")}
+          source={require("../../assets/Discover.png")}
           style={{
             marginLeft: 25,
             width: "90%",

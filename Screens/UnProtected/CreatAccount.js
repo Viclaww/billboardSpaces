@@ -14,7 +14,7 @@ import {
 } from 'react-native';
 import { Feather } from '@expo/vector-icons';
 import AsyncStorage from '@react-native-async-storage/async-storage';
-import { BASE_URL } from '../apiConfig';
+import { BASE_URL } from '../../apiConfig';
 
 export default function CreateAccount({ navigation }) {
   const [passwordVisible, setPasswordVisible] = useState(false);
@@ -269,13 +269,13 @@ export default function CreateAccount({ navigation }) {
           <Image
             style={styles.logo}
             resizeMode="cover"
-            source={require('../assets/logo.png')}
+            source={require('../../assets/logo.png')}
           />
         </View>
         <Text style={styles.createAnAccount1}>Create an Account</Text>
         <View style={{ alignItems: 'center', marginTop: '5%' }}>
           <View style={styles.rectangleView}>
-            <Image style={styles.groupIcon1} resizeMode="cover" source={require("../assets/googleIcon.png")} />
+            <Image style={styles.groupIcon1} resizeMode="cover" source={require("../../assets/googleIcon.png")} />
             <Text style={styles.continueWithGoogle1}>    Continue with Google</Text>
           </View>
         </View>

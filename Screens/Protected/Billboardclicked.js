@@ -77,7 +77,7 @@ const Billboardclicked = ({ route, navigation }) => {
           <TouchableOpacity>
             <Image
               style={{ width: 40, height: 40, borderRadius: 100 }}
-              source={require("../assets/profilePicture.jpeg")}
+              source={require("../../assets/profilePicture.jpeg")}
             />
           </TouchableOpacity>
           <Text style={{ fontSize: 16, fontWeight: "400", marginLeft: 5 }}>

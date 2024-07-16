@@ -56,7 +56,7 @@ export default function Advertisement({ navigation }) {
         >
           <Image
             style={{ alignSelf: "center" }}
-            source={require("../assets/Advert1.png")}
+            source={require("../../assets/Advert1.png")}
           />
         </TouchableOpacity>
         <TouchableOpacity
@@ -74,7 +74,7 @@ export default function Advertisement({ navigation }) {
         >
           <Image
             style={{ alignSelf: "center" }}
-            source={require("../assets/advert2.png")}
+            source={require("../../assets/advert2.png")}
           />
         </TouchableOpacity>
       </ScrollView>

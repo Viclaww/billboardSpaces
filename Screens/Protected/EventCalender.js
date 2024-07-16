@@ -22,7 +22,7 @@ import React, { useState, useEffect } from "react";
 import { Feather } from "@expo/vector-icons";
 import { Ionicons } from "@expo/vector-icons";
 import Datepicker from "react-native-modern-datepicker";
-import { BASE_URL } from "../apiConfig";
+import { BASE_URL } from "../../apiConfig";
 import AsyncStorage from "@react-native-async-storage/async-storage";
 import { MaterialCommunityIcons } from "@expo/vector-icons";
 

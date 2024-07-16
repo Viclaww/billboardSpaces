@@ -9,25 +9,25 @@ const slides = [
     key: 'slide1',
     title: 'Welcome to Billboard Spaces',
     text: 'Streamline your outdoor advertising operations to be more efficient, profitable, and accessible',
-    image: require('../assets/onboarding1.png'),
+    image: require('../../assets/onboarding1.png'),
   },
   {
     key: 'slide2',
     title: 'Explore Billboards Near You',
     text: 'Streamline your outdoor advertising operations to be more efficient, profitable, and accessible',
-    image: require('../assets/onboarding2.jpeg'),
+    image: require('../../assets/onboarding2.jpeg'),
   },
   {
     key: 'slide3',
     title: 'Earn Passive Income',
     text: 'Easily list your billboards on our platform, manage availability and pricing, and connect with advertisers eager to promote their brands on your prime locations.',
-    image: require('../assets/onboarding3.png'),
+    image: require('../../assets/onboarding3.png'),
   },
   {
     key: 'slide4',
     title: 'Unlock Targeted Advertising Excellence',
     text: 'AdSpace allows advertisers to tailor their campaigns with precision',
-    image: require('../assets/onboarding4.png'),
+    image: require('../../assets/onboarding4.png'),
   },
 ];
 

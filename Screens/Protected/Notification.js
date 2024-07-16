@@ -18,7 +18,7 @@ import {
 import { AntDesign } from "@expo/vector-icons";
 import { Zocial } from "@expo/vector-icons";
 import AsyncStorage from "@react-native-async-storage/async-storage";
-import { BASE_URL } from "../apiConfig";
+import { BASE_URL } from "../../apiConfig";
 
 export default function Notification() {
   const [modalVisible, setModalVisible] = useState(false);
@@ -108,7 +108,7 @@ export default function Notification() {
             Notification
           </Text>
           <TouchableOpacity onPress={openModal}>
-            <Image style={{}} source={require("../assets/cat.png")} />
+            <Image style={{}} source={require("../../assets/cat.png")} />
           </TouchableOpacity>
         </View>
 
@@ -163,10 +163,10 @@ export default function Notification() {
                 <AntDesign name="checkcircle" size={35} color="#31C624" />
               )}
               {notification.type === "maintainance" && (
-                <Image source={require("../assets/notify.png")} />
+                <Image source={require("../../assets/notify.png")} />
               )}
               {notification.type === "explore" && (
-                <Image source={require("../assets/notify.png")} />
+                <Image source={require("../../assets/notify.png")} />
               )}
               <View
                 style={{

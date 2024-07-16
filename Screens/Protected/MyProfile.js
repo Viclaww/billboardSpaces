@@ -22,9 +22,9 @@ import React, { useState, useEffect } from "react";
 import * as ImagePicker from "expo-image-picker";
 import { Feather } from "@expo/vector-icons";
 import { Ionicons } from "@expo/vector-icons";
-import { BASE_URL } from "../apiConfig";
+import { BASE_URL } from "../../apiConfig";
 import AsyncStorage from "@react-native-async-storage/async-storage";
-import { refreshToken } from "./authUtils";
+import { refreshToken } from "../authUtils";
 
 export default function MyProfile({ navigation }) {
   const [selectedImage, setSelectedImage] = useState(null);
@@ -58,7 +58,7 @@ export default function MyProfile({ navigation }) {
 
   const backgroundImage = selectedImage
     ? { uri: selectedImage }
-    : require("../assets/imageupload.png");
+    : require("../../assets/imageupload.png");
 
   const handleEditMode = () => {
     setEditMode((currentMode) => !currentMode);
@@ -222,7 +222,7 @@ export default function MyProfile({ navigation }) {
             >
               <Image
                 resizeMode="contain"
-                source={require("../assets/cam.png")}
+                source={require("../../assets/cam.png")}
               />
             </TouchableOpacity>
           </View>

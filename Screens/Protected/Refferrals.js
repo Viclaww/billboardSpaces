@@ -150,7 +150,7 @@ export default function Refferrals({ navigation }) {
             width: "80%",
             height: 261,
           }}
-          source={require("../assets/refferrals.png")}
+          source={require("../../assets/refferrals.png")}
         />
 
         <TouchableOpacity
@@ -194,7 +194,7 @@ export default function Refferrals({ navigation }) {
               <Image
                 style={{ width: 15.2, height: 16, alignSelf: "center" }}
                 resizeMode="contain"
-                source={require("../assets/X.png")}
+                source={require("../../assets/X.png")}
               />
             </Pressable>
             <AntDesign

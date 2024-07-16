@@ -19,7 +19,7 @@ import {
 import React, { useState, useRef, useEffect } from "react";
 import { Feather } from "@expo/vector-icons";
 import AsyncStorage from "@react-native-async-storage/async-storage";
-import { BASE_URL } from "../apiConfig";
+import { BASE_URL } from "../../apiConfig";
 import { AuthSession } from "expo";
 
 export default function CreatAccount({ navigation }) {
@@ -426,7 +426,7 @@ export default function CreatAccount({ navigation }) {
             <Image
               style={styles.logo}
               resizeMode="cover"
-              source={require("../assets/logo.png")}
+              source={require("../../assets/logo.png")}
             />
           </View>
           <Text style={styles.createAnAccount1}>Access your Account</Text>
@@ -435,7 +435,7 @@ export default function CreatAccount({ navigation }) {
               <Image
                 style={styles.groupIcon1}
                 resizeMode="cover"
-                source={require("../assets/googleIcon.png")}
+                source={require("../../assets/googleIcon.png")}
               />
               <Pressable
                 onPress={handleGoogleAuth}
