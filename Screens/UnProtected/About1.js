@@ -18,6 +18,7 @@ import { AntDesign } from "@expo/vector-icons";
 import { refreshToken } from "../authUtils";
 import AsyncStorage from "@react-native-async-storage/async-storage";
 import { BASE_URL } from "../../apiConfig";
+import { useUpdateUserMutation } from "../../data/api/authSlice";
 
 export default function About1({ navigation, route }) {
   const { userId } = route.params;
@@ -39,36 +40,30 @@ export default function About1({ navigation, route }) {
   const [phoneNumberFocused, setPhoneNumberFocused] = useState(false);
   const [displayNameFocused, setDisplayNameFocused] = useState(false);
 
+  const [updateUser, { isSuccess, data, isError, error }] =
+    useUpdateUserMutation();
   const handleDone = async () => {
-    const endpointUrl = `${BASE_URL}/auth/update-profile/`;
     try {
-      const storedAccess = await AsyncStorage.getItem("access");
-      setIsLoading(true);
-      const response = await fetch(endpointUrl, {
-        method: "PUT",
-        headers: {
-          Authorization: `Bearer ${storedAccess}`,
-          "Content-Type": "application/json",
-        },
-        body: JSON.stringify({
+      await updateUser(
+        storedAccess,
+        {
           user_field: selectedText,
           full_name: fullName,
           phone_number: phoneNumber,
           state: selectedState,
           display_name: displayName,
-        }),
-      });
-
-      if (response.ok) {
-        navigation.navigate("Home");
-      } else {
-        console.error("PUT request failed:", response);
-        alert("Failed to update user data");
+        },
+        userId
+      );
+      if (isSuccess) {
+        alert(data.message);
+      }
+      if (isError) {
+        alert(error);
       }
     } catch (error) {
       console.error("An error occurred during PUT request:", error.message);
       alert("Failed to update user data");
-
       // Log response if available
       if (error.response) {
         try {

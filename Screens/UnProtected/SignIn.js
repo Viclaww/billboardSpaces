@@ -20,7 +20,12 @@ import React, { useState, useRef, useEffect } from "react";
 import { Feather } from "@expo/vector-icons";
 import AsyncStorage from "@react-native-async-storage/async-storage";
 import { BASE_URL } from "../../apiConfig";
-import { AuthSession } from "expo";
+import {
+  useLoginMutation,
+  useVerifyOTPMutation,
+  useChangePasswordMutation,
+  useResetPasswordMutation,
+} from "../../data/api/authSlice";
 
 export default function CreatAccount({ navigation }) {
   const [passwordVisible, setPasswordVisible] = useState(false);
@@ -171,18 +176,18 @@ export default function CreatAccount({ navigation }) {
     setModalVisible(false);
   };
 
+  const [login, { data, isSuccess, isError, error }] = useLoginMutation();
+  const [verifyOTP] = useChangePasswordMutation();
+  const [resetPassword, { isSuccess: resetSucess, error: resetError }] =
+    useResetPasswordMutation();
+  const [] = useVerifyOTPMutation();
   const handleNext = async () => {
     const endpointUrl = `${BASE_URL}/auth/password/reset/`;
     try {
       setIsLoading2(true);
-      const response = await fetch(endpointUrl, {
-        method: "POST",
-        headers: {
-          "Content-Type": "application/json",
-        },
-        body: JSON.stringify({
-          email: mordalEmail,
-        }),
+
+      await resetPassword({
+        email: mordalEmail,
       });
 
       if (!response.ok) {
@@ -191,13 +196,12 @@ export default function CreatAccount({ navigation }) {
         const errorMessage = errorData.message || "Failed to reset password";
         throw new Error(errorMessage);
       }
-      openOtpModal();
-
-      const data = await response.json();
-      const otp = data.otp; // Assuming the response contains the OTP
+      if (resetSucess) openOtpModal();
+      if (resetError) {
+        console.log(resetError);
+      }
 
       setIsLoading2(false); // Set loading state to false after successful response
-      return otp;
     } catch (error) {
       // Handle errors
       console.error("Error resetting password:", error);
@@ -210,6 +214,10 @@ export default function CreatAccount({ navigation }) {
     }
   };
 
+  const handleVerifyOtp = async () => {
+    try {
+    } catch (error) {}
+  };
   const handleGoogleAuth = async () => {
     const endpointUrl = `${BASE_URL}/auth/google-signup/`;
     // const signInWithGoogle = async () => {

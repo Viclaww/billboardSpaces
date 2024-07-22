@@ -1,4 +1,4 @@
-import React, { useState } from 'react';
+import React, { useState } from "react";
 import {
   StyleSheet,
   Text,
@@ -11,24 +11,23 @@ import {
   Pressable,
   ActivityIndicator,
   ScrollView,
-} from 'react-native';
-import { Feather } from '@expo/vector-icons';
-import AsyncStorage from '@react-native-async-storage/async-storage';
-import { BASE_URL } from '../../apiConfig';
-
+} from "react-native";
+import { Feather } from "@expo/vector-icons";
+import AsyncStorage from "@react-native-async-storage/async-storage";
+import { BASE_URL } from "../../apiConfig";
+import { useLoginMutation, useSignupMutation } from "../../data/api/authSlice";
 export default function CreateAccount({ navigation }) {
   const [passwordVisible, setPasswordVisible] = useState(false);
   const [confirmPasswordVisible, setConfirmPasswordVisible] = useState(false);
-  const [email, setEmail] = useState('');
-  const [password, setPassword] = useState('');
-  const [confirmPassword, setConfirmPassword] = useState('');
+  const [email, setEmail] = useState("");
+  const [password, setPassword] = useState("");
+  const [confirmPassword, setConfirmPassword] = useState("");
   const [isLoading, setIsLoading] = useState(false);
-  const [errorMessage, setErrorMessage] = useState('');
+  const [errorMessage, setErrorMessage] = useState("");
   const [errorModalVisible, setErrorModalVisible] = useState(false);
   const [emailFocused, setEmailFocused] = useState(false); // Track if email input is focused
   const [passwordFocused, setPasswordFocused] = useState(false); // Track if password input is focused
   const [confirmPasswordFocused, setConfirmPasswordFocused] = useState(false); // Track if confirm password input is focused
-
 
   const togglePasswordVisibility = () => {
     setPasswordVisible(!passwordVisible);
@@ -135,84 +134,59 @@ export default function CreateAccount({ navigation }) {
     const endpointUrl = `${BASE_URL}/auth/create/`;
     try {
       setIsLoading(true);
+      const [signup, { data, isLoading, error, isSuccess }] =
+        useSignupMutation();
 
-      // Use fetch to send the signup request
-      const response = await fetch(endpointUrl, {
-        method: "POST",
-        headers: {
-          "Content-Type": "application/json",
-        },
-        body: JSON.stringify({
-          password: password,
-          email: email,
-          password2: confirmPassword,
-        }),
-      }
-      );
+      await signup({
+        password: password,
+        email: email,
+        // password2: confirmPassword,
+      });
 
       // Log the details of the response
-      console.log("Response Status:", response.status);
-      console.log("Response Headers:", response.headers);
-      const responseData = await response.json();
-      console.log("Response Data:", responseData);
+      console.log("Response Status:", data.status);
+      console.log("Response data:", data.data);
+      console.log("Response token", data.token);
 
-      if (response.ok) {
+      if (isSuccess) {
         console.log("Signup Successful:", responseData);
         // Extract tokens from responseData
-        const access = responseData.access;
-        const refresh = responseData.refresh;
+        const access = data.token;
+        // const refresh = responseData.refresh;
 
         // Store tokens securely
-        await AsyncStorage.setItem('access', access);
-        await AsyncStorage.setItem('refresh', refresh);
+        await AsyncStorage.setItem("access", access);
+        // await AsyncStorage.setItem("refresh", refresh);
 
         // Extract user_id from responseData
-        const userId = responseData.id;
-
-        // Construct URL for profile update endpoint
-        const profileUpdateUrl = `${BASE_URL}/auth/update-profile/${userId}/`;
-
-        // Send request to update profile
-        const profileUpdateResponse = await fetch(profileUpdateUrl, {
-          method: "PUT", // or "PATCH" depending on your API
-          headers: {
-            "Content-Type": "application/json",
-          },
-          body: JSON.stringify({
-            // Include any profile update data here
-          }),
-        });
+        const userId = data.data.id;
 
         // Handle response for profile update if needed
 
         // Handle navigation or state updates on successful signup
-        navigation.navigate("About1", { userId: responseData.id });
+        navigation.navigate("About1", { userId });
       } else {
-        console.error("Signup Error:", responseData);
+        console.error("Signup Error:", error);
 
         // Extract and show error messages in an alert
-        const errorMessages = Object.values(responseData.errors).flat();
-        alert(`Signup failed. ${errorMessages.join("\n")}`);
+
+        alert(`Signup failed. ${error}`);
       }
     } catch (error) {
       console.error("Error:", error);
 
       // Handle other errors, e.g., network issues
       const errorMessage =
-        error.message ||
-        "Signup failed. Please check your network connection.";
+        error.message || "Signup failed. Please check your network connection.";
       alert(errorMessage);
     } finally {
       setIsLoading(false);
     }
   };
 
-
-
   const SignIn = () => {
-    navigation.navigate('SignIn');
+    navigation.navigate("SignIn");
   };
-
 
   const SignupWithGoogle = async () => {
     const endpointUrl = `${BASE_URL}/auth/google-signup/`;
@@ -260,8 +234,6 @@ export default function CreateAccount({ navigation }) {
     }
   };
 
-
-
   return (
     <KeyboardAvoidingView style={styles.container} behavior="height" enabled>
       <ScrollView>
@@ -269,25 +241,33 @@ export default function CreateAccount({ navigation }) {
           <Image
             style={styles.logo}
             resizeMode="cover"
-            source={require('../../assets/logo.png')}
+            source={require("../../assets/logo.png")}
           />
         </View>
         <Text style={styles.createAnAccount1}>Create an Account</Text>
-        <View style={{ alignItems: 'center', marginTop: '5%' }}>
+        <View style={{ alignItems: "center", marginTop: "5%" }}>
           <View style={styles.rectangleView}>
-            <Image style={styles.groupIcon1} resizeMode="cover" source={require("../../assets/googleIcon.png")} />
-            <Text style={styles.continueWithGoogle1}>    Continue with Google</Text>
+            <Image
+              style={styles.groupIcon1}
+              resizeMode="cover"
+              source={require("../../assets/googleIcon.png")}
+            />
+            <Text style={styles.continueWithGoogle1}>
+              {" "}
+              Continue with Google
+            </Text>
           </View>
         </View>
-        <View style={{ alignItems: 'center', marginTop: '10%' }}>
+        <View style={{ alignItems: "center", marginTop: "10%" }}>
           <Text style={styles.or}>OR</Text>
-          <View style={[styles.rectangleView1,
-          emailFocused && { borderColor: "#0080fe", borderWidth: 1, },]}>
+          <View
+            style={[
+              styles.rectangleView1,
+              emailFocused && { borderColor: "#0080fe", borderWidth: 1 },
+            ]}
+          >
             <TextInput
-              style={[
-                styles.email,
-
-              ]}
+              style={[styles.email]}
               placeholder="Email"
               value={email}
               onChangeText={(text) => setEmail(text)}
@@ -295,12 +275,14 @@ export default function CreateAccount({ navigation }) {
               onBlur={handleInputBlur}
             />
           </View>
-          <View style={[styles.rectangleView2,
-          passwordFocused && { borderColor: "#0080fe", borderWidth: 1 },]}>
+          <View
+            style={[
+              styles.rectangleView2,
+              passwordFocused && { borderColor: "#0080fe", borderWidth: 1 },
+            ]}
+          >
             <TextInput
-              style={[
-                styles.email,
-              ]}
+              style={[styles.email]}
               placeholder="Password"
               value={password}
               onChangeText={(text) => setPassword(text)}
@@ -313,20 +295,24 @@ export default function CreateAccount({ navigation }) {
               onPress={togglePasswordVisibility}
             >
               <Feather
-                name={passwordVisible ? 'eye' : 'eye-off'}
+                name={passwordVisible ? "eye" : "eye-off"}
                 size={20}
                 color="gray"
               />
             </TouchableOpacity>
           </View>
-          <View style={[styles.rectangleView2,
+          <View
+            style={[
+              styles.rectangleView2,
 
-          confirmPasswordFocused && { borderColor: "#0080fe", borderWidth: 1 },
-          ]}>
+              confirmPasswordFocused && {
+                borderColor: "#0080fe",
+                borderWidth: 1,
+              },
+            ]}
+          >
             <TextInput
-              style={[
-                styles.email,
-              ]}
+              style={[styles.email]}
               placeholder="Confirm Password"
               value={confirmPassword}
               onChangeText={(text) => setConfirmPassword(text)}
@@ -339,7 +325,7 @@ export default function CreateAccount({ navigation }) {
               onPress={toggleConfirmPasswordVisibility}
             >
               <Feather
-                name={confirmPasswordVisible ? 'eye' : 'eye-off'}
+                name={confirmPasswordVisible ? "eye" : "eye-off"}
                 size={20}
                 color="gray"
               />
@@ -374,28 +360,28 @@ const styles = StyleSheet.create({
     padding: 10,
   },
   logoPosition: {
-    marginTop: '30%',
-    alignItems: 'center',
-    justifyContent: 'center',
+    marginTop: "30%",
+    alignItems: "center",
+    justifyContent: "center",
     height: 24,
   },
   createAnAccount1: {
     fontSize: 28,
-    marginTop: '10%',
+    marginTop: "10%",
     fontWeight: "500",
     color: "#1e1e1e",
-    textAlign: "center"
+    textAlign: "center",
   },
   rectangleView: {
     borderRadius: 7,
     backgroundColor: "#fff",
-    flexDirection: 'row',
-    alignItems: 'center',
+    flexDirection: "row",
+    alignItems: "center",
     justifyContent: "center",
     shadowColor: "rgba(204, 204, 204, 0.25)",
     shadowOffset: {
       width: 2,
-      height: 2
+      height: 2,
     },
     shadowRadius: 2,
     elevation: 2,
@@ -404,15 +390,15 @@ const styles = StyleSheet.create({
     borderColor: "#ccc",
     borderWidth: 0.3,
     width: "60%",
-    height: 40
+    height: 40,
   },
   groupIcon1: {
-    height: 24
+    height: 24,
   },
   continueWithGoogle1: {
     fontSize: 16,
     color: "#383838",
-    textAlign: "left"
+    textAlign: "left",
   },
   or: {
     fontSize: 12,
@@ -422,49 +408,49 @@ const styles = StyleSheet.create({
   rectangleView1: {
     borderRadius: 10,
     backgroundColor: "#f5faff",
-    justifyContent: 'center',
+    justifyContent: "center",
     shadowColor: "rgba(204, 204, 204, 0.25)",
     shadowOffset: {
       width: 0,
-      height: 2
+      height: 2,
     },
     shadowRadius: 2,
     elevation: 2,
     shadowOpacity: 1,
     borderStyle: "solid",
     // borderColor: "#0080fe",
-    marginTop: '5%',
+    marginTop: "5%",
     // borderWidth: 1,
     width: "90%",
-    height: 50
+    height: 50,
   },
   rectangleView2: {
     borderRadius: 10,
     backgroundColor: "#f5faff",
-    justifyContent: 'center',
+    justifyContent: "center",
     shadowColor: "rgba(204, 204, 204, 0.25)",
     shadowOffset: {
       width: 0,
-      height: 2
+      height: 2,
     },
     shadowRadius: 2,
-    marginTop: '5%',
+    marginTop: "5%",
     elevation: 2,
     shadowOpacity: 1,
     width: "90%",
-    height: 50
+    height: 50,
   },
   email: {
     fontSize: 12,
-    fontWeight: '400',
+    fontWeight: "400",
     textAlign: "left",
     left: 10,
-    width: '100%'
+    width: "100%",
   },
   passwordToggle: {
-    position: 'absolute',
+    position: "absolute",
     right: 15,
-    top: '50%',
+    top: "50%",
     transform: [{ translateY: -12 }],
   },
   button: {
@@ -477,25 +463,25 @@ const styles = StyleSheet.create({
     borderRadius: 10,
     backgroundColor: "#0080fe",
     width: "90%",
-    marginTop: '20%',
+    marginTop: "20%",
     height: 48,
     alignItems: "center",
     justifyContent: "center",
   },
   alreadyAUser1: {
     fontSize: 12,
-    color: "#383838"
+    color: "#383838",
   },
   signIn: {
     fontSize: 14,
     fontWeight: "500",
-    color: "#0080fe"
+    color: "#0080fe",
   },
   text: {
     // textAlign: "left",
-    justifyContent: 'center',
-    alignItems: 'center',
-    flexDirection: 'row',
-    marginTop: 20
-  }
-})
+    justifyContent: "center",
+    alignItems: "center",
+    flexDirection: "row",
+    marginTop: 20,
+  },
+});
