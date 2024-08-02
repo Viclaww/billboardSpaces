@@ -64,7 +64,7 @@ export function Unprotected() {
 export function Navigation() {
   // show sign in and sign up (protected unprotected screens) when user is not signed
   // in.
-  const user = useSelector((state) => state.user.username);
+  const user = useSelector((state) => state.user.user);
   return (
     <NavigationContainer>
       {user ? <Protected></Protected> : <Unprotected></Unprotected>}

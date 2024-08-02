@@ -26,6 +26,8 @@ import {
   useChangePasswordMutation,
   useResetPasswordMutation,
 } from "../../data/api/authSlice";
+import { useDispatch } from "react-redux";
+import { setToken, setUser } from "../../data/dataSlices/user.slice";
 
 export default function CreatAccount({ navigation }) {
   const [passwordVisible, setPasswordVisible] = useState(false);
@@ -55,6 +57,8 @@ export default function CreatAccount({ navigation }) {
   const [newPassword, setNewPassword] = useState("");
   const [confirmPassword, setConfirmPassword] = useState("");
   const [passwordError, setPasswordError] = useState("");
+
+  const dispatch = useDispatch();
 
   const handleEmailFocus = () => {
     setEmailFocused(true);
@@ -225,7 +229,10 @@ export default function CreatAccount({ navigation }) {
 
       if (data) {
         // await AsyncStorage("access", data.token);
-        console.log("Login Successful. Token:", data);
+        console.log("Login Successful", data);
+        dispatch(setToken(data.token));
+        dispatch(setUser(data.data));
+
         navigation.navigate("Home");
       } else {
         // Handle error, e.g., show an error message to the user
