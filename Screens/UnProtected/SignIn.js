@@ -176,7 +176,7 @@ export default function CreatAccount({ navigation }) {
     setModalVisible(false);
   };
 
-  const [login, { data, isSuccess, isError, error }] = useLoginMutation();
+  const [login, { isSuccess, isError }] = useLoginMutation();
   const [verifyOTP] = useChangePasswordMutation();
   const [resetPassword, { isSuccess: resetSucess, error: resetError }] =
     useResetPasswordMutation();
@@ -214,150 +214,25 @@ export default function CreatAccount({ navigation }) {
     }
   };
 
-  const handleVerifyOtp = async () => {
-    try {
-    } catch (error) {}
-  };
-  const handleGoogleAuth = async () => {
-    const endpointUrl = `${BASE_URL}/auth/google-signup/`;
-    // const signInWithGoogle = async () => {
-    //   try {
-    //     const authState = await authorize(config);
-    //     console.log(authState);
-    // Send the authState information to your backend for further processing
-    //   } catch (error) {
-    //     console.error(error);
-    //   }
-    // };
-    try {
-      setIsLoading(true);
-
-      const redirectUrl = endpointUrl; // Replace with your backend endpoint for handling Google sign-in
-
-      // Construct OAuth URL
-      const authUrl = `https://accounts.google.com/o/oauth2/v2/auth?response_type=code&scope=email%20profile&redirect_uri=${encodeURIComponent(
-        redirectUrl
-      )}&client_id=YOUR_CLIENT_ID`;
-
-      // Open webview for OAuth flow
-      Linking.openURL(authUrl);
-    } catch (error) {
-      console.log(" very Bad");
-      console.log("Error:", error);
-    } finally {
-      setIsLoading(false);
-      console.log("finally me");
-    }
-  };
-
-  const handleOAuthRedirect = async (event) => {
-    // Parse URL from the event
-    const { url } = event;
-
-    // Check if the URL matches the redirect URL you provided
-    if (url.startsWith(`${BASE_URL}/auth/google`)) {
-      try {
-        // Extract code from the URL
-        const code = extractCodeFromUrl(url);
-
-        // Exchange code for access token
-        await exchangeCodeForToken(code);
-      } catch (error) {
-        console.error("Error handling OAuth redirect:", error);
-      }
-    }
-  };
-
-  // Function to extract code from the URL query string
-  const extractCodeFromUrl = (url) => {
-    return new URL(url).searchParams.get("code");
-  };
-
-  const exchangeCodeForToken = async (code) => {
-    try {
-      const tokenUrl = `${BASE_URL}/auth/google/token`; // Replace with your backend endpoint for exchanging code for token
-
-      const response = await axios.post(tokenUrl, {
-        code,
-      });
-
-      if (response.data.access_token) {
-        const accessToken = response.data.access_token;
-        console.log("Google Auth Success. Access Token:", accessToken);
-
-        // Example: Store access token in AsyncStorage or Context
-        // AsyncStorage.setItem('accessToken', accessToken);
-        // Navigate to your application's main screen
-        // navigation.navigate('Home');
-      } else {
-        console.error("Failed to fetch access token:", response.data);
-      }
-    } catch (error) {
-      console.error("Error exchanging code for token:", error);
-    }
-  };
-
-  useEffect(() => {
-    const handleInitialUrl = async () => {
-      // Check initial URL when the app is opened from a redirect
-      const initialUrl = await Linking.getInitialURL();
-      if (initialUrl) {
-        handleOAuthRedirect({ url: initialUrl });
-      }
-
-      // Add event listener for subsequent URL changes
-      Linking.addEventListener("url", handleOAuthRedirect);
-
-      return () => {
-        // Clean up event listener when component unmounts
-        Linking.removeEventListener("url", handleOAuthRedirect);
-      };
-    };
-
-    handleInitialUrl();
-  }, []); // Empty dependency array ensures this effect runs only once
-
   const handleLogin = async () => {
-    const endpointUrl = `${BASE_URL}/auth/login/`;
     try {
       setIsLoading(true);
-
-      // Use fetch to send the login request
-      const response = await fetch(endpointUrl, {
-        method: "POST",
-        headers: {
-          "Content-Type": "application/json",
-        },
-        body: JSON.stringify({
-          email: email,
-          password: password,
-          // Add any additional data you need to send to the server
-        }),
+      // make request
+      const { data, error } = await login({
+        email,
+        password,
       });
 
-      if (response.ok) {
-        // If login is successful, extract the token from response
-        const data = await response.json();
-        const access = data.access;
-        const refresh = data.refresh;
-
-        // Store tokens securely
-        await AsyncStorage.setItem("access", access);
-        await AsyncStorage.setItem("refresh", refresh);
-
-        // Log the token
+      if (data) {
+        // await AsyncStorage("access", data.token);
         console.log("Login Successful. Token:", data);
-
-        // Navigate to the HomeScreen
         navigation.navigate("Home");
       } else {
         // Handle error, e.g., show an error message to the user
-        const errorData = await response.json();
-        console.error("Login Error:", errorData);
+        console.error("Login Error:", error.data.message);
 
-        // Extract and show error messages in an alert
-        const errorMessages = Object.values(errorData.errors).flat();
-        alert(`Login failed. ${errorMessages.join("\n")}`);
+        // Extract and show error messages in an aler
+        alert(`Login failed. ${error.data.message}`);
       }
     } catch (error) {
       // Handle other errors, e.g., network issues
@@ -445,10 +320,7 @@ export default function CreatAccount({ navigation }) {
                 resizeMode="cover"
                 source={require("../../assets/googleIcon.png")}
               />
-              <Pressable
-                onPress={handleGoogleAuth}
-                style={styles.continueWithGoogle1}
-              >
+              <Pressable style={styles.continueWithGoogle1}>
                 <Text>Continue with Google</Text>
               </Pressable>
             </View>

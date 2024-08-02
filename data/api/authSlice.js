@@ -1,4 +1,4 @@
-import { generalApiSlice } from "./generalApiSlice";
+import { generalApiSlice } from "./baseApiSlice";
 export const authApiSlice = generalApiSlice.injectEndpoints({
   endpoints: (builder) => ({
     login: builder.mutation({
@@ -16,7 +16,7 @@ export const authApiSlice = generalApiSlice.injectEndpoints({
       }),
     }),
     updateUser: builder.mutation({
-      query: (access, data, id) => ({
+      query: ({ access, data, id }) => ({
         url: `/auth/user/${id}`,
         method: "PATCH",
         body: data,
