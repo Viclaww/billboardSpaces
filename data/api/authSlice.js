@@ -34,7 +34,7 @@ export const authApiSlice = generalApiSlice.injectEndpoints({
     }),
     verifyOTP: builder.mutation({
       query: (data) => ({
-        url: "auth/verifyOTP",
+        url: "auth/verify-otp",
         method: "POST",
         body: data,
       }),
