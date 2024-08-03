@@ -11,6 +11,8 @@ export const authApiSlice = generalApiSlice.injectEndpoints({
       }),
     }),
     getPopularBillboards: builder.query({
+      // doesnt work yet
+
       query: (token) => ({
         url: "/billboard/popular",
         method: "GET",
