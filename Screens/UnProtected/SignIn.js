@@ -182,27 +182,27 @@ export default function CreatAccount({ navigation }) {
 
   const [login, { isSuccess, isError }] = useLoginMutation();
   const [verifyOTP] = useChangePasswordMutation();
-  const [resetPassword, { isSuccess: resetSucess, error: resetError }] =
-    useResetPasswordMutation();
+  const [
+    resetPassword,
+    { data: resetRes, isSuccess: resetSucess, error: resetError },
+  ] = useResetPasswordMutation();
   const [] = useVerifyOTPMutation();
+
   const handleNext = async () => {
-    const endpointUrl = `${BASE_URL}/auth/password/reset/`;
     try {
       setIsLoading2(true);
-
       await resetPassword({
         email: mordalEmail,
       });
 
-      if (!response.ok) {
-        // If response is not okay, throw an error with the reason
-        const errorData = await response.json();
-        const errorMessage = errorData.message || "Failed to reset password";
-        throw new Error(errorMessage);
+      if (resetRes) {
+        console.log(resetRes);
+        openOtpModal();
       }
-      if (resetSucess) openOtpModal();
+
       if (resetError) {
-        console.log(resetError);
+        console.log("thsi", resetError);
+        // alert(resetError.data.message);
       }
 
       setIsLoading2(false); // Set loading state to false after successful response
@@ -214,7 +214,6 @@ export default function CreatAccount({ navigation }) {
       alert(error.message || "Failed to reset password. Please try again.");
 
       setIsLoading2(false); // Set loading state to false in case of error
-      throw error; // Re-throw the error to handle it at a higher level if needed
     }
   };
 
@@ -254,6 +253,10 @@ export default function CreatAccount({ navigation }) {
 
   const otpString = Object.values(otp).join("");
 
+  const handleVerifyOTP = async () => {
+    try {
+    } catch (error) {}
+  };
   // Function to handle submission of new password, confirm password, email, and OTP
   const handleSubmitPassword = async () => {
     const endpointUrl = `${BASE_URL}/auth/password/reset/confirm/`;
