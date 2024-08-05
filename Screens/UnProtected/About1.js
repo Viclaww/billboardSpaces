@@ -19,9 +19,12 @@ import { refreshToken } from "../authUtils";
 import AsyncStorage from "@react-native-async-storage/async-storage";
 import { BASE_URL } from "../../apiConfig";
 import { useUpdateUserMutation } from "../../data/api/authSlice";
+import { useDispatch } from "react-redux";
+import { setUser } from "../../data/dataSlices/user.slice";
 
 export default function About1({ navigation, route }) {
   const { userId } = route.params;
+  const dispatch = useDispatch();
 
   const [modalVisible, setModalVisible] = useState(false);
   const [selectedText, setSelectedText] = useState("");
@@ -40,42 +43,39 @@ export default function About1({ navigation, route }) {
   const [phoneNumberFocused, setPhoneNumberFocused] = useState(false);
   const [displayNameFocused, setDisplayNameFocused] = useState(false);
 
-  const [updateUser, { isSuccess, data, isError, error }] =
-    useUpdateUserMutation();
+  const [updateUser, { isSuccess, isError }] = useUpdateUserMutation();
+
   const handleDone = async () => {
+    const storedAccess = await AsyncStorage.getItem("access");
+    setIsLoading(true);
     try {
-      await updateUser(
-        storedAccess,
-        {
+      const body = {
+        access: storedAccess,
+        data: {
           user_field: selectedText,
           full_name: fullName,
           phone_number: phoneNumber,
           state: selectedState,
           display_name: displayName,
         },
-        userId
-      );
-      if (isSuccess) {
-        alert(data.message);
+      };
+
+      const responce = await updateUser(body);
+      console.log(responce);
+      if (responce.data) {
+        alert(responce.data.message);
+        await dispatch(setUser(responce.data.data));
+        navigation.navigate("Home");
       }
-      if (isError) {
-        alert(error);
+      if (responce.error) {
+        alert(responce.error.data.message);
+        console.log(responce.error);
       }
     } catch (error) {
       console.error("An error occurred during PUT request:", error.message);
       alert("Failed to update user data");
-      // Log response if available
-      if (error.response) {
-        try {
-          const errorResponseData = await error.response.json();
-          console.log("Error response data:", errorResponseData);
-        } catch (jsonError) {
-          console.error(
-            "Failed to parse error response as JSON:",
-            jsonError.message
-          );
-        }
-      }
+    } finally {
+      setIsLoading(false);
     }
   };
 

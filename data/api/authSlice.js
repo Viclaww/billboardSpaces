@@ -16,8 +16,8 @@ export const authApiSlice = generalApiSlice.injectEndpoints({
       }),
     }),
     updateUser: builder.mutation({
-      query: ({ access, data, id }) => ({
-        url: `/auth/user/${id}`,
+      query: ({ access, data }) => ({
+        url: `/auth/profile/update`,
         method: "PATCH",
         body: data,
         headers: {
@@ -34,7 +34,7 @@ export const authApiSlice = generalApiSlice.injectEndpoints({
     }),
     verifyOTP: builder.mutation({
       query: (data) => ({
-        url: "auth/verifyOTP",
+        url: "auth/verify-otp",
         method: "POST",
         body: data,
       }),

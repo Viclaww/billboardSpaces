@@ -26,6 +26,8 @@ import {
   useChangePasswordMutation,
   useResetPasswordMutation,
 } from "../../data/api/authSlice";
+import { useDispatch } from "react-redux";
+import { setToken, setUser } from "../../data/dataSlices/user.slice";
 
 export default function CreatAccount({ navigation }) {
   const [passwordVisible, setPasswordVisible] = useState(false);
@@ -55,6 +57,8 @@ export default function CreatAccount({ navigation }) {
   const [newPassword, setNewPassword] = useState("");
   const [confirmPassword, setConfirmPassword] = useState("");
   const [passwordError, setPasswordError] = useState("");
+
+  const dispatch = useDispatch();
 
   const handleEmailFocus = () => {
     setEmailFocused(true);
@@ -177,28 +181,28 @@ export default function CreatAccount({ navigation }) {
   };
 
   const [login, { isSuccess, isError }] = useLoginMutation();
-  const [verifyOTP] = useChangePasswordMutation();
-  const [resetPassword, { isSuccess: resetSucess, error: resetError }] =
-    useResetPasswordMutation();
-  const [] = useVerifyOTPMutation();
+  const [changePassword] = useChangePasswordMutation();
+  const [
+    resetPassword,
+    { data: resetRes, isSuccess: resetSucess, error: resetError },
+  ] = useResetPasswordMutation();
+  const [verifyOTP] = useVerifyOTPMutation();
+
   const handleNext = async () => {
-    const endpointUrl = `${BASE_URL}/auth/password/reset/`;
     try {
       setIsLoading2(true);
-
-      await resetPassword({
+      const { data: res, error: err } = await resetPassword({
         email: mordalEmail,
       });
 
-      if (!response.ok) {
-        // If response is not okay, throw an error with the reason
-        const errorData = await response.json();
-        const errorMessage = errorData.message || "Failed to reset password";
-        throw new Error(errorMessage);
+      if (res) {
+        console.log(res);
+        openOtpModal();
       }
-      if (resetSucess) openOtpModal();
-      if (resetError) {
-        console.log(resetError);
+
+      if (err) {
+        console.log("ths", error);
+        // alert(resetError.data.message);
       }
 
       setIsLoading2(false); // Set loading state to false after successful response
@@ -210,7 +214,6 @@ export default function CreatAccount({ navigation }) {
       alert(error.message || "Failed to reset password. Please try again.");
 
       setIsLoading2(false); // Set loading state to false in case of error
-      throw error; // Re-throw the error to handle it at a higher level if needed
     }
   };
 
@@ -225,7 +228,10 @@ export default function CreatAccount({ navigation }) {
 
       if (data) {
         // await AsyncStorage("access", data.token);
-        console.log("Login Successful. Token:", data);
+        console.log("Login Successful", data);
+        dispatch(setToken(data.token));
+        dispatch(setUser(data.data));
+
         navigation.navigate("Home");
       } else {
         // Handle error, e.g., show an error message to the user
@@ -247,31 +253,39 @@ export default function CreatAccount({ navigation }) {
 
   const otpString = Object.values(otp).join("");
 
+  const handleVerifyOTP = async () => {
+    try {
+      setIsLoading2(true);
+
+      const { data, error: err } = await verifyOTP({
+        otp: otpString,
+        email: mordalEmail,
+      });
+
+      if (data) {
+        console.log(data);
+        openNewPasswordModalVisible();
+      } else {
+        console.log(err);
+        alert(err);
+      }
+    } catch (error) {}
+  };
   // Function to handle submission of new password, confirm password, email, and OTP
   const handleSubmitPassword = async () => {
-    const endpointUrl = `${BASE_URL}/auth/password/reset/confirm/`;
     try {
       // Validate that passwords match
       if (newPassword !== confirmPassword) {
         setPasswordError("Passwords do not match");
         return;
       }
-
-      // Call API endpoint to reset password
-      const response = await fetch(endpointUrl, {
-        method: "POST",
-        headers: {
-          "Content-Type": "application/json",
-        },
-        body: JSON.stringify({
-          email: mordalEmail,
-          otp: otpString, // Convert OTP to string
-          password: newPassword,
-          password2: confirmPassword,
-        }),
+      // send data to server
+      const response = await changePassword({
+        email: mordalEmail,
+        password: newPassword,
       });
 
-      if (response.ok) {
+      if (response.data) {
         // Password reset successful
         alert("Password reset successful");
         // Close all modals
@@ -279,12 +293,11 @@ export default function CreatAccount({ navigation }) {
         setNewPasswordModalVisible(false);
         // Additional logic if needed
       } else {
-        // Password reset failed
-        const errorData = await response.json();
-        console.error("Password Reset Error:", errorData);
+        console.error("Password Reset Error:", response.error);
         // Extract and show error message
         const errorMessage =
-          errorData.message || "Password reset failed. Please try again.";
+          response.error.data.message ||
+          "Password reset failed. Please try again.";
         alert(errorMessage);
       }
     } catch (error) {
@@ -607,7 +620,7 @@ reset it`}</Text>
                         </View>
                       </View>
                       <TouchableOpacity
-                        onPress={openNewPasswordModalVisible}
+                        onPress={handleVerifyOTP}
                         style={styles.buttonParent}
                       >
                         <Text style={styles.button}>Next</Text>

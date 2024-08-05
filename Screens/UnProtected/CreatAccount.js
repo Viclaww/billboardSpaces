@@ -93,13 +93,14 @@ export default function CreateAccount({ navigation }) {
       } else {
         console.log("Signup Error:", error);
         // Extract and show error messages in an alert
-        alert(`Signup failed. ${error.message}`);
+        alert(`Signup failed. ${error.data.message}`);
       }
     } catch (error) {
       console.error("Error:", error);
       // Handle other errors, e.g., network issues
       const errorMessage =
-        error.message || "Signup failed. Please check your network connection.";
+        error.data.message ||
+        "Signup failed. Please check your network connection.";
       alert(errorMessage);
     } finally {
       setIsLoading(false);

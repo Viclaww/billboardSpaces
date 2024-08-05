@@ -38,11 +38,11 @@ export default function HomeScreen({ navigation }) {
             navigation.navigate("Billboardclicked", { data: product })
           }
         >
-          <Image
+          {/* <Image
             resizeMode="cover"
             source={{ uri: product.image }}
             style={styles.rectangleIcon2}
-          />
+          /> */}
           <Text>{product.location}</Text>
         </TouchableOpacity>
       </View>
@@ -63,11 +63,11 @@ export default function HomeScreen({ navigation }) {
             navigation.navigate("Billboardclicked", { data: popular })
           }
         >
-          <Image
+          {/* <Image
             resizeMode="cover"
             source={{ uri: popular.image }}
             style={styles.rectangleIcon3}
-          />
+          /> */}
           <Text>{popular.location}</Text>
         </TouchableOpacity>
       </View>
@@ -86,11 +86,11 @@ export default function HomeScreen({ navigation }) {
         <TouchableOpacity
           onPress={() => navigation.navigate("Eventclicked", { data: events })}
         >
-          <Image
+          {/* <Image
             resizeMode="cover"
             source={{ uri: events.image }}
             style={styles.rectangleIcon3}
-          />
+          /> */}
           <Text>{events.name}</Text>
         </TouchableOpacity>
       </View>
@@ -109,154 +109,6 @@ export default function HomeScreen({ navigation }) {
   const [products, setProducts] = useState([]);
   const [error, setError] = useState(null);
   const [events, setEvents] = useState([]);
-
-  useEffect(() => {
-    const fetchProducts = async () => {
-      const endpointUrl = `${BASE_URL}/billboards/list/new/`;
-      try {
-        // Retrieve the access token from AsyncStorage
-        const storedAccess = await AsyncStorage.getItem("access");
-
-        const response = await fetch(endpointUrl, {
-          headers: {
-            Authorization: `Bearer ${storedAccess}`, // Use the retrieved token in the request headers
-          },
-        });
-
-        if (!response.ok) {
-          if (response.status === 401) {
-            const newAccessToken = await refreshToken();
-            // Use the new access token to make the request
-            const newResponse = await fetch(endpointUrl, {
-              headers: {
-                Authorization: `Bearer ${newAccessToken}`,
-              },
-            });
-
-            if (!newResponse.ok) {
-              throw new Error("Failed to fetch products after token refresh");
-            }
-
-            const newData = await newResponse.json();
-            setProducts(newData);
-          } else {
-            // If the response status is not 401, handle other errors
-            console.log("This is the first response", response);
-            throw new Error("Failed to fetch products");
-          }
-        } else {
-          // If the response is ok, set the products
-          const data = await response.json();
-          setProducts(data);
-        }
-      } catch (error) {
-        console.error("Error fetching products:", error);
-        setError(error.message);
-      }
-    };
-    fetchProducts();
-  }, []); // Remove 'access' from the dependencies array since it's not needed here
-
-  if (error) {
-    return <Text>{error}</Text>;
-  }
-
-  useEffect(() => {
-    const fetchPopular = async () => {
-      const endpointUrl = `${BASE_URL}/billboards/list`;
-      try {
-        // Retrieve the access token from AsyncStorage
-        const storedAccess = await AsyncStorage.getItem("access");
-
-        const response = await fetch(endpointUrl, {
-          headers: {
-            Authorization: `Bearer ${storedAccess}`, // Use the retrieved token in the request headers
-          },
-        });
-
-        if (!response.ok) {
-          if (response.status === 401) {
-            const newAccessToken = await refreshToken();
-            // Use the new access token to make the request
-            const newResponse = await fetch(endpointUrl, {
-              headers: {
-                Authorization: `Bearer ${newAccessToken}`,
-              },
-            });
-
-            if (!newResponse.ok) {
-              throw new Error("Failed to fetch products after token refresh");
-            }
-
-            const newData = await newResponse.json();
-            setPopular(newData);
-          } else {
-            // If the response status is not 401, handle other errors
-            throw new Error("Failed to fetch popular");
-          }
-        } else {
-          // If the response is ok, set the popular
-          const data = await response.json();
-          setPopular(data);
-        }
-      } catch (error) {
-        console.error("Error fetching popular:", error);
-        setError(error.message);
-      }
-    };
-    fetchPopular();
-  }, []); // Remove 'access' from the dependencies array since it's not needed here
-
-  if (error) {
-    return <Text>{error}</Text>;
-  }
-
-  // events
-  useEffect(() => {
-    const fetchEvents = async () => {
-      const endpointUrl = `${BASE_URL}/events/`;
-      try {
-        // Retrieve the access token from AsyncStorage
-        const storedAccess = await AsyncStorage.getItem("access");
-
-        const response = await fetch(endpointUrl, {
-          headers: {
-            Authorization: `Bearer ${storedAccess}`, // Use the retrieved token in the request headers
-          },
-        });
-
-        if (!response.ok) {
-          if (response.status === 401) {
-            const newAccessToken = await refreshToken();
-            // Use the new access token to make the request
-            const newResponse = await fetch(endpointUrl, {
-              headers: {
-                Authorization: `Bearer ${newAccessToken}`,
-              },
-            });
-
-            if (!newResponse.ok) {
-              throw new Error("Failed to fetch products after token refresh");
-            }
-
-            const newData = await newResponse.json();
-            setProducts(newData);
-          } else {
-            // If the response status is not 401, handle other errors
-            throw new Error("Failed to fetch products");
-          }
-        } else {
-          // If the response is ok, set the products
-          const data = await response.json();
-          setEvents(data);
-        }
-      } catch (error) {
-        console.error("Error fetching products:", error);
-        setError(error.message);
-      }
-    };
-    // fetchEvents();
-  }, []);
 
   if (error) {
     return <Text>{error}</Text>;
@@ -340,10 +192,12 @@ export default function HomeScreen({ navigation }) {
         <View style={styles.newlyAddedScroll}>
           <ScrollView horizontal={true} showsHorizontalScrollIndicator={false}>
             <View style={styles.img2}>
-              {products &&
-                products.map((product, index) => (
-                  <ProductComponent key={index} product={product} />
-                ))}
+              <ProductComponent
+                product={{
+                  image: slide1,
+                  location: "urua ekpa",
+                }}
+              />
             </View>
           </ScrollView>
         </View>
@@ -364,22 +218,26 @@ export default function HomeScreen({ navigation }) {
         <View style={styles.newlyAddedScroll}>
           <ScrollView horizontal={true} showsHorizontalScrollIndicator={false}>
             <View style={styles.img2}>
-              {events &&
-                events.map((events, index) => (
-                  <EventComponent key={index} events={events} />
-                ))}
+              <EventComponent
+                events={{
+                  image: slide2,
+                }}
+              />
             </View>
           </ScrollView>
         </View>
         <Text style={styles.newlyAdded}>Popular</Text>
         <View style={styles.popularContainer}>
-          {splitIntoRows(popular).map((row, rowIndex) => (
+          <PopularComponent
+            popular={{ image: slide3, location: "the streets" }}
+          />
+          {/* {splitIntoRows(popular).map((row, rowIndex) => (
             <View key={rowIndex} style={styles.popularRow}>
               {row.map((item, itemIndex) => (
-                <PopularComponent key={itemIndex} popular={item} />
+            
               ))}
             </View>
-          ))}
+          ))} */}
         </View>
       </ScrollView>
     </SafeAreaView>
