@@ -22,8 +22,7 @@ import { useUpdateUserMutation } from "../../data/api/authSlice";
 import { useDispatch } from "react-redux";
 import { setUser } from "../../data/dataSlices/user.slice";
 
-export default function About1({ navigation, route }) {
-  const { userId } = route.params;
+export default function About1({ navigation }) {
   const dispatch = useDispatch();
 
   const [modalVisible, setModalVisible] = useState(false);

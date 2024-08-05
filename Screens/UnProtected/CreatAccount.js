@@ -66,34 +66,27 @@ export default function CreateAccount({ navigation }) {
   const Signup = async () => {
     setIsLoading(true);
     try {
-      await signup({
+      const responce = await signup({
         password: password,
         email: email,
       });
 
       // Log the details of the response
 
-      if (data) {
-        console.log("Signup Successful:", data);
+      if (responce.data) {
+        console.log("Signup Successful:", responce.data);
         // Extract tokens from responseData
-        console.log("Response Status:", data.status);
-        console.log("Response data:", data.data);
-        console.log("Response token", data.token);
-        const access = data.token;
+
+        console.log("Response token", responce.data.token);
+        const access = responce.data.token;
 
         await AsyncStorage.setItem("access", access);
 
-        // Extract user_id from responseData
-        const userId = data.data.id;
-
-        // Handle response for profile update if needed
-
-        // Handle navigation or state updates on successful signup
-        navigation.navigate("About1", { userId });
+        navigation.navigate("About1");
       } else {
-        console.log("Signup Error:", error);
+        console.log("Signup Error:", responce.error);
         // Extract and show error messages in an alert
-        alert(`Signup failed. ${error.data.message}`);
+        alert(`Signup failed. ${responce.error.data.message}`);
       }
     } catch (error) {
       console.error("Error:", error);
