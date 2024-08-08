@@ -1,4 +1,5 @@
 import { generalApiSlice } from "./baseApiSlice";
+// console.log(generalApiSlice);
 export const authApiSlice = generalApiSlice.injectEndpoints({
   endpoints: (builder) => ({
     login: builder.mutation({

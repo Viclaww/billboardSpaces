@@ -11,8 +11,8 @@ import CreatAccount from "./UnProtected/CreatAccount";
 import SignIn from "./UnProtected/SignIn";
 import About from "./UnProtected/About";
 import About1 from "./UnProtected/About1";
-import Tabs from "../Tab/Tabs";
-import HomeScreen from "./Protected/HomeScreen";
+import Tabs from "./utils/Tabs";
+import HomeScreen from "./Protected/Home/HomeScreen";
 const Stack = createNativeStackNavigator();
 export function Protected() {
   return (

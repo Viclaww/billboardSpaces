@@ -20,9 +20,9 @@ import {
 import React, { useState, useEffect } from "react";
 import * as ImagePicker from "expo-image-picker";
 import { AntDesign } from "@expo/vector-icons";
-import { refreshToken } from "../Screens/authUtils";
+import { refreshToken } from "../../utils/authUtils";
 import AsyncStorage from "@react-native-async-storage/async-storage";
-import { BASE_URL } from "../apiConfig";
+import { BASE_URL } from "../../../apiConfig";
 
 export default function AddBillboard() {
   const [selectedImage, setSelectedImage] = useState(null);
@@ -79,7 +79,7 @@ export default function AddBillboard() {
 
   const backgroundImage = selectedImage
     ? { uri: selectedImage }
-    : require("../assets/imageupload.png");
+    : require("../../../assets/imageupload.png");
 
   const uploadData = async () => {
     const endpointUrl = `${BASE_URL}/billboards/create/`;
@@ -551,6 +551,8 @@ const styles = StyleSheet.create({
   container: {
     flex: 1,
     paddingTop: Platform.OS === "android" ? StatusBar.currentHeight : 0,
+    backgroundColor: "white",
+    padding: 5,
   },
   Text: {
     fontWeight: "400",

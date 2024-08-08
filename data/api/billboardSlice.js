@@ -1,43 +1,47 @@
 import { generalApiSlice } from "./baseApiSlice";
-export const authApiSlice = generalApiSlice.injectEndpoints({
-  endpoint: (builder) => ({
-    getNewBillboards: builder.query({
-      query: (token) => ({
+console.log(generalApiSlice);
+console.log('reddington')
+export const billboardApiSlice = generalApiSlice.injectEndpoints({
+  endpoints: (builder) => ({
+    getNewBillboard: builder.query({
+      query: (data) => ({
         url: "/billboard/list",
         method: "GET",
         headers: {
-          Authorization: `Bearer ${token}`,
+          Authorization: `Bearer ${data.token}`,
         },
       }),
     }),
     getPopularBillboards: builder.query({
       // doesnt work yet
 
-      query: (token) => ({
+      query: (data) => ({
         url: "/billboard/popular",
         method: "GET",
         headers: {
-          Authorization: `Bearer ${token}`,
+          Authorization: `Bearer ${data.token}`,
         },
       }),
     }),
     getABillboard: builder.query({
-      query: (token, id) => ({
-        url: `/billboard/${id}`,
+      query: (data) => ({
+        url: `/billboard/${data.id}`,
         method: "GET",
         headers: {
-          Authorization: `Bearer ${token}`,
+          Authorization: `Bearer ${data.token}`,
         },
       }),
     }),
     getBillboards: builder.query({
-      query: (token) => ({
+      query: (data) => ({
         url: "/billboard/list",
         method: "GET",
         headers: {
-          Authorization: `Bearer ${token}`,
+          Authorization: `Bearer ${data.token}`,
         },
       }),
     }),
   }),
 });
+
+export const { useGetNewBillboardQuery } = billboardApiSlice;

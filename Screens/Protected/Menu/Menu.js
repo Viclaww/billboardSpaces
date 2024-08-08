@@ -19,8 +19,10 @@ import React, { useState, useEffect } from "react";
 import { AntDesign } from "@expo/vector-icons";
 import AsyncStorage from "@react-native-async-storage/async-storage";
 import { MaterialIcons } from "@expo/vector-icons";
-import { refreshToken } from "../Screens/authUtils";
-import { BASE_URL } from "../apiConfig";
+import { refreshToken } from "../../utils/authUtils";
+import { BASE_URL } from "../../../apiConfig";
+import ProductComponent from "../components/ProductComponent";
+import PopularComponent from "../components/PopularComponent";
 
 export default function Menu({ navigation }) {
   const [fieldModalVisible, setFieldModalVisible] = useState(false);
@@ -54,57 +56,6 @@ export default function Menu({ navigation }) {
     setSelectedState(text);
     closeStateModal();
   };
-
-  const ProductComponent = ({ product }) => {
-    return (
-      <View
-        style={{
-          padding: 5,
-          flex: 1,
-          width: 180,
-        }}
-      >
-        <TouchableOpacity
-          onPress={() =>
-            navigation.navigate("Billboardclicked", { data: product })
-          }
-        >
-          <Image
-            resizeMode="cover"
-            source={{ uri: product.image }}
-            style={styles.rectangleIcon2}
-          />
-          <Text>{product.location}</Text>
-        </TouchableOpacity>
-      </View>
-    );
-  };
-  const PopularComponent = ({ popular }) => {
-    return (
-      <View
-        style={{
-          padding: 5,
-          // flex: 1,
-          // backgroundColor:'red',
-          width: 180,
-        }}
-      >
-        <TouchableOpacity
-          onPress={() =>
-            navigation.navigate("Billboardclicked", { data: popular })
-          }
-        >
-          <Image
-            resizeMode="cover"
-            source={{ uri: popular.image }}
-            style={styles.rectangleIcon3}
-          />
-          <Text>{popular.location}</Text>
-        </TouchableOpacity>
-      </View>
-    );
-  };
-
   const splitIntoRows = (data) => {
     const rows = [];
     for (let i = 0; i < data.length; i += 2) {
@@ -112,164 +63,6 @@ export default function Menu({ navigation }) {
     }
     return rows;
   };
-
-  useEffect(() => {
-    // Check if searchKeyword is empty
-    if (searchKeyword.trim() === "") {
-      // If searchKeyword is empty, set showSearchResults to false
-      setShowSearchResults(false);
-    } else {
-      // If searchKeyword is not empty, set showSearchResults to true
-      setShowSearchResults(true);
-    }
-  }, [searchKeyword]);
-
-  useEffect(() => {
-    const fetchProducts = async () => {
-      const endpointUrl = `${BASE_URL}/billboards/new/`;
-      try {
-        // Retrieve the access token from AsyncStorage
-        const storedAccess = await AsyncStorage.getItem("access");
-
-        const response = await fetch(endpointUrl, {
-          headers: {
-            Authorization: `Bearer ${storedAccess}`, // Use the retrieved token in the request headers
-          },
-        });
-
-        if (!response.ok) {
-          if (response.status === 401) {
-            const newAccessToken = await refreshToken();
-            // Use the new access token to make the request
-            const newResponse = await fetch(endpointUrl, {
-              headers: {
-                Authorization: `Bearer ${newAccessToken}`,
-              },
-            });
-
-            if (!newResponse.ok) {
-              throw new Error("Failed to fetch products after token refresh");
-            }
-
-            const newData = await newResponse.json();
-            setProducts(newData);
-          } else {
-            // If the response status is not 401, handle other errors
-            throw new Error("Failed to fetch products");
-          }
-        } else {
-          // If the response is ok, set the products
-          const data = await response.json();
-          setProducts(data);
-        }
-      } catch (error) {
-        console.error("Error fetching products:", error);
-        setError(error.message);
-      }
-    };
-    fetchProducts();
-  }, []); // Remove 'access' from the dependencies array since it's not needed here
-
-  if (error) {
-    return <Text>{error}</Text>;
-  }
-
-  useEffect(() => {
-    const fetchPopular = async () => {
-      const endpointUrl = `${BASE_URL}/billboards/all/`;
-      try {
-        // Retrieve the access token from AsyncStorage
-        const storedAccess = await AsyncStorage.getItem("access");
-
-        const response = await fetch(endpointUrl, {
-          headers: {
-            Authorization: `Bearer ${storedAccess}`, // Use the retrieved token in the request headers
-          },
-        });
-
-        if (!response.ok) {
-          if (response.status === 401) {
-            const newAccessToken = await refreshToken();
-            // Use the new access token to make the request
-            const newResponse = await fetch(endpointUrl, {
-              headers: {
-                Authorization: `Bearer ${newAccessToken}`,
-              },
-            });
-
-            if (!newResponse.ok) {
-              throw new Error("Failed to fetch products after token refresh");
-            }
-
-            const newData = await newResponse.json();
-            setPopular(newData);
-          } else {
-            // If the response status is not 401, handle other errors
-            throw new Error("Failed to fetch popular");
-          }
-        } else {
-          // If the response is ok, set the popular
-          const data = await response.json();
-          setPopular(data);
-        }
-      } catch (error) {
-        console.error("Error fetching popular:", error);
-        setError(error.message);
-      }
-    };
-    fetchPopular();
-  }, []); // Remove 'access' from the dependencies array since it's not needed here
-
-  if (error) {
-    return <Text>{error}</Text>;
-  }
-
-  const fetchSearchResults = async () => {
-    const endpointUrl = `${BASE_URL}/billboards/all/?search_keyword=${searchKeyword}&location=${selectedState}&size=${selectedText}`;
-    try {
-      const storedAccess = await AsyncStorage.getItem("access");
-
-      const response = await fetch(endpointUrl, {
-        headers: {
-          Authorization: `Bearer ${storedAccess}`,
-        },
-      });
-
-      if (!response.ok) {
-        if (response.status === 401) {
-          const newAccessToken = await refreshToken();
-          // Use the new access token to make the request
-          const newResponse = await fetch(endpointUrl, {
-            headers: {
-              Authorization: `Bearer ${newAccessToken}`,
-            },
-          });
-
-          if (!newResponse.ok) {
-            throw new Error("Failed to fetch products after token refresh");
-          }
-
-          const newData = await newResponse.json();
-          setSearchResults(newData);
-        } else {
-          throw new Error("Failed to fetch products");
-        }
-      } else {
-        const data = await response.json();
-        console.log(endpointUrl);
-        console.log(data);
-        setSearchResults(data);
-      }
-    } catch (error) {
-      console.error("Error fetching results:", error);
-      setError(error.message);
-    }
-  };
-
-  const handleSearch = () => {
-    fetchSearchResults();
-  };
-
   return (
     <SafeAreaView style={styles.container}>
       <ScrollView
@@ -299,11 +92,9 @@ export default function Menu({ navigation }) {
             style={styles.searchText}
             placeholder="Search"
             onChangeText={(text) => setSearchKeyword(text)}
-            onSubmitEditing={handleSearch}
           />
           <TouchableOpacity
             style={styles.passwordToggle}
-            onPress={handleSearch}
           >
             <AntDesign name="search1" size={24} color="#CCCCCC" />
           </TouchableOpacity>
@@ -327,7 +118,7 @@ export default function Menu({ navigation }) {
               // Display image when no search results
               <View style={styles.noResultContainer}>
                 <Image
-                  source={require("../assets/marketError.png")}
+                  source={require("../../../assets/marketError.png")}
                   style={styles.noResultImage}
                 />
                 <Text style={styles.noResultText}>No results found</Text>
@@ -517,6 +308,7 @@ const styles = StyleSheet.create({
   container: {
     flex: 1,
     paddingTop: Platform.OS === "android" ? StatusBar.currentHeight : 0,
+    backgroundColor: "white"
   },
   searchContainer: {
     borderRadius: 10,

@@ -11,6 +11,7 @@ import {
   Pressable,
   ActivityIndicator,
   ScrollView,
+  Alert
 } from "react-native";
 import { Feather } from "@expo/vector-icons";
 import AsyncStorage from "@react-native-async-storage/async-storage";
@@ -61,24 +62,28 @@ export default function CreateAccount({ navigation }) {
     setConfirmPasswordFocused(false);
   };
 
-  const [signup, { data, error, isSuccess }] = useSignupMutation();
+  const [signup, { error, isSuccess }] = useSignupMutation();
 
   const Signup = async () => {
     setIsLoading(true);
     try {
-      const responce = await signup({
+      const {data, error} = await signup({
         password: password,
         email: email,
       });
-
+      console.log(data);
+      if(error) {
+       return Alert.alert('Error', `Signup Error: ${error?.data.message}`);
+      }
       // Log the details of the response
 
-      if (responce.data) {
-        console.log("Signup Successful:", responce.data);
+      if (data) {
+        console.log("Signup Successful:", data);
         // Extract tokens from responseData
-
-        console.log("Response token", responce.data.token);
-        const access = responce.data.token;
+        console.log("Response Status:", data.status);
+        console.log("Response data:", data.data);
+        console.log("Response token", data.token);
+        const access = data.token;
 
         await AsyncStorage.setItem("access", access);
 
@@ -91,10 +96,10 @@ export default function CreateAccount({ navigation }) {
     } catch (error) {
       console.error("Error:", error);
       // Handle other errors, e.g., network issues
-      const errorMessage =
-        error.data.message ||
-        "Signup failed. Please check your network connection.";
-      alert(errorMessage);
+      // const errorMessage =
+      //   error.data.message ||
+      //   "Signup failed. Please check your network connection.";
+      Alert.alert("Error", 'Unknown error. Please check network connectivity');
     } finally {
       setIsLoading(false);
     }

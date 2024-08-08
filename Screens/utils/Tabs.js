@@ -1,10 +1,10 @@
 import { StyleSheet, Text, View, Image, TouchableOpacity, StatusBar } from "react-native";
 import { createBottomTabNavigator } from "@react-navigation/bottom-tabs";
-import HomeScreen from "../Screens/Protected/HomeScreen";
-import AddBillboard from "./AddBillboard"
-import Menu from "./Menu";
-import More from "./More"
-import Annoucment from "./Annoucment"
+import HomeScreen from "../Protected/Home/HomeScreen";
+import AddBillboard from "../Protected/AddBillboard/AddBillboard"
+import Menu from "../Protected/Menu/Menu";
+import More from "../Protected/More/More"
+import Annoucment from "../Protected/Announcement/Annoucment"
 import { Foundation } from '@expo/vector-icons';
 import { AntDesign } from '@expo/vector-icons';
 import { Feather } from '@expo/vector-icons';
@@ -73,7 +73,7 @@ const Tabs = () => {
             <Tab.Screen name="AddBillboard" component={AddBillboard} options={{
                 headerShown: false,
                 tabBarIcon: ({ focused }) => (
-                    <Image source={(require('../assets/AddBill.png'))}
+                    <Image source={(require('../../assets/AddBill.png'))}
                         resizeMode='contain' />
                 ),
                 tabBarButton: (props) => (
