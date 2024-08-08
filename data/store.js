@@ -8,5 +8,5 @@ export const store = configureStore({
        [generalApiSlice.reducerPath]: generalApiSlice.reducer,
     },
     middleware: (getDefaultMiddleware) => getDefaultMiddleware().concat(generalApiSlice.middleware),
-    devTools: true
+    devTools: false
 });
