@@ -20,9 +20,9 @@ import { AntDesign } from "@expo/vector-icons";
 import { MaterialIcons } from "@expo/vector-icons";
 import { MaterialCommunityIcons } from "@expo/vector-icons";
 import { FontAwesome5 } from "@expo/vector-icons";
-import { refreshToken } from "../Screens/authUtils";
+import { refreshToken } from "../../utils/authUtils";
 import AsyncStorage from "@react-native-async-storage/async-storage";
-import { BASE_URL } from "../apiConfig";
+import { BASE_URL } from "../../../apiConfig";
 
 export default function Annoucment({ navigation }) {
   const [showBillboardDetails, setShowBillboardDetails] = useState(false);
@@ -131,7 +131,7 @@ export default function Annoucment({ navigation }) {
           <TouchableOpacity>
             <Image
               style={{ width: 40, height: 40, borderRadius: 100 }}
-              source={require("../assets/profilePicture.jpeg")}
+              source={require("../../../assets/profilePicture.jpeg")}
             />
           </TouchableOpacity>
           <Text style={{ fontSize: 16, marginLeft: 5, fontWeight: "500" }}>
@@ -162,70 +162,6 @@ export default function Annoucment({ navigation }) {
       </View>
     );
   };
-
-  useEffect(() => {
-    const fetchPost = async () => {
-      const endpointUrl = `${BASE_URL}/posts/`;
-      try {
-        // Retrieve the access token from AsyncStorage
-        const storedAccess = await AsyncStorage.getItem("access");
-
-        const response = await fetch(endpointUrl, {
-          headers: {
-            Authorization: `Bearer ${storedAccess}`, // Use the retrieved token in the request headers
-          },
-        });
-
-        if (!response.ok) {
-          throw new Error("Failed to fetch posts");
-        }
-
-        const data = await response.json();
-        setPost(data);
-      } catch (error) {
-        console.error("Error fetching posts:", error);
-        setError(error.message);
-      }
-    };
-    fetchPost();
-  }, []); // Remove 'access' from the dependencies array since it's not needed here
-
-  const uploadPost = async () => {
-    const endpointUrl = `${BASE_URL}/posts/create/`;
-    try {
-      const storedAccess = await AsyncStorage.getItem("access");
-      const formData = new FormData();
-      formData.append("image", {
-        uri: selectedImage,
-        type: "image/jpeg", // Adjust the type according to your image type
-        name: "image.jpg", // Adjust the name as needed
-      });
-      formData.append("caption", modalCaption);
-
-      const response = await fetch(endpointUrl, {
-        method: "POST",
-        headers: {
-          Authorization: `Bearer ${storedAccess}`,
-          "Content-Type": "multipart/form-data",
-        },
-        body: formData,
-      });
-
-      if (!response.ok) {
-        throw new Error("Failed to upload post");
-      }
-
-      // Optionally, handle success response
-      console.log("Post uploaded successfully");
-      // You can reset the modal caption and selected image here if needed
-      setModalCaption("");
-      setSelectedImage(null);
-    } catch (error) {
-      console.error("Error uploading post:", error);
-      // Optionally, handle error
-    }
-  };
-
   const BillboardRequ = () => {
     navigation.navigate("BillboardRequ");
   };
@@ -289,7 +225,7 @@ export default function Annoucment({ navigation }) {
               <TouchableOpacity>
                 <Image
                   style={{ width: 40, height: 40, borderRadius: 100 }}
-                  source={require("../assets/profilePicture.jpeg")}
+                  source={require("../../../assets/profilePicture.jpeg")}
                 />
               </TouchableOpacity>
               <View
@@ -305,7 +241,7 @@ export default function Annoucment({ navigation }) {
                 >
                   <Image
                     style={{}}
-                    source={require("../assets/announcement.png")}
+                    source={require("../../../assets/announcement.png")}
                   />
                 </TouchableOpacity>
               </View>
@@ -366,13 +302,13 @@ export default function Annoucment({ navigation }) {
                             onPress={openImagePickerAsync}
                             style={{ marginLeft: 16, width: "32%" }}
                           >
-                            <Image source={require("../assets/addImage.png")} />
+                            <Image source={require("../../../assets/addImage.png")} />
                           </TouchableOpacity>
                           <TouchableOpacity
                             onPress={() => openCameraPickerAsync(true)}
                             style={{ marginLeft: 16, width: "32%" }}
                           >
-                            <Image source={require("../assets/takePic.png")} />
+                            <Image source={require("../../../assets/takePic.png")} />
                           </TouchableOpacity>
                         </View>
 
@@ -392,7 +328,7 @@ export default function Annoucment({ navigation }) {
                         </Pressable>
 
                         <TouchableOpacity
-                          onPress={uploadPost}
+                         
                           style={{
                             marginTop: 20,
                             backgroundColor: "#0080FE",
@@ -586,7 +522,7 @@ export default function Annoucment({ navigation }) {
                   <TouchableOpacity>
                     <Image
                       resizeMode="cover"
-                      source={require("../assets/profilePicture.jpeg")}
+                      source={require("../../../assets/profilePicture.jpeg")}
                       style={styles.rectangleIcon2}
                     />
                     <Text
@@ -624,7 +560,7 @@ export default function Annoucment({ navigation }) {
             >
               <Image
                 resizeMode="cover"
-                source={require("../assets/profilePicture.jpeg")}
+                source={require("../../../assets/profilePicture.jpeg")}
                 style={styles.rectangleIcon}
               />
               <View style={{ flexDirection: "column", padding: 5 }}>

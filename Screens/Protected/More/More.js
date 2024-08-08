@@ -19,7 +19,7 @@ import { FontAwesome5 } from "@expo/vector-icons";
 import { MaterialIcons } from "@expo/vector-icons";
 import { useFocusEffect } from "@react-navigation/native"; // Import useFocusEffect from React Navigation
 import { useDispatch } from "react-redux";
-import { setUser } from "../data/dataSlices/user.slice";
+import { setUser } from "../../../data/dataSlices/user.slice";
 
 export default function More({ navigation }) {
   const dispatch = useDispatch();
@@ -78,7 +78,7 @@ export default function More({ navigation }) {
           >
             <Image
               resizeMode="cover"
-              source={require("../assets/profilePicture.jpeg")}
+              source={require("../../../assets/profilePicture.jpeg")}
               style={styles.rectangleIcon}
             />
             <View style={{ flexDirection: "column", padding: 5 }}>
@@ -142,7 +142,7 @@ export default function More({ navigation }) {
         >
           <Image
             style={{ width: "7%", height: 24 }}
-            source={require("../assets/pin.png")}
+            source={require("../../../assets/pin.png")}
           />
           <Text
             style={{
@@ -162,7 +162,7 @@ export default function More({ navigation }) {
           <Image
             resizeMode="contain"
             style={{ width: "6.5%", height: 24 }}
-            source={require("../assets/event.png")}
+            source={require("../../../assets/event.png")}
           />
           <Text
             style={{
@@ -193,7 +193,7 @@ export default function More({ navigation }) {
           <Image
             resizeMode="contain"
             style={{ width: "7.9%", height: 24 }}
-            source={require("../assets/subscribtion.png")}
+            source={require("../../../assets/subscribtion.png")}
           />
           <Text
             style={{
@@ -213,7 +213,7 @@ export default function More({ navigation }) {
           <Image
             resizeMode="contain"
             style={{ width: "8.5%", height: 24 }}
-            source={require("../assets/advert.png")}
+            source={require("../../../assets/advert.png")}
           />
           <Text
             style={{
@@ -233,7 +233,7 @@ export default function More({ navigation }) {
           <Image
             resizeMode="contain"
             style={{ width: "6.5%", height: 24 }}
-            source={require("../assets/maintanance.png")}
+            source={require("../../../assets/maintanance.png")}
           />
           <Text
             style={{
@@ -252,7 +252,7 @@ export default function More({ navigation }) {
           <Image
             resizeMode="contain"
             style={{ width: "6.5%", height: 24 }}
-            source={require("../assets/analys.png")}
+            source={require("../../../assets/analys.png")}
           />
           <Text
             style={{
@@ -272,7 +272,7 @@ export default function More({ navigation }) {
           <Image
             resizeMode="contain"
             style={{ width: "6.5%", height: 24 }}
-            source={require("../assets/referal.png")}
+            source={require("../../../assets/referal.png")}
           />
           <Text
             style={{
@@ -292,7 +292,7 @@ export default function More({ navigation }) {
           <Image
             resizeMode="contain"
             style={{ width: "6.5%", height: 24 }}
-            source={require("../assets/help.png")}
+            source={require("../../../assets/help.png")}
           />
           <Text
             style={{
@@ -327,7 +327,7 @@ export default function More({ navigation }) {
           <Image
             resizeMode="contain"
             style={{ width: "6%", height: 24 }}
-            source={require("../assets/logout.png")}
+            source={require("../../../assets/logout.png")}
           />
           <Text
             onPress={() => {

@@ -13,9 +13,10 @@ import {
   StatusBar,
   KeyboardAvoidingView,
   ActivityIndicator,
+  Alert,
 } from "react-native";
 import { AntDesign } from "@expo/vector-icons";
-import { refreshToken } from "../authUtils";
+import { refreshToken } from "../utils/authUtils";
 import AsyncStorage from "@react-native-async-storage/async-storage";
 import { BASE_URL } from "../../apiConfig";
 import { useUpdateUserMutation } from "../../data/api/authSlice";
@@ -60,16 +61,16 @@ export default function About1({ navigation, route }) {
         },
       };
 
-      const responce = await updateUser(body);
-      console.log(responce);
-      if (responce.data) {
-        alert(responce.data.message);
-        await dispatch(setUser(responce.data.data));
-        navigation.navigate("Home");
+      const {data, error} = await updateUser(body);
+      console.log(data);
+      if (data) {
+        Alert.alert("Success", data.message);
+        await dispatch(setUser(data.data));
+        // navigation.navigate("Home");
       }
-      if (responce.error) {
-        alert(responce.error.data.message);
-        console.log(responce.error);
+      if (error) {
+        Alert.alert(error.data.message);
+        console.log(error);
       }
     } catch (error) {
       console.error("An error occurred during PUT request:", error.message);

@@ -13,90 +13,19 @@ import {
 import { MaterialIcons } from "@expo/vector-icons";
 import React, { useState, useEffect } from "react";
 import AsyncStorage from "@react-native-async-storage/async-storage";
-import { refreshToken } from "../authUtils"; // Import the refreshToken function
-import { BASE_URL } from "../../apiConfig";
-import slide1 from "../../assets/slide1.png";
-import slide2 from "../../assets/slide2.png";
-import slide3 from "../../assets/slide3.png";
+import { refreshToken } from "../../utils/authUtils"; // Import the refreshToken function
+import { BASE_URL } from "../../../apiConfig";
+import ProductComponent from "../components/ProductComponent";
+import PopularComponent from "../components/PopularComponent";
+import EventComponent from "../components/EventComponent";
+import slide1 from "../../../assets/slide1.png";
+import slide2 from "../../../assets/slide2.png";
+import slide3 from "../../../assets/slide3.png";
 
 const WIDTH = Dimensions.get("window").width;
 const HEIGHT = Dimensions.get("window").height;
 
 export default function HomeScreen({ navigation }) {
-  const ProductComponent = ({ product }) => {
-    return (
-      <View
-        style={{
-          padding: 5,
-          // flex: 1,
-          // backgroundColor:'red',
-          width: 180,
-        }}
-      >
-        <TouchableOpacity
-          onPress={() =>
-            navigation.navigate("Billboardclicked", { data: product })
-          }
-        >
-          {/* <Image
-            resizeMode="cover"
-            source={{ uri: product.image }}
-            style={styles.rectangleIcon2}
-          /> */}
-          <Text>{product.location}</Text>
-        </TouchableOpacity>
-      </View>
-    );
-  };
-  const PopularComponent = ({ popular }) => {
-    return (
-      <View
-        style={{
-          padding: 5,
-          // flex: 1,
-          // backgroundColor:'red',
-          width: 180,
-        }}
-      >
-        <TouchableOpacity
-          onPress={() =>
-            navigation.navigate("Billboardclicked", { data: popular })
-          }
-        >
-          {/* <Image
-            resizeMode="cover"
-            source={{ uri: popular.image }}
-            style={styles.rectangleIcon3}
-          /> */}
-          <Text>{popular.location}</Text>
-        </TouchableOpacity>
-      </View>
-    );
-  };
-  const EventComponent = ({ events }) => {
-    return (
-      <View
-        style={{
-          padding: 5,
-          // flex: 1,
-          // backgroundColor:'red',
-          width: 180,
-        }}
-      >
-        <TouchableOpacity
-          onPress={() => navigation.navigate("Eventclicked", { data: events })}
-        >
-          {/* <Image
-            resizeMode="cover"
-            source={{ uri: events.image }}
-            style={styles.rectangleIcon3}
-          /> */}
-          <Text>{events.name}</Text>
-        </TouchableOpacity>
-      </View>
-    );
-  };
-
   const splitIntoRows = (data) => {
     const rows = [];
     for (let i = 0; i < data.length; i += 2) {
@@ -132,7 +61,7 @@ export default function HomeScreen({ navigation }) {
   return (
     <SafeAreaView style={styles.container}>
       <ScrollView
-        style={{ marginBottom: 5 }}
+        style={{ marginBottom: 5, backgroundColor: 'white'}}
         horizontal={false}
         showsVerticalScrollIndicator={false}
       >
@@ -140,7 +69,7 @@ export default function HomeScreen({ navigation }) {
           <View>
             <Image
               style={{ width: 40, height: 40, borderRadius: 100 }}
-              source={require("../../assets/profilePicture.jpeg")}
+              source={require("../../../assets/profilePicture.jpeg")}
             />
           </View>
           <Text style={{ fontSize: 22, marginLeft: 5 }}>Welcome</Text>
@@ -192,12 +121,11 @@ export default function HomeScreen({ navigation }) {
         <View style={styles.newlyAddedScroll}>
           <ScrollView horizontal={true} showsHorizontalScrollIndicator={false}>
             <View style={styles.img2}>
-              <ProductComponent
-                product={{
-                  image: slide1,
-                  location: "urua ekpa",
-                }}
-              />
+             <ProductComponent
+             product={{
+              location: "urua ekpa"
+             }}
+             ></ProductComponent>
             </View>
           </ScrollView>
         </View>
@@ -205,7 +133,7 @@ export default function HomeScreen({ navigation }) {
 
         <Image
           resizeMode="contain"
-          source={require("../../assets/Discover.png")}
+          source={require("../../../assets/Discover.png")}
           style={{
             marginLeft: 25,
             width: "90%",
@@ -248,6 +176,7 @@ const styles = StyleSheet.create({
   container: {
     flex: 1,
     paddingTop: Platform.OS === "android" ? StatusBar.currentHeight : 0,
+    backgroundColor: 'white'
   },
   rectangle1: {
     width: "100%",
