@@ -11,6 +11,7 @@ import {
   Pressable,
   ActivityIndicator,
   ScrollView,
+  Alert,
 } from "react-native";
 import { Feather } from "@expo/vector-icons";
 import AsyncStorage from "@react-native-async-storage/async-storage";
@@ -64,6 +65,14 @@ export default function CreateAccount({ navigation }) {
   const [signup, { data, error, isSuccess }] = useSignupMutation();
 
   const Signup = async () => {
+    if (!password && !confirmPassword) {
+      Alert.alert("Please input Password");
+      return;
+    }
+    if (password && password != confirmPassword) {
+      Alert.alert("Passwords dont match");
+      return;
+    }
     setIsLoading(true);
     try {
       const responce = await signup({
