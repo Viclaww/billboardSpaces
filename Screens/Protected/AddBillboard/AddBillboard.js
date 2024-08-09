@@ -23,6 +23,7 @@ import { AntDesign } from "@expo/vector-icons";
 import { refreshToken } from "../../utils/authUtils";
 import AsyncStorage from "@react-native-async-storage/async-storage";
 import { BASE_URL } from "../../../apiConfig";
+import { useCreateNewMutation } from "../../../data/api/billboardSlice";
 
 export default function AddBillboard() {
   const [selectedImage, setSelectedImage] = useState(null);
@@ -81,13 +82,14 @@ export default function AddBillboard() {
     ? { uri: selectedImage }
     : require("../../../assets/imageupload.png");
 
-  const uploadData = async () => {
-    const endpointUrl = `${BASE_URL}/billboards/create/`;
+  const [createNew] = useCreateNewMutation();
 
+  const uploadData = async () => {
     try {
       setIsLoading(true);
       const storedAccess = await AsyncStorage.getItem("access");
       const formData = new FormData();
+
       formData.append("image", {
         uri: selectedImage,
         type: "image/jpeg", // Adjust the type according to your image type
@@ -97,19 +99,14 @@ export default function AddBillboard() {
       formData.append("state", selectedState);
       formData.append("target_audience", fullName);
       formData.append("location", displayName);
-      formData.append("price", phoneNumber);
+      formData.append("rentPerMonth", phoneNumber);
 
-      const response = await fetch(endpointUrl, {
-        method: "POST",
-        headers: {
-          Authorization: `Bearer ${storedAccess}`,
-          "Content-Type": "multipart/form-data",
-        },
-        body: formData,
-      });
+      const responce = await createNew({ token: storedAccess, body: formData });
 
-      if (!response.ok) {
-        throw new Error("Failed to upload");
+      if (responce.data) {
+        console.log(responce.data.message);
+      } else {
+        console.log(responce.error);
       }
 
       // Optionally, handle success response
@@ -119,6 +116,8 @@ export default function AddBillboard() {
     } catch (error) {
       console.error("Error uploading post:", error);
       // Optionally, handle error
+    } finally {
+      setIsLoading(false);
     }
   };
 

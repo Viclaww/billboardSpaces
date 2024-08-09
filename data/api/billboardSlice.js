@@ -1,6 +1,6 @@
 import { generalApiSlice } from "./baseApiSlice";
 console.log(generalApiSlice);
-console.log('reddington')
+console.log("reddington");
 export const billboardApiSlice = generalApiSlice.injectEndpoints({
   endpoints: (builder) => ({
     getNewBillboard: builder.query({
@@ -32,6 +32,14 @@ export const billboardApiSlice = generalApiSlice.injectEndpoints({
         },
       }),
     }),
+    createNew: builder.mutation({
+      query: (data) => ({
+        url: "/billboard/new",
+        body: data.body,
+        method: "POST",
+        headers: { Authorization: `Bearer ${data.token}` },
+      }),
+    }),
     getBillboards: builder.query({
       query: (data) => ({
         url: "/billboard/list",
@@ -44,4 +52,5 @@ export const billboardApiSlice = generalApiSlice.injectEndpoints({
   }),
 });
 
-export const { useGetNewBillboardQuery } = billboardApiSlice;
+export const { useGetNewBillboardQuery, useCreateNewMutation } =
+  billboardApiSlice;
