@@ -1,11 +1,9 @@
 // this page includes code to render a navigation for protected and unprotected screens
 // and then uses a conditional based on users logged in state to determine the app mode.
-
 import { createNativeStackNavigator } from "@react-navigation/native-stack";
 // import BottomTabNavigator from "./Protected/Landing";
 import { useSelector } from "react-redux";
 import { NavigationContainer } from "@react-navigation/native";
-
 import Onboarding from "./UnProtected/Onboarding";
 import CreatAccount from "./UnProtected/CreatAccount";
 import SignIn from "./UnProtected/SignIn";
@@ -15,7 +13,6 @@ import Tabs from "./utils/Tabs";
 import HomeScreen from "./Protected/Home/HomeScreen";
 import Billboardclicked from "./Protected/Billboardclicked";
 import SetAdvertisingDuration from "./Protected/SetAdvertisingDuration";
-import AddBillboard from "./Protected/AddBillboard/AddBillboard";
 const Stack = createNativeStackNavigator();
 export function Protected() {
   return (
@@ -34,11 +31,6 @@ export function Protected() {
         options={{ headerShown: false }}
         name="Billboardclicked"
         component={Billboardclicked}
-      />
-      <Stack.Screen
-        options={{ headerShown: false }}
-        name="Add Billboard"
-        component={AddBillboard}
       />
       <Stack.Screen
         options={{}}
