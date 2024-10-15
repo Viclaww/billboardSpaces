@@ -17,6 +17,8 @@ import { Feather } from "@expo/vector-icons";
 import AsyncStorage from "@react-native-async-storage/async-storage";
 import { BASE_URL } from "../../apiConfig";
 import { useLoginMutation, useSignupMutation } from "../../data/api/authSlice";
+import { useDispatch } from "react-redux";
+import { setToken } from "../../data/dataSlices/user.slice";
 export default function CreateAccount({ navigation }) {
   const [passwordVisible, setPasswordVisible] = useState(false);
   const [confirmPasswordVisible, setConfirmPasswordVisible] = useState(false);
@@ -29,7 +31,7 @@ export default function CreateAccount({ navigation }) {
   const [emailFocused, setEmailFocused] = useState(false); // Track if email input is focused
   const [passwordFocused, setPasswordFocused] = useState(false); // Track if password input is focused
   const [confirmPasswordFocused, setConfirmPasswordFocused] = useState(false); // Track if confirm password input is focused
-
+  const dispatch = useDispatch();
   const togglePasswordVisibility = () => {
     setPasswordVisible(!passwordVisible);
   };
@@ -94,7 +96,7 @@ export default function CreateAccount({ navigation }) {
         const access = data.token;
 
         await AsyncStorage.setItem("access", access);
-
+        dispatch(setToken(access));
         navigation.navigate("About1");
       } else {
         console.log("Signup Error:", responce.error);
@@ -112,7 +114,6 @@ export default function CreateAccount({ navigation }) {
       setIsLoading(false);
     }
   };
-
   const SignIn = () => {
     navigation.navigate("SignIn");
   };

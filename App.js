@@ -6,7 +6,8 @@ import { createStackNavigator } from "@react-navigation/stack";
 import { Provider } from "react-redux";
 import { Navigation } from "./Screens/screenConfig";
 import ErrorBoundary from "react-native-error-boundary";
-import { store } from "./data/store";
+import { store, persistor } from "./data/store";
+import { PersistGate } from "redux-persist/integration/react";
 const Stack = createStackNavigator();
 function App() {
   StatusBar.setBarStyle("dark-content"); // Change status bar style (light or dark)
@@ -52,7 +53,9 @@ function App() {
   return (
     <ErrorBoundary>
       <Provider store={store}>
-        <Navigation></Navigation>
+        <PersistGate loading={null} persistor={persistor}>
+          <Navigation></Navigation>
+        </PersistGate>
       </Provider>
     </ErrorBoundary>
   );
