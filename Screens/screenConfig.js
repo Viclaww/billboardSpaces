@@ -16,6 +16,20 @@ import HomeScreen from "./Protected/Home/HomeScreen";
 import Billboardclicked from "./Protected/Billboardclicked";
 import SetAdvertisingDuration from "./Protected/SetAdvertisingDuration";
 import AddBillboard from "./Protected/AddBillboard/AddBillboard";
+import ExploreMore from "./Protected/ExploreMore";
+import Billboardclicked2 from "./Protected/Billboardclicked2";
+import Subscription from "./Protected/Subscription";
+import Advertisement from "./Protected/Advertisement";
+import MaintenanceBooking from "./Protected/MaintenanceBooking";
+import BookingForm from "./Protected/BookingForm";
+import Refferrals from "./Protected/Refferrals";
+import Help from "./Protected/Help";
+import ContactUs from "./Protected/ContactUs";
+import MyBillboard from "./Protected/MyBillboard";
+import MyProfile from "./Protected/MyProfile";
+import EventCalender from "./Protected/EventCalender";
+import BillboardRequ from "./Protected/BillboardRequ";
+import AddDocument from "./Protected/AddDocument";
 const Stack = createNativeStackNavigator();
 export function Protected() {
   return (
@@ -44,6 +58,87 @@ export function Protected() {
         options={{}}
         name="Set Advertising Duration"
         component={SetAdvertisingDuration}
+      />
+
+      <Stack.Screen
+        options={{ headerShown: false }}
+        name="ExploreMore"
+        component={ExploreMore}
+      />
+      <Stack.Screen
+        options={{ headerShown: false }}
+        name="Billboardclicked2"
+        component={Billboardclicked2}
+      />
+      <Stack.Screen
+        options={{ headerShown: false }}
+        name="Notification"
+        component={Notification}
+      />
+      <Stack.Screen
+        options={{}}
+        name="Set Advertising Duration"
+        component={SetAdvertisingDuration}
+      />
+      <Stack.Screen
+        options={{ headerShown: false }}
+        name="Subscription"
+        component={Subscription}
+      />
+      <Stack.Screen
+        options={{ headerShown: false }}
+        name="Advertisement"
+        component={Advertisement}
+      />
+      <Stack.Screen
+        options={{ headerShown: false }}
+        name="Maintenance Booking"
+        component={MaintenanceBooking}
+      />
+      <Stack.Screen
+        options={{ headerShown: false }}
+        name="Booking Form"
+        component={BookingForm}
+      />
+      <Stack.Screen
+        options={{ headerShown: false }}
+        name="Refferrals"
+        component={Refferrals}
+      />
+      <Stack.Screen
+        options={{ headerShown: false }}
+        name="Help and Support"
+        component={Help}
+      />
+      <Stack.Screen
+        options={{ headerShown: false }}
+        name="Contact Us"
+        component={ContactUs}
+      />
+      <Stack.Screen
+        options={{ headerShown: false }}
+        name="My Billboards"
+        component={MyBillboard}
+      />
+      <Stack.Screen
+        options={{ headerShown: false }}
+        name="My Profile"
+        component={MyProfile}
+      />
+      <Stack.Screen
+        options={{ headerShown: false }}
+        name="EventCalender"
+        component={EventCalender}
+      />
+      <Stack.Screen
+        options={{ headerShown: false }}
+        name="BillboardRequ"
+        component={BillboardRequ}
+      />
+      <Stack.Screen
+        options={{ headerShown: false }}
+        name="AddDocument"
+        component={AddDocument}
       />
     </Stack.Navigator>
   );
