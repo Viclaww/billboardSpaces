@@ -4,6 +4,16 @@ const baseQuery = fetchBaseQuery({
 });
 export const generalApiSlice = createApi({
   baseQuery,
-  tagTypes: ["User", "BillBoards"],
-  endpoints: (builder) => ({}),
+  // tagTypes: ["User", "BillBoards"],
+  endpoints: (builder) => ({
+    getHome: builder.query({
+      query: (data) => ({
+        url: "/page/home",
+        method: "GET",
+        headers: {
+          Authorization: `Bearer ${data.token}`,
+        },
+      }),
+    }),
+  }),
 });

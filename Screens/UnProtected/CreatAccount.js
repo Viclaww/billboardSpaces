@@ -11,7 +11,7 @@ import {
   Pressable,
   ActivityIndicator,
   ScrollView,
-  Alert
+  Alert,
 } from "react-native";
 import { Feather } from "@expo/vector-icons";
 import AsyncStorage from "@react-native-async-storage/async-storage";
@@ -65,15 +65,23 @@ export default function CreateAccount({ navigation }) {
   const [signup, { error, isSuccess }] = useSignupMutation();
 
   const Signup = async () => {
+    if (!password && !confirmPassword) {
+      Alert.alert("Please input Password");
+      return;
+    }
+    if (password && password != confirmPassword) {
+      Alert.alert("Passwords dont match");
+      return;
+    }
     setIsLoading(true);
     try {
-      const {data, error} = await signup({
+      const { data, error } = await signup({
         password: password,
         email: email,
       });
       console.log(data);
-      if(error) {
-       return Alert.alert('Error', `Signup Error: ${error?.data.message}`);
+      if (error) {
+        return Alert.alert("Error", `Signup Error: ${error?.data.message}`);
       }
       // Log the details of the response
 
@@ -99,7 +107,7 @@ export default function CreateAccount({ navigation }) {
       // const errorMessage =
       //   error.data.message ||
       //   "Signup failed. Please check your network connection.";
-      Alert.alert("Error", 'Unknown error. Please check network connectivity');
+      Alert.alert("Error", "Unknown error. Please check network connectivity");
     } finally {
       setIsLoading(false);
     }

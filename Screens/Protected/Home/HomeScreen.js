@@ -21,6 +21,8 @@ import EventComponent from "../components/EventComponent";
 import slide1 from "../../../assets/slide1.png";
 import slide2 from "../../../assets/slide2.png";
 import slide3 from "../../../assets/slide3.png";
+import { useSelector } from "react-redux";
+import { useGetHomeQuery } from "../../../data/api/billboardSlice";
 
 const WIDTH = Dimensions.get("window").width;
 const HEIGHT = Dimensions.get("window").height;
@@ -34,10 +36,26 @@ export default function HomeScreen({ navigation }) {
     return rows;
   };
 
+  const user = useSelector((state) => state.user);
+  // console.log(user);
+
   const [popular, setPopular] = useState([]);
   const [products, setProducts] = useState([]);
   const [error, setError] = useState(null);
   const [events, setEvents] = useState([]);
+
+  const { data, error: home, isLoading } = useGetHomeQuery(user);
+  console.log(isLoading);
+  useEffect(() => {
+    if (data) {
+      console.log(data);
+      setPopular(data.data.popular);
+      setProducts(data.data.new);
+    }
+    if (home) {
+      console.log("failed", home);
+    }
+  }, [data]);
 
   if (error) {
     return <Text>{error}</Text>;
@@ -61,7 +79,7 @@ export default function HomeScreen({ navigation }) {
   return (
     <SafeAreaView style={styles.container}>
       <ScrollView
-        style={{ marginBottom: 5, backgroundColor: 'white'}}
+        style={{ marginBottom: 5, backgroundColor: "white" }}
         horizontal={false}
         showsVerticalScrollIndicator={false}
       >
@@ -72,7 +90,9 @@ export default function HomeScreen({ navigation }) {
               source={require("../../../assets/profilePicture.jpeg")}
             />
           </View>
-          <Text style={{ fontSize: 22, marginLeft: 5 }}>Welcome</Text>
+          <Text style={{ fontSize: 22, marginLeft: 5 }}>
+            Welcome {user ? user.user["display-name"] : "User"}
+          </Text>
           <View style={{ flex: 1, alignItems: "flex-end", paddingRight: 10 }}>
             <TouchableOpacity
               onPress={() => {
@@ -121,11 +141,14 @@ export default function HomeScreen({ navigation }) {
         <View style={styles.newlyAddedScroll}>
           <ScrollView horizontal={true} showsHorizontalScrollIndicator={false}>
             <View style={styles.img2}>
-             <ProductComponent
-             product={{
-              location: "urua ekpa"
-             }}
-             ></ProductComponent>
+              {products &&
+                products.map((product, index) => (
+                  <ProductComponent
+                    navigation={navigation}
+                    key={index}
+                    product={product}
+                  ></ProductComponent>
+                ))}
             </View>
           </ScrollView>
         </View>
@@ -159,13 +182,13 @@ export default function HomeScreen({ navigation }) {
           <PopularComponent
             popular={{ image: slide3, location: "the streets" }}
           />
-          {/* {splitIntoRows(popular).map((row, rowIndex) => (
+          {splitIntoRows(popular).map((row, rowIndex) => (
             <View key={rowIndex} style={styles.popularRow}>
               {row.map((item, itemIndex) => (
-            
+                <PopularComponent key={itemIndex} popular={item} />
               ))}
             </View>
-          ))} */}
+          ))}
         </View>
       </ScrollView>
     </SafeAreaView>
@@ -176,7 +199,7 @@ const styles = StyleSheet.create({
   container: {
     flex: 1,
     paddingTop: Platform.OS === "android" ? StatusBar.currentHeight : 0,
-    backgroundColor: 'white'
+    backgroundColor: "white",
   },
   rectangle1: {
     width: "100%",

@@ -13,6 +13,8 @@ import About from "./UnProtected/About";
 import About1 from "./UnProtected/About1";
 import Tabs from "./utils/Tabs";
 import HomeScreen from "./Protected/Home/HomeScreen";
+import Billboardclicked from "./Protected/Billboardclicked";
+import SetAdvertisingDuration from "./Protected/SetAdvertisingDuration";
 const Stack = createNativeStackNavigator();
 export function Protected() {
   return (
@@ -26,6 +28,16 @@ export function Protected() {
         name="Home"
         component={HomeScreen}
         options={{ headerShown: false }}
+      />
+      <Stack.Screen
+        options={{ headerShown: false }}
+        name="Billboardclicked"
+        component={Billboardclicked}
+      />
+      <Stack.Screen
+        options={{}}
+        name="Set Advertising Duration"
+        component={SetAdvertisingDuration}
       />
     </Stack.Navigator>
   );
