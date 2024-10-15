@@ -15,6 +15,7 @@ import Tabs from "./utils/Tabs";
 import HomeScreen from "./Protected/Home/HomeScreen";
 import Billboardclicked from "./Protected/Billboardclicked";
 import SetAdvertisingDuration from "./Protected/SetAdvertisingDuration";
+import AddBillboard from "./Protected/AddBillboard/AddBillboard";
 const Stack = createNativeStackNavigator();
 export function Protected() {
   return (
@@ -33,6 +34,11 @@ export function Protected() {
         options={{ headerShown: false }}
         name="Billboardclicked"
         component={Billboardclicked}
+      />
+      <Stack.Screen
+        options={{ headerShown: false }}
+        name="Add Billboard"
+        component={AddBillboard}
       />
       <Stack.Screen
         options={{}}

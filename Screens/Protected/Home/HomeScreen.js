@@ -163,7 +163,7 @@ export default function HomeScreen({ navigation }) {
             marginTop: 10,
           }}
         />
-
+        {/* noevents api found
         <Text style={styles.newlyAdded}>Upcoming Events</Text>
 
         <View style={styles.newlyAddedScroll}>
@@ -176,16 +176,17 @@ export default function HomeScreen({ navigation }) {
               />
             </View>
           </ScrollView>
-        </View>
+        </View> */}
         <Text style={styles.newlyAdded}>Popular</Text>
         <View style={styles.popularContainer}>
-          <PopularComponent
-            popular={{ image: slide3, location: "the streets" }}
-          />
           {splitIntoRows(popular).map((row, rowIndex) => (
             <View key={rowIndex} style={styles.popularRow}>
               {row.map((item, itemIndex) => (
-                <PopularComponent key={itemIndex} popular={item} />
+                <PopularComponent
+                  navigation={navigation}
+                  key={itemIndex}
+                  popular={item}
+                />
               ))}
             </View>
           ))}
