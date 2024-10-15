@@ -1,17 +1,6 @@
 import { generalApiSlice } from "./baseApiSlice";
-console.log(generalApiSlice);
-console.log("reddington");
 export const billboardApiSlice = generalApiSlice.injectEndpoints({
   endpoints: (builder) => ({
-    getNewBillboard: builder.query({
-      query: (data) => ({
-        url: "/billboard/list",
-        method: "GET",
-        headers: {
-          Authorization: `Bearer ${data.token}`,
-        },
-      }),
-    }),
     getPopularBillboards: builder.query({
       // doesnt work yet
 
@@ -23,6 +12,7 @@ export const billboardApiSlice = generalApiSlice.injectEndpoints({
         },
       }),
     }),
+
     getABillboard: builder.query({
       query: (data) => ({
         url: `/billboard/${data.id}`,
@@ -52,5 +42,4 @@ export const billboardApiSlice = generalApiSlice.injectEndpoints({
   }),
 });
 
-export const { useGetNewBillboardQuery, useCreateNewMutation } =
-  billboardApiSlice;
+export const { useGetHomeQuery, useCreateNewMutation } = billboardApiSlice;
