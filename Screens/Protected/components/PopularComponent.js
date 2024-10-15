@@ -1,5 +1,5 @@
 import { View, TouchableOpacity, Text, Image, StyleSheet } from "react-native";
-const PopularComponent = ({ popular }) => {
+const PopularComponent = ({ popular, navigation }) => {
   console.log(popular);
   return (
     <View
@@ -17,7 +17,7 @@ const PopularComponent = ({ popular }) => {
       >
         <Image
           resizeMode="cover"
-          // source={{ uri: popular.image }}
+          source={{ uri: popular.image }}
           style={styles.rectangleIcon3}
         />
         <Text>{popular.location}</Text>
