@@ -1,0 +1,39 @@
+{
+  "project_info": {
+    "project_number": "384091720558",
+    "project_id": "billboardspaces-6cbc7",
+    "storage_bucket": "billboardspaces-6cbc7.appspot.com"
+  },
+  "client": [
+    {
+      "client_info": {
+        "mobilesdk_app_id": "1:384091720558:android:03254ef0ea09ed6a30cf7f",
+        "android_client_info": {
+          "package_name": "com.uku_joseph.BillboardSpaces"
+        }
+      },
+      "oauth_client": [
+        {
+          "client_id": "384091720558-558up2io38cfr4jkf1uubhnoa7dcqrh4.apps.googleusercontent.com",
+          "client_type": 3
+        }
+      ],
+      "api_key": [
+        {
+          "current_key": "AIzaSyDPB-loI0c8eOM5QaK-OocDV-RHDHJFMIU"
+        }
+      ],
+      "services": {
+        "appinvite_service": {
+          "other_platform_oauth_client": [
+            {
+              "client_id": "384091720558-558up2io38cfr4jkf1uubhnoa7dcqrh4.apps.googleusercontent.com",
+              "client_type": 3
+            }
+          ]
+        }
+      }
+    }
+  ],
+  "configuration_version": "1"
+}
