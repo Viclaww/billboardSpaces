@@ -14,16 +14,18 @@ import {
   TouchableWithoutFeedback,
   Modal,
   KeyboardAvoidingView,
+  ActivityIndicator,
 } from "react-native";
 import * as ImagePicker from "expo-image-picker";
 import { AntDesign } from "@expo/vector-icons";
-import { MaterialIcons } from "@expo/vector-icons";
 import { MaterialCommunityIcons } from "@expo/vector-icons";
 import { FontAwesome5 } from "@expo/vector-icons";
-import { refreshToken } from "../../utils/authUtils";
-import AsyncStorage from "@react-native-async-storage/async-storage";
-import { BASE_URL } from "../../../apiConfig";
-
+import {
+  useGetAdsInMarketPlaceQuery,
+  useCreateNewAdMutation,
+} from "../../../data/api/adSlice";
+import { useSelector } from "react-redux";
+import { cloudinaryUpload } from "../../../utils/cloudinaryUpload";
 export default function Annoucment({ navigation }) {
   const [showBillboardDetails, setShowBillboardDetails] = useState(false);
   const [showAdDetails, setShowAdDetails] = useState(true);
@@ -32,8 +34,26 @@ export default function Annoucment({ navigation }) {
   const [activeText, setActiveText] = useState("ad");
   const [modalVisible, setModalVisible] = useState(false);
   const [modalCaption, setModalCaption] = useState("");
+  const [isFileUpLoading, setIFileUpLoading] = useState(false);
   const [selectedImage, setSelectedImage] = useState(null);
-
+  const [
+    createAd,
+    {
+      // data: adData,
+      // error: adError,
+      isLoading: adLoading,
+      // isFetching: adFetching,
+    },
+  ] = useCreateNewAdMutation();
+  const token = useSelector((state) => state.user.token);
+  const {
+    data,
+    error: errorBd,
+    isLoading,
+    isFetching,
+    refetch
+  } = useGetAdsInMarketPlaceQuery({ token: token });
+  console.log(data);
   const [notifyModalVisible, setNotifyModalVisible] = useState(false);
 
   const openNotifyModal = () => {
@@ -75,6 +95,25 @@ export default function Annoucment({ navigation }) {
   const closeModal = () => {
     setModalVisible(false);
   };
+
+  const sendToBackend = async (selectedImage, modalCaption) => {
+    setIFileUpLoading(true);
+    const adImage = await cloudinaryUpload(selectedImage);
+    if (adImage.image) {
+      const res = await createAd({
+        body: { message: modalCaption, image: adImage.image },
+        token,
+      });
+      console.log("Response from upload:", res);
+      setIFileUpLoading(false);
+      if (res.data) {
+        refetch();
+        setSelectedImage(null);
+        setModalCaption("");
+        closeModal();
+      }
+    }
+  };
   const openCameraPickerAsync = async (isCamera) => {
     let permissionResult;
     if (isCamera) {
@@ -98,7 +137,12 @@ export default function Annoucment({ navigation }) {
 
     if (!pickerResult.cancelled && pickerResult.assets.length > 0) {
       const selectedUri = pickerResult.assets[0].uri;
-      setSelectedImage(selectedUri);
+      console.log(pickerResult);
+      setSelectedImage({
+        name: pickerResult.assets[0].fileName,
+        type: pickerResult.assets[0].mimeType,
+        uri: pickerResult.assets[0].uri,
+      });
     }
   };
 
@@ -115,50 +159,56 @@ export default function Annoucment({ navigation }) {
     if (!pickerResult.cancelled && pickerResult.assets.length > 0) {
       const selectedUri = pickerResult.assets[0].uri;
       console.log("Selected Image URI:", selectedUri); // Log selected image URI for debugging
-      setSelectedImage(selectedUri);
+      console.log(pickerResult);
+      setSelectedImage({
+        name: pickerResult.assets[0].fileName,
+        type: pickerResult.assets[0].mimeType,
+        uri: pickerResult.assets[0].uri,
+      });
     }
   };
 
-  console.log("Selected image:", selectedImage); // Log selected image state for debugging
-
   const [post, setPost] = useState([]);
   const [error, setError] = useState(null);
-
   const Post = ({ post }) => {
     return (
       <View style={{ flex: 1 }}>
-        <View style={styles.rectangle1}>
-          <TouchableOpacity>
-            <Image
-              style={{ width: 40, height: 40, borderRadius: 100 }}
-              source={require("../../../assets/profilePicture.jpeg")}
-            />
-          </TouchableOpacity>
-          <Text style={{ fontSize: 16, marginLeft: 5, fontWeight: "500" }}>
-            {post.user.business_name}
-          </Text>
-        </View>
-        <Text
-          style={{
-            fontWeight: "400",
-            fontSize: 16,
-            paddingLeft: 16,
-            marginTop: 5,
-          }}
-        >
-          {post.caption}
-        </Text>
+      <View style={styles.rectangle1}>
+        <TouchableOpacity>
         <Image
-          resizeMode="cover"
-          style={{
-            marginLeft: 16,
-            marginTop: 20,
-            width: "90%",
-            height: 228,
-            borderRadius: 20,
-          }}
-          source={{ uri: post.image }}
+          style={{ width: 40, height: 40, borderRadius: 100 }}
+          source={require("../../../assets/profilePicture.jpeg")}
         />
+        </TouchableOpacity>
+        <Text style={{ fontSize: 16, marginLeft: 5, fontWeight: "500" }}>
+        {post.author.email.replace('@gmail.com', '')}
+        </Text>
+      </View>
+      <Text
+        style={{
+        fontWeight: "400",
+        fontSize: 16,
+        paddingLeft: 16,
+        marginTop: 5,
+        color: 'black'
+        }}
+      >
+        {post.message}
+      </Text>
+      <View>
+      <Image
+        resizeMode="cover"
+        style={{
+        marginLeft: 16,
+        marginTop: 20,
+        width: "90%",
+        height: 228,
+        borderRadius: 20,
+        }}
+        source={{ uri: post.image }}
+      />
+      </View>
+      
       </View>
     );
   };
@@ -169,7 +219,7 @@ export default function Annoucment({ navigation }) {
   return (
     <SafeAreaView style={styles.container}>
       <ScrollView
-        style={{ marginBottom: 5 }}
+        style={{ marginBottom: 5, backgroundColor: "white" }}
         horizontal={false}
         showsVerticalScrollIndicator={false}
       >
@@ -224,7 +274,7 @@ export default function Annoucment({ navigation }) {
             <View style={styles.rectangle1}>
               <TouchableOpacity>
                 <Image
-                  style={{ width: 40, height: 40, borderRadius: 100 }}
+                  style={{ width: 30, height: 30, borderRadius: 100 }}
                   source={require("../../../assets/profilePicture.jpeg")}
                 />
               </TouchableOpacity>
@@ -235,7 +285,7 @@ export default function Annoucment({ navigation }) {
                   onPress={openModal}
                   style={{
                     justifyContent: "center",
-                    width: "91.5%",
+                    width: "auto",
                     height: 40,
                   }}
                 >
@@ -256,11 +306,33 @@ export default function Annoucment({ navigation }) {
             >
               Popular Advert
             </Text>
-
+            {isLoading && (
+              <View
+                style={{
+                  flex: 1,
+                  justifyContent: "center",
+                  alignItems: "center",
+                }}
+              >
+                <ActivityIndicator size="large" color="#0000ff" />
+                <Text>Fetching marketplace</Text>
+              </View>
+            )}
+            {!data && (
+              <View
+                style={{
+                  flex: 1,
+                  justifyContent: "center",
+                  alignItems: "center",
+                }}
+              >
+                <Text>No advertisements yet</Text>
+              </View>
+            )}
             <View style={{}}>
               <View style={{}}>
                 {post &&
-                  post.map((post, index) => <Post key={index} post={post} />)}
+                  data['ads'].map((post, index) => <Post key={index} post={post} />)}
               </View>
             </View>
 
@@ -302,20 +374,24 @@ export default function Annoucment({ navigation }) {
                             onPress={openImagePickerAsync}
                             style={{ marginLeft: 16, width: "32%" }}
                           >
-                            <Image source={require("../../../assets/addImage.png")} />
+                            <Image
+                              source={require("../../../assets/addImage.png")}
+                            />
                           </TouchableOpacity>
                           <TouchableOpacity
                             onPress={() => openCameraPickerAsync(true)}
                             style={{ marginLeft: 16, width: "32%" }}
                           >
-                            <Image source={require("../../../assets/takePic.png")} />
+                            <Image
+                              source={require("../../../assets/takePic.png")}
+                            />
                           </TouchableOpacity>
                         </View>
 
                         <Pressable>
                           {selectedImage && (
                             <Image
-                              source={{ uri: selectedImage }}
+                              source={{ uri: selectedImage.uri }}
                               style={{
                                 width: "90%",
                                 height: 250,
@@ -328,7 +404,6 @@ export default function Annoucment({ navigation }) {
                         </Pressable>
 
                         <TouchableOpacity
-                         
                           style={{
                             marginTop: 20,
                             backgroundColor: "#0080FE",
@@ -339,10 +414,19 @@ export default function Annoucment({ navigation }) {
                             justifyContent: "center",
                             marginBottom: 10,
                           }}
+                          onPress={() => {
+                            sendToBackend(selectedImage, modalCaption);
+                          }}
                         >
-                          <Text style={{ color: "#ffff", alignSelf: "center" }}>
-                            Post Advertisement
-                          </Text>
+                          {adLoading || isFileUpLoading ? (
+                            <ActivityIndicator size="small" />
+                          ) : (
+                            <Text
+                              style={{ color: "#ffff", alignSelf: "center" }}
+                            >
+                              Post Advertisement
+                            </Text>
+                          )}
                         </TouchableOpacity>
                       </ScrollView>
                     </View>
@@ -597,7 +681,8 @@ const styles = StyleSheet.create({
     borderRadius: 10,
     borderWidth: 1,
     borderColor: "#999999",
-    width: 192,
+    width: "auto",
+    paddingHorizontal: 15,
     height: 40,
     alignItems: "center",
     justifyContent: "center",
@@ -621,7 +706,7 @@ const styles = StyleSheet.create({
     color: "#999999",
   },
   rectangle1: {
-    width: "100%",
+    width: "auto",
     height: 40,
     paddingLeft: 20,
     marginTop: "5%",

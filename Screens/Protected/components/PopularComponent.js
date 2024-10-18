@@ -1,6 +1,5 @@
 import { View, TouchableOpacity, Text, Image, StyleSheet } from "react-native";
 const PopularComponent = ({ popular, navigation }) => {
-  console.log(popular);
   return (
     <View
       style={{

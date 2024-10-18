@@ -20,7 +20,7 @@ import { refreshToken } from "../utils/authUtils";
 import AsyncStorage from "@react-native-async-storage/async-storage";
 import { BASE_URL } from "../../apiConfig";
 import { useUpdateUserMutation } from "../../data/api/authSlice";
-import { useDispatch } from "react-redux";
+import { useDispatch, useSelector } from "react-redux";
 import { setUser } from "../../data/dataSlices/user.slice";
 
 export default function About1({ navigation }) {
@@ -46,7 +46,7 @@ export default function About1({ navigation }) {
   const [updateUser, { isSuccess, isError }] = useUpdateUserMutation();
 
   const handleDone = async () => {
-    const storedAccess = await AsyncStorage.getItem("access");
+    const storedAccess = useSelector((state) => state.token);
     setIsLoading(true);
     try {
       const body = {

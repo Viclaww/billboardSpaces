@@ -49,16 +49,11 @@ export function Protected() {
         name="Billboardclicked"
         component={Billboardclicked}
       />
-      <Stack.Screen
-        options={{ headerShown: false }}
-        name="Add Billboard"
-        component={AddBillboard}
-      />
-      <Stack.Screen
+      {/* <Stack.Screen
         options={{}}
         name="Set Advertising Duration"
         component={SetAdvertisingDuration}
-      />
+      /> */}
 
       <Stack.Screen
         options={{ headerShown: false }}
@@ -70,11 +65,11 @@ export function Protected() {
         name="Billboardclicked2"
         component={Billboardclicked2}
       />
-      <Stack.Screen
+      {/* <Stack.Screen
         options={{ headerShown: false }}
         name="Notification"
         component={Notification}
-      />
+      /> */}
       <Stack.Screen
         options={{}}
         name="Set Advertising Duration"
@@ -178,6 +173,7 @@ export function Navigation() {
   // show sign in and sign up (protected unprotected screens) when user is not signed
   // in.
   const user = useSelector((state) => state.user.user);
+  console.log(user);
 
   return (
     <NavigationContainer>

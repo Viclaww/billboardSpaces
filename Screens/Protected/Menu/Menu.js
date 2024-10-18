@@ -5,26 +5,31 @@ import {
   Platform,
   StatusBar,
   TouchableOpacity,
-  TouchableWithoutFeedback,
   Modal,
   Image,
   TextInput,
   Pressable,
-  KeyboardAvoidingView,
   SafeAreaView,
-  ActivityIndicator,
   ScrollView,
+  ActivityIndicator
 } from "react-native";
 import React, { useState, useEffect } from "react";
 import { AntDesign } from "@expo/vector-icons";
-import AsyncStorage from "@react-native-async-storage/async-storage";
-import { MaterialIcons } from "@expo/vector-icons";
-import { refreshToken } from "../../utils/authUtils";
-import { BASE_URL } from "../../../apiConfig";
+import axios from "axios";
 import ProductComponent from "../components/ProductComponent";
 import PopularComponent from "../components/PopularComponent";
-
+import { useSelector } from "react-redux";
+import { useGetBillboardsInMarketPlaceQuery } from "../../../data/api/billboardSlice";
 export default function Menu({ navigation }) {
+  const token = useSelector((state) => state.user.token);
+  console.log(token);
+  const {
+    data: marketPlaceData,
+    isError,
+    error,
+    isLoading,
+    isFetching,
+  } = useGetBillboardsInMarketPlaceQuery({token: token});
   const [fieldModalVisible, setFieldModalVisible] = useState(false);
   const [stateModalVisible, setStateModalVisible] = useState(false);
   const [selectedText, setSelectedText] = useState("");
@@ -32,9 +37,8 @@ export default function Menu({ navigation }) {
   const [searchKeyword, setSearchKeyword] = useState("");
   const [popular, setPopular] = useState([]);
   const [products, setProducts] = useState([]);
-  const [error, setError] = useState(null);
   const [searchResults, setSearchResults] = useState([]);
-  const [showSearchResults, setShowSearchResults] = useState(true);
+  const [showSearchResults, setShowSearchResults] = useState(false);
 
   const openStateModal = () => {
     setStateModalVisible(true);
@@ -93,9 +97,7 @@ export default function Menu({ navigation }) {
             placeholder="Search"
             onChangeText={(text) => setSearchKeyword(text)}
           />
-          <TouchableOpacity
-            style={styles.passwordToggle}
-          >
+          <TouchableOpacity style={styles.passwordToggle}>
             <AntDesign name="search1" size={24} color="#CCCCCC" />
           </TouchableOpacity>
         </View>
@@ -272,31 +274,46 @@ export default function Menu({ navigation }) {
                 </View>
               </Pressable>
             </Modal>
-
-            <Text style={styles.newlyAdded}>Featured</Text>
-            <View style={styles.newlyAddedScroll}>
-              <ScrollView
-                horizontal={true}
-                showsHorizontalScrollIndicator={false}
+            {isFetching && (
+              <View
+                style={{
+                  flex: 1,
+                  justifyContent: "center",
+                  alignItems: "center",
+                }}
               >
-                <View style={styles.img2}>
-                  {products &&
-                    products.map((product, index) => (
-                      <ProductComponent key={index} product={product} />
-                    ))}
+                <ActivityIndicator size="large" color="#0000ff" />
+                <Text>Fetching marketplace</Text>
+              </View>
+            )}
+            {(marketPlaceData && marketPlaceData?.length !== 0) && (
+              <>
+                <Text style={styles.newlyAdded}>Featured</Text>
+                <View style={styles.newlyAddedScroll}>
+                  <ScrollView
+                    horizontal={true}
+                    showsHorizontalScrollIndicator={false}
+                  >
+                    <View style={styles.img2}>
+                      {products &&
+                        marketPlaceData.data['featured'].map((product, index) => (
+                          <ProductComponent navigation={navigation} key={index} product={product} />
+                        ))}
+                    </View>
+                  </ScrollView>
                 </View>
-              </ScrollView>
-            </View>
-            <Text style={styles.newlyAdded}>Popular</Text>
-            <View style={styles.popularContainer}>
-              {splitIntoRows(popular).map((row, rowIndex) => (
-                <View key={rowIndex} style={styles.popularRow}>
-                  {row.map((item, itemIndex) => (
-                    <PopularComponent key={itemIndex} popular={item} />
+                <Text style={styles.newlyAdded}>Popular</Text>
+                <View style={styles.popularContainer}>
+                  {splitIntoRows(marketPlaceData.data['explore']).map((row, rowIndex) => (
+                    <View key={rowIndex} style={styles.popularRow}>
+                      {row.map((item, itemIndex) => (
+                        <PopularComponent key={itemIndex} navigation={navigation} popular={item} />
+                      ))}
+                    </View>
                   ))}
                 </View>
-              ))}
-            </View>
+              </>
+            )}
           </>
         )}
       </ScrollView>
@@ -308,7 +325,7 @@ const styles = StyleSheet.create({
   container: {
     flex: 1,
     paddingTop: Platform.OS === "android" ? StatusBar.currentHeight : 0,
-    backgroundColor: "white"
+    backgroundColor: "white",
   },
   searchContainer: {
     borderRadius: 10,

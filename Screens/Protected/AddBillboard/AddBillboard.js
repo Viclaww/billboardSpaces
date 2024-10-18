@@ -88,7 +88,13 @@ export default function AddBillboard() {
     try {
       setIsLoading(true);
       const storedAccess = await AsyncStorage.getItem("access");
-      const formData = new FormData();
+      const formData = {
+        "size": selectedText,
+        "state": selectedState,
+        "target_audience": fullName,
+        "location": displayName,
+        "rentPerMonth": phoneNumber
+      }
 
       formData.append("file", {
         uri: selectedImage,
