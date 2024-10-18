@@ -5,54 +5,36 @@ import {
   View,
   ScrollView,
   Platform,
-  TextInput,
   SafeAreaView,
   Image,
   StatusBar,
   Pressable,
-  TouchableOpacity,
-  TouchableWithoutFeedback,
-  Modal,
-  KeyboardAvoidingView,
+  Alert,
 } from "react-native";
 import { MaterialCommunityIcons } from "@expo/vector-icons";
 import { Fontisto } from "@expo/vector-icons";
 import { Feather } from "@expo/vector-icons";
 import { Ionicons } from "@expo/vector-icons";
-import AsyncStorage from "@react-native-async-storage/async-storage";
-import { BASE_URL } from "../../apiConfig";
+import { useGetBillboardsByUserQuery } from "../../data/api/billboardSlice";
+import { useSelector } from "react-redux";
 
 export default function MyBillboard({ navigation }) {
-  const [billboard, setBillboard] = useState([]);
-  const [error, setError] = useState(null);
-
-  useEffect(() => {
-    const fetchBillboards = async () => {
-      const endpointUrl = `${BASE_URL}/billboards/user/`;
-      try {
-        // Retrieve the access token from AsyncStorage
-        const storedAccess = await AsyncStorage.getItem("access");
-
-        const response = await fetch(endpointUrl, {
-          headers: {
-            Authorization: `Bearer ${storedAccess}`, // Use the retrieved token in the request headers
-          },
-        });
-
-        if (!response.ok) {
-          throw new Error("Failed to fetch posts");
-        }
-
-        const data = await response.json();
-        setBillboard(data);
-      } catch (error) {
-        console.error("Error fetching posts:", error);
-        setError(error.message);
-      }
-    };
-    fetchBillboards();
-  }, []); // Remove 'access' from the dependencies array since it's not needed here
-
+  const [billboard, setBillboard] = useState();
+  // const [error, setError] = useState(null);
+  const user = useSelector((state) => state.user);
+  console.log(user);
+  const { data, error, isError, isFetching } = useGetBillboardsByUserQuery({
+    token: user.token
+  });
+  console.log(data);
+  console.log(error);
+  console.log("Error/FEtching:", isError, isFetching);
+  // if(isError) {
+  //   console.log(error);
+  //   Alert.alert('Error', 'Error fetching billboards')
+  // }
+  console.log("Data:", data);
+  // setBillboard(data.data);
   const BillboardComp = ({ billboard }) => {
     return (
       <Pressable
@@ -181,7 +163,14 @@ export default function MyBillboard({ navigation }) {
   return (
     <SafeAreaView style={styles.container}>
       <ScrollView showsVerticalScrollIndicator={false}>
-        <View style={{ flexDirection: "row", gap: 16, marginTop: 10 }}>
+        <View
+          style={{
+            backgroundColor: "white",
+            flexDirection: "row",
+            gap: 16,
+            marginTop: 10,
+          }}
+        >
           <Ionicons
             onPress={() => {
               navigation.goBack();
@@ -202,14 +191,62 @@ export default function MyBillboard({ navigation }) {
           </Text>
         </View>
 
-        <View style={{}}>
-          <View style={{}}>
-            {billboard &&
-              billboard.map((billboard, index) => (
-                <BillboardComp key={index} billboard={billboard} />
-              ))}
+        {(billboard?.length === 0 || !billboard) && (
+          <View
+            style={{
+              marginTop: 100,
+              paddingHorizontal: 15,
+              paddingVertical: 30,
+            }}
+          >
+            <Image
+              resizeMode="cover"
+              source={require("../../assets/oops.png")}
+              style={styles.billboardImage}
+            />
+            <Text
+              style={{
+                fontSize: 20,
+                textAlign: "center",
+              }}
+            >
+              Oops! No billboards yet
+            </Text>
           </View>
-        </View>
+        )}
+        {isError && (
+          <View
+            style={{
+              marginTop: 100,
+              paddingHorizontal: 15,
+              paddingVertical: 30,
+            }}
+          >
+            <Image
+              resizeMode="cover"
+              source={require("../../assets/oops.png")}
+              style={styles.billboardImage}
+            />
+            <Text
+              style={{
+                fontSize: 20,
+                textAlign: "center",
+              }}
+            >
+              Oops! Error finding billboards!
+            </Text>
+          </View>
+        )}
+        {billboard?.length !== 0 && (
+          <View style={{}}>
+            <View style={{}}>
+              {billboard &&
+                billboard?.map((billboard, index) => (
+                  <BillboardComp key={index} billboard={billboard} />
+                ))}
+            </View>
+          </View>
+        )}
         {/* <Pressable onPress={() => {
                     navigation.navigate('Billboardclicked2')
                 }}>
@@ -285,6 +322,7 @@ const styles = StyleSheet.create({
     flex: 1,
     paddingTop: Platform.OS === "android" ? StatusBar.currentHeight : 0,
     marginBottom: 10,
+    backgroundColor: "white",
   },
   billboardImage: {
     width: "90%",

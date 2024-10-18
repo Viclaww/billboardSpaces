@@ -49,11 +49,11 @@ export function Protected() {
         name="Billboardclicked"
         component={Billboardclicked}
       />
-      <Stack.Screen
+      {/* <Stack.Screen
         options={{}}
         name="Set Advertising Duration"
         component={SetAdvertisingDuration}
-      />
+      /> */}
 
       <Stack.Screen
         options={{ headerShown: false }}
@@ -65,11 +65,11 @@ export function Protected() {
         name="Billboardclicked2"
         component={Billboardclicked2}
       />
-      <Stack.Screen
+      {/* <Stack.Screen
         options={{ headerShown: false }}
         name="Notification"
         component={Notification}
-      />
+      /> */}
       <Stack.Screen
         options={{}}
         name="Set Advertising Duration"

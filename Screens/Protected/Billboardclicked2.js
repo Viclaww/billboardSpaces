@@ -37,7 +37,7 @@ const Billboardclicked2 = ({ route, navigation }) => {
   return (
     <SafeAreaView style={styles.container}>
       <ScrollView
-        style={{ marginBottom: 5 }}
+        style={{ marginBottom: 5, backgroundColor: 'white' }}
         horizontal={false}
         showsVerticalScrollIndicator={false}
       >
@@ -47,6 +47,7 @@ const Billboardclicked2 = ({ route, navigation }) => {
             gap: 16,
             marginRight: 10,
             marginTop: 10,
+            backgroundColor: 'white'
           }}
         >
           <AntDesign

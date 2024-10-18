@@ -3,7 +3,6 @@ export const billboardApiSlice = generalApiSlice.injectEndpoints({
   endpoints: (builder) => ({
     getPopularBillboards: builder.query({
       // doesnt work yet
-
       query: (data) => ({
         url: "/billboard/popular",
         method: "GET",
@@ -39,7 +38,27 @@ export const billboardApiSlice = generalApiSlice.injectEndpoints({
         },
       }),
     }),
+    getBillboardsByUser: builder.query({
+      query: (data) => {
+        console.log(data);
+        return {
+        url: `/billboards/user/${data.id}`,
+        method: 'GET',
+        headers: {
+          Authorization: `Bearer ${data.token}`
+        }
+      }},
+    }),
+    getBillboardsInMarketPlace: builder.query({
+      query: (data) => ({
+        url: `/page/marketplace`,
+        method: "GET",
+        headers: {
+          Authorization: `Bearer ${data.token}`,
+        },
+      })
+    })
   }),
 });
 
-export const { useGetHomeQuery, useCreateNewMutation } = billboardApiSlice;
+export const { useGetHomeQuery, useCreateNewMutation, useGetBillboardsByUserQuery, useGetBillboardsInMarketPlaceQuery } = billboardApiSlice;

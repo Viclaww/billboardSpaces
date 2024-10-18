@@ -24,7 +24,7 @@ import { Feather } from "@expo/vector-icons";
 import { Ionicons } from "@expo/vector-icons";
 import { BASE_URL } from "../../apiConfig";
 import AsyncStorage from "@react-native-async-storage/async-storage";
-import { refreshToken } from "../authUtils";
+import { refreshToken } from "../utils/authUtils";
 
 export default function MyProfile({ navigation }) {
   const [selectedImage, setSelectedImage] = useState(null);

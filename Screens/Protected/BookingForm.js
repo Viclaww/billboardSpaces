@@ -16,7 +16,7 @@ import {
   KeyboardAvoidingView,
 } from "react-native";
 import AsyncStorage from "@react-native-async-storage/async-storage";
-import { refreshToken } from "../authUtils";
+import { refreshToken } from "../utils/authUtils";
 import { BASE_URL } from "../../apiConfig";
 import { Ionicons } from "@expo/vector-icons";
 

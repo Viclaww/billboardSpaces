@@ -12,9 +12,6 @@ import {
 } from "react-native";
 import { MaterialIcons } from "@expo/vector-icons";
 import React, { useState, useEffect } from "react";
-import AsyncStorage from "@react-native-async-storage/async-storage";
-import { refreshToken } from "../../utils/authUtils"; // Import the refreshToken function
-import { BASE_URL } from "../../../apiConfig";
 import ProductComponent from "../components/ProductComponent";
 import PopularComponent from "../components/PopularComponent";
 import EventComponent from "../components/EventComponent";
@@ -45,10 +42,8 @@ export default function HomeScreen({ navigation }) {
   const [events, setEvents] = useState([]);
 
   const { data, error: home, isLoading } = useGetHomeQuery(user);
-  console.log(isLoading);
   useEffect(() => {
     if (data) {
-      console.log(data);
       setPopular(data.data.popular);
       setProducts(data.data.new);
     }
