@@ -96,7 +96,7 @@ export default function AddBillboard() {
         "rentPerMonth": phoneNumber
       }
 
-      formData.append("image", {
+      formData.append("file", {
         uri: selectedImage,
         type: "image/jpeg", // Adjust the type according to your image type
         name: "image.jpg", // Adjust the name as needed
