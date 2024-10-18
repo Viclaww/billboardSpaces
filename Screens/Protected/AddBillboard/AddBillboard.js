@@ -90,7 +90,7 @@ export default function AddBillboard() {
       const storedAccess = await AsyncStorage.getItem("access");
       const formData = new FormData();
 
-      formData.append("image", {
+      formData.append("file", {
         uri: selectedImage,
         type: "image/jpeg", // Adjust the type according to your image type
         name: "image.jpg", // Adjust the name as needed
