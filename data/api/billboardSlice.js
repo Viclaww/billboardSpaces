@@ -23,7 +23,7 @@ export const billboardApiSlice = generalApiSlice.injectEndpoints({
     }),
     createNew: builder.mutation({
       query: (data) => ({
-        url: "/billboard/new",
+        url: "/billboards/new",
         body: data.body,
         method: "POST",
         headers: { Authorization: `Bearer ${data.token}` },
@@ -42,12 +42,13 @@ export const billboardApiSlice = generalApiSlice.injectEndpoints({
       query: (data) => {
         console.log(data);
         return {
-        url: `/billboards/user/${data.id}`,
-        method: 'GET',
-        headers: {
-          Authorization: `Bearer ${data.token}`
-        }
-      }},
+          url: `/billboards/user/${data.id}`,
+          method: "GET",
+          headers: {
+            Authorization: `Bearer ${data.token}`,
+          },
+        };
+      },
     }),
     getBillboardsInMarketPlace: builder.query({
       query: (data) => ({
@@ -56,9 +57,14 @@ export const billboardApiSlice = generalApiSlice.injectEndpoints({
         headers: {
           Authorization: `Bearer ${data.token}`,
         },
-      })
-    })
+      }),
+    }),
   }),
 });
 
-export const { useGetHomeQuery, useCreateNewMutation, useGetBillboardsByUserQuery, useGetBillboardsInMarketPlaceQuery } = billboardApiSlice;
+export const {
+  useGetHomeQuery,
+  useCreateNewMutation,
+  useGetBillboardsByUserQuery,
+  useGetBillboardsInMarketPlaceQuery,
+} = billboardApiSlice;

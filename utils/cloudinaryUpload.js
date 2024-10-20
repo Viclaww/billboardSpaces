@@ -13,12 +13,13 @@ export const cloudinaryUpload = async (photo) => {
       }
     );
     let responseData = await res.json();
+    console.log(responseData);
     return {
       image: responseData.secure_url,
       message: "OK",
     };
   } catch (err) {
-    console.log('Error while uploading image:', err);
+    console.log("Error while uploading image:", err);
     Alert.alert("An Error Occured While Uploading");
     Alert.alert(err.error);
   }

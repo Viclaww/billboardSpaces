@@ -41,7 +41,7 @@ export default function HomeScreen({ navigation }) {
   const [error, setError] = useState(null);
   const [events, setEvents] = useState([]);
 
-  const { data, error: home, isLoading } = useGetHomeQuery(user);
+  const { data, error: home, isFetching } = useGetHomeQuery(user);
   useEffect(() => {
     if (data) {
       setPopular(data.data.popular);
@@ -70,6 +70,20 @@ export default function HomeScreen({ navigation }) {
       }
     }
   };
+  if (isFetching) {
+    return (
+      <View
+        style={{
+          flex: 1,
+          justifyContent: "center",
+          alignItems: "center",
+        }}
+      >
+        <ActivityIndicator size="large" color="#0000ff" />
+        <Text>Fetching marketplace</Text>
+      </View>
+    );
+  }
 
   return (
     <SafeAreaView style={styles.container}>

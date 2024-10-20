@@ -24,6 +24,8 @@ import { refreshToken } from "../../utils/authUtils";
 import AsyncStorage from "@react-native-async-storage/async-storage";
 import { BASE_URL } from "../../../apiConfig";
 import { useCreateNewMutation } from "../../../data/api/billboardSlice";
+import { cloudinaryUpload } from "../../../utils/cloudinaryUpload";
+import { useSelector } from "react-redux";
 
 export default function AddBillboard() {
   const [selectedImage, setSelectedImage] = useState(null);
@@ -72,7 +74,11 @@ export default function AddBillboard() {
     if (!pickerResult.cancelled && pickerResult.assets.length > 0) {
       const selectedUri = pickerResult.assets[0].uri;
       console.log("Selected Image URI:", selectedUri); // Log selected image URI for debugging
-      setSelectedImage(selectedUri);
+      setSelectedImage({
+        name: pickerResult.assets[0].fileName,
+        type: pickerResult.assets[0].mimeType,
+        uri: pickerResult.assets[0].uri,
+      });
     }
   };
 
@@ -81,36 +87,30 @@ export default function AddBillboard() {
   const backgroundImage = selectedImage
     ? { uri: selectedImage }
     : require("../../../assets/imageupload.png");
-
+  const storedAccess = useSelector((state) => state.user.token);
   const [createNew] = useCreateNewMutation();
 
   const uploadData = async () => {
     try {
       setIsLoading(true);
-      const storedAccess = await AsyncStorage.getItem("access");
-      const formData = {
-        "size": selectedText,
-        "state": selectedState,
-        "target_audience": fullName,
-        "location": displayName,
-        "rentPerMonth": phoneNumber
-      }
 
-      formData.append("file", {
-        uri: selectedImage,
-        type: "image/jpeg", // Adjust the type according to your image type
-        name: "image.jpg", // Adjust the name as needed
-      });
-      formData.append("size", selectedText);
-      formData.append("state", selectedState);
-      formData.append("target_audience", fullName);
-      formData.append("location", displayName);
-      formData.append("rentPerMonth", phoneNumber);
+      console.log("access", storedAccess);
+      const uploader = await cloudinaryUpload(selectedImage);
+      console.log(uploader);
+      const formData = {
+        image: uploader.image,
+        size: selectedText.slice(0, 1).toUpperCase() + selectedText.slice(1),
+        state: selectedState,
+        target_audience: fullName,
+        location: displayName,
+        rentPerMonth: phoneNumber,
+      };
 
       const responce = await createNew({ token: storedAccess, body: formData });
-
+      console.log(responce);
       if (responce.data) {
-        console.log(responce.data.message);
+        console.log(responce.data);
+        setSelectedImage(null);
       } else {
         console.log(responce.error);
       }
@@ -118,9 +118,8 @@ export default function AddBillboard() {
       // Optionally, handle success response
       console.log("Post uploaded successfully");
       // You can reset the modal caption and selected image here if needed
-      setSelectedImage(null);
     } catch (error) {
-      console.error("Error uploading post:", error);
+      console.log("Error uploading post:", error);
       // Optionally, handle error
     } finally {
       setIsLoading(false);
@@ -503,7 +502,7 @@ export default function AddBillboard() {
               paddingLeft: 16,
             }}
           >
-            <Text style={styles.Text}>Location Adress</Text>
+            <Text style={styles.Text}>Location Address</Text>
             <View>
               <TouchableOpacity>
                 <View style={styles.rectangleView2}>
