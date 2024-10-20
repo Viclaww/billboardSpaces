@@ -231,6 +231,9 @@ export default function CreatAccount({ navigation }) {
         console.log("Login Successful", data);
         dispatch(setToken(data.token));
         dispatch(setUser(data.data));
+        if (!data.data["display-name"]) {
+          navigation.navigate("About1");
+        }
 
         navigation.navigate("Home");
       } else {

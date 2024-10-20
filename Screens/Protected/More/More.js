@@ -19,7 +19,7 @@ import { FontAwesome5 } from "@expo/vector-icons";
 import { MaterialIcons } from "@expo/vector-icons";
 import { useFocusEffect } from "@react-navigation/native"; // Import useFocusEffect from React Navigation
 import { useDispatch } from "react-redux";
-import { setUser } from "../../../data/dataSlices/user.slice";
+import { setToken, setUser } from "../../../data/dataSlices/user.slice";
 
 export default function More({ navigation }) {
   const dispatch = useDispatch();
@@ -332,6 +332,7 @@ export default function More({ navigation }) {
           <Text
             onPress={() => {
               dispatch(setUser(null));
+              dispatch(setTokenr(null));
               // navigation.navigate("Login");
             }}
             style={{

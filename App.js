@@ -8,7 +8,7 @@ import { Navigation } from "./Screens/screenConfig";
 import ErrorBoundary from "react-native-error-boundary";
 import { store, persistor } from "./data/store";
 import { PersistGate } from "redux-persist/integration/react";
-const Stack = createStackNavigator();
+
 function App() {
   StatusBar.setBarStyle("dark-content"); // Change status bar style (light or dark)
   StatusBar.setBackgroundColor("#0080FE"); // Change color as per your requirement

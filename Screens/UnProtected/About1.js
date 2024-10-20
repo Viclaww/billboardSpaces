@@ -60,12 +60,12 @@ export default function About1({ navigation }) {
         },
       };
 
-      const {data, error} = await updateUser(body);
+      const { data, error } = await updateUser(body);
       console.log(data);
       if (data) {
         Alert.alert("Success", data.message);
         await dispatch(setUser(data.data));
-        // navigation.navigate("Home");
+        navigation.navigate("Home");
       }
       if (error) {
         Alert.alert(error.data.message);
