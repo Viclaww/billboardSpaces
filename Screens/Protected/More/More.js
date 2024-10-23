@@ -332,7 +332,7 @@ export default function More({ navigation }) {
           <Text
             onPress={() => {
               dispatch(setUser(null));
-              dispatch(setTokenr(null));
+              dispatch(setToken(null));
               // navigation.navigate("Login");
             }}
             style={{

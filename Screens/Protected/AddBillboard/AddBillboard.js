@@ -82,10 +82,8 @@ export default function AddBillboard() {
     }
   };
 
-  console.log("Selected image:", selectedImage); // Log selected image state for debugging
-
   const backgroundImage = selectedImage
-    ? { uri: selectedImage }
+    ? { uri: selectedImage.uri }
     : require("../../../assets/imageupload.png");
   const storedAccess = useSelector((state) => state.user.token);
   const [createNew] = useCreateNewMutation();

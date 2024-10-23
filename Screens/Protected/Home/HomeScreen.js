@@ -9,6 +9,7 @@ import {
   StatusBar,
   SafeAreaView,
   Dimensions,
+  ActivityIndicator,
 } from "react-native";
 import { MaterialIcons } from "@expo/vector-icons";
 import React, { useState, useEffect } from "react";
@@ -80,7 +81,7 @@ export default function HomeScreen({ navigation }) {
         }}
       >
         <ActivityIndicator size="large" color="#0000ff" />
-        <Text>Fetching marketplace</Text>
+        <Text>Fetching Billboards</Text>
       </View>
     );
   }

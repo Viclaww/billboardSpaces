@@ -14,6 +14,7 @@ export const generalApiSlice = createApi({
           Authorization: `Bearer ${data.token}`,
         },
       }),
+      providesTags: ["BillBoards"],
     }),
   }),
 });

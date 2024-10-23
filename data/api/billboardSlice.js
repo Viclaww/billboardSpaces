@@ -14,7 +14,7 @@ export const billboardApiSlice = generalApiSlice.injectEndpoints({
 
     getABillboard: builder.query({
       query: (data) => ({
-        url: `/billboard/${data.id}`,
+        url: `/billboards/${data.id}`,
         method: "GET",
         headers: {
           Authorization: `Bearer ${data.token}`,
@@ -28,6 +28,7 @@ export const billboardApiSlice = generalApiSlice.injectEndpoints({
         method: "POST",
         headers: { Authorization: `Bearer ${data.token}` },
       }),
+      invalidatesTags: ["BillBoards"],
     }),
     getBillboards: builder.query({
       query: (data) => ({
@@ -58,6 +59,7 @@ export const billboardApiSlice = generalApiSlice.injectEndpoints({
           Authorization: `Bearer ${data.token}`,
         },
       }),
+      providesTags: ["BillBoards"],
     }),
   }),
 });
@@ -67,4 +69,5 @@ export const {
   useCreateNewMutation,
   useGetBillboardsByUserQuery,
   useGetBillboardsInMarketPlaceQuery,
+  useGetABillboardQuery,
 } = billboardApiSlice;

@@ -1,31 +1,49 @@
 import React, { useState, useEffect } from "react";
 import {
-  StyleSheet,
   Platform,
   Text,
   View,
   ScrollView,
-  TextInput,
   SafeAreaView,
   Image,
   StatusBar,
   Modal,
-  Pressable,
   TouchableOpacity,
   TouchableWithoutFeedback,
+  ActivityIndicator,
 } from "react-native";
 import { AntDesign } from "@expo/vector-icons";
 import { MaterialCommunityIcons } from "@expo/vector-icons";
 import { MaterialIcons } from "@expo/vector-icons";
 import { Table, Row, Rows, Cell } from "react-native-table-component";
+import { useGetABillboardQuery } from "../../data/api/billboardSlice";
+import { useSelector } from "react-redux";
 
 const Billboardclicked = ({ route, navigation }) => {
+  const [billboardData, setBillBoardData] = useState(null);
+  const token = useSelector((state) => state.user.token);
+  console.log(route.params.data._id);
+  const {
+    data: billboardRes,
+    error,
+    isFetching,
+  } = useGetABillboardQuery({
+    id: route.params.data._id,
+    token,
+  });
+
+  useEffect(() => {
+    if (billboardRes) {
+      console.log(billboardRes);
+      setBillBoardData(billboardRes.data);
+    }
+  }, [billboardRes]);
+
   const tableData = [
-    ["Location", route.params.data.location],
-    ["Size", route.params.data.size],
-    ["Target Audience", "30"],
+    ["Location", billboardData?.billboard.location],
+    ["Size", billboardData?.billboard.size],
+    ["Price", `${billboardData?.billboard.rentPerMonth}`],
   ];
-  const { data } = route.params;
   const [showDetails, setShowDetails] = useState(false);
 
   const handleLogin = () => {
@@ -36,10 +54,39 @@ const Billboardclicked = ({ route, navigation }) => {
     setShowDetails((currentState) => !currentState);
   };
 
+  if (isFetching) {
+    return (
+      <View
+        style={{
+          flex: 1,
+          justifyContent: "center",
+          alignItems: "center",
+        }}
+      >
+        <ActivityIndicator size="large" color="#0000ff" />
+        <Text>Fetching Billboard</Text>
+      </View>
+    );
+  }
+
+  if (error) {
+    console.log(error);
+    return (
+      <View
+        style={{
+          flex: 1,
+          justifyContent: "center",
+          alignItems: "center",
+        }}
+      >
+        <Text>Failed tot Fetch!</Text>
+      </View>
+    );
+  }
   return (
     <SafeAreaView style={styles.container}>
       <ScrollView
-        style={{ marginBottom: 5, backgroundColor: 'white' }}
+        style={{ marginBottom: 5, backgroundColor: "white" }}
         horizontal={false}
         showsVerticalScrollIndicator={false}
       >
@@ -50,7 +97,7 @@ const Billboardclicked = ({ route, navigation }) => {
             paddingLeft: 16,
             paddingRight: 10,
             paddingTop: 10,
-            backgroundColor: 'white'
+            backgroundColor: "white",
           }}
         >
           <AntDesign
@@ -69,7 +116,7 @@ const Billboardclicked = ({ route, navigation }) => {
         <View style={{ alignItems: "center", marginTop: 10 }}>
           <Image
             resizeMode="cover"
-            source={{ uri: data.image }}
+            source={{ uri: billboardData?.billboard.image }}
             style={styles.billboardImage}
           />
         </View>
@@ -78,16 +125,20 @@ const Billboardclicked = ({ route, navigation }) => {
           <TouchableOpacity>
             <Image
               style={{ width: 40, height: 40, borderRadius: 100 }}
-              source={require("../../assets/profilePicture.jpeg")}
+              source={
+                billboardData?.owner.profilePicture
+                  ? billboardData.owner.profilePicture
+                  : require("../../assets/profilePicture.jpeg")
+              }
             />
           </TouchableOpacity>
           <Text style={{ fontSize: 16, fontWeight: "400", marginLeft: 5 }}>
-            Greyfield. co
+            {billboardData?.owner.name}
           </Text>
           <View style={{ flex: 1, alignItems: "flex-end", paddingRight: 10 }}>
             <TouchableOpacity
               onPress={() => {
-                navigation.navigate("ExploreMore", { data });
+                navigation.navigate("ExploreMore", { billboardData });
               }}
               style={{
                 justifyContent: "center",
