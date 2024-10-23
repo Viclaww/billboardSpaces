@@ -51,7 +51,7 @@ export default function Annoucment({ navigation }) {
     error: errorBd,
     isLoading,
     isFetching,
-    refetch,
+    refetch
   } = useGetAdsInMarketPlaceQuery({ token: token });
   console.log(data);
   const [notifyModalVisible, setNotifyModalVisible] = useState(false);
@@ -173,41 +173,42 @@ export default function Annoucment({ navigation }) {
   const Post = ({ post }) => {
     return (
       <View style={{ flex: 1 }}>
-        <View style={styles.rectangle1}>
-          <TouchableOpacity>
-            <Image
-              style={{ width: 40, height: 40, borderRadius: 100 }}
-              source={require("../../../assets/profilePicture.jpeg")}
-            />
-          </TouchableOpacity>
-          <Text style={{ fontSize: 16, marginLeft: 5, fontWeight: "500" }}>
-            {post.author.email.replace("@gmail.com", "")}
-          </Text>
-        </View>
-        <Text
-          style={{
-            fontWeight: "400",
-            fontSize: 16,
-            paddingLeft: 16,
-            marginTop: 5,
-            color: "black",
-          }}
-        >
-          {post.message}
+      <View style={styles.rectangle1}>
+        <TouchableOpacity>
+        <Image
+          style={{ width: 40, height: 40, borderRadius: 100 }}
+          source={require("../../../assets/profilePicture.jpeg")}
+        />
+        </TouchableOpacity>
+        <Text style={{ fontSize: 16, marginLeft: 5, fontWeight: "500" }}>
+        {post.author.email.replace('@gmail.com', '')}
         </Text>
-        <View>
-          <Image
-            resizeMode="cover"
-            style={{
-              marginLeft: 16,
-              marginTop: 20,
-              width: "90%",
-              height: 228,
-              borderRadius: 20,
-            }}
-            source={{ uri: post.image }}
-          />
-        </View>
+      </View>
+      <Text
+        style={{
+        fontWeight: "400",
+        fontSize: 16,
+        paddingLeft: 16,
+        marginTop: 5,
+        color: 'black'
+        }}
+      >
+        {post.message}
+      </Text>
+      <View>
+      <Image
+        resizeMode="cover"
+        style={{
+        marginLeft: 16,
+        marginTop: 20,
+        width: "90%",
+        height: 228,
+        borderRadius: 20,
+        }}
+        source={{ uri: post.image }}
+      />
+      </View>
+      
       </View>
     );
   };
@@ -331,10 +332,7 @@ export default function Annoucment({ navigation }) {
             <View style={{}}>
               <View style={{}}>
                 {post &&
-                  data &&
-                  data["ads"].map((post, index) => (
-                    <Post key={index} post={post} />
-                  ))}
+                  data['ads'].map((post, index) => <Post key={index} post={post} />)}
               </View>
             </View>
 
