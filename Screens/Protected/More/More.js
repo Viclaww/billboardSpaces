@@ -316,7 +316,12 @@ export default function More({ navigation }) {
           }}
         ></View>
 
-        <View
+        <Pressable
+          onPress={async () => {
+            dispatch(setUser(null));
+            dispatch(setToken(null));
+            navigation.navigate("SignIn");
+          }}
           style={{
             flexDirection: "row",
             marginTop: 30,
@@ -330,11 +335,6 @@ export default function More({ navigation }) {
             source={require("../../../assets/logout.png")}
           />
           <Text
-            onPress={() => {
-              dispatch(setUser(null));
-              dispatch(setToken(null));
-              // navigation.navigate("Login");
-            }}
             style={{
               paddingLeft: 20,
               fontSize: 16,
@@ -344,7 +344,7 @@ export default function More({ navigation }) {
           >
             Log Out
           </Text>
-        </View>
+        </Pressable>
       </ScrollView>
     </SafeAreaView>
   );
@@ -352,6 +352,7 @@ export default function More({ navigation }) {
 
 const styles = StyleSheet.create({
   container: {
+    backgroundColor: "white",
     flex: 1,
     paddingTop: Platform.OS === "android" ? StatusBar.currentHeight : 0,
   },

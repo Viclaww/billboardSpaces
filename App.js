@@ -53,9 +53,9 @@ function App() {
   return (
     <ErrorBoundary>
       <Provider store={store}>
-        <PersistGate loading={null} persistor={persistor}>
+        {/* <PersistGate loading={null} persistor={persistor}> */}
           <Navigation></Navigation>
-        </PersistGate>
+        {/* </PersistGate> */}
       </Provider>
     </ErrorBoundary>
   );

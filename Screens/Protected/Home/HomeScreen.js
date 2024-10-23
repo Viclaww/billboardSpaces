@@ -101,7 +101,7 @@ export default function HomeScreen({ navigation }) {
             />
           </View>
           <Text style={{ fontSize: 22, marginLeft: 5 }}>
-            Welcome {user ? user.user["display-name"] : "User"}
+            Welcome {user.user ? user.user["display-name"] : "User"}
           </Text>
           <View style={{ flex: 1, alignItems: "flex-end", paddingRight: 10 }}>
             <TouchableOpacity

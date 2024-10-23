@@ -56,13 +56,6 @@ export const adApiSlice = generalApiSlice.injectEndpoints({
                 },
                 
             }),
-            providesTags: (result) =>
-                result
-                  ? [
-                      ...result.map(({ id }) => ({ type: 'Ads', id })),
-                      { type: 'Ads', id: 'LIST' },
-                    ]
-                  : [{ type: 'Ads', id: 'LIST' }],
         }),
     }),
 });

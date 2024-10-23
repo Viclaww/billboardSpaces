@@ -1,4 +1,4 @@
-import React, { useState } from "react";
+import React, { useState, useRef } from "react";
 import {
   StyleSheet,
   Platform,
@@ -13,6 +13,7 @@ import {
   TouchableWithoutFeedback,
 } from "react-native";
 import { Ionicons } from "@expo/vector-icons";
+import  { Paystack }  from 'react-native-paystack-webview';
 import { AntDesign } from "@expo/vector-icons";
 
 export default function SetAdvertisingDuration() {
@@ -63,9 +64,24 @@ export default function SetAdvertisingDuration() {
       openModal(); // Open the modal if both options are selected
     }
   };
-
+  const paystackWebViewRef = useRef(); 
   return (
     <SafeAreaView style={styles.container}>
+      <Paystack
+        paystackKey="pk_test_ea5cc760a7b2c1b3508a38fa53afad61dc9f2e0f"
+        billingEmail="paystackwebview@something.com"
+        channels={["card", "bank", "ussd", "qr", "mobile_money"]}
+        amount={'25000.00'}
+        onCancel={(e) => {
+          console.log(e);
+          // handle response here
+        }}
+        onSuccess={(res) => {
+          // handle response here
+          console.log(res);
+        }}
+        ref={paystackWebViewRef}
+      />
       {/* <View style={styles.firstView}>
                 <Ionicons name="arrow-back-outline" size={40} color="black" />
                 <Text style={styles.text1}>Set Advertising Duration</Text>
@@ -163,6 +179,7 @@ export default function SetAdvertisingDuration() {
               <Text style={styles.timeLine}>Price</Text>
               <Text style={{ paddingTop: 6 }}>200,000</Text>
               <TouchableOpacity
+              onPress={()=> paystackWebViewRef.current.startTransaction()}
                 style={{
                   width: 343,
                   height: 40,

@@ -4,7 +4,7 @@
 import { createNativeStackNavigator } from "@react-navigation/native-stack";
 // import BottomTabNavigator from "./Protected/Landing";
 import { useSelector } from "react-redux";
-import { NavigationContainer } from "@react-navigation/native";
+import { NavigationContainer, useNavigation } from "@react-navigation/native";
 
 import Onboarding from "./UnProtected/Onboarding";
 import CreatAccount from "./UnProtected/CreatAccount";
@@ -30,154 +30,142 @@ import MyProfile from "./Protected/MyProfile";
 import EventCalender from "./Protected/EventCalender";
 import BillboardRequ from "./Protected/BillboardRequ";
 import AddDocument from "./Protected/AddDocument";
+import { useEffect } from "react";
 const Stack = createNativeStackNavigator();
-export function Protected() {
-  return (
-    <Stack.Navigator>
-      <Stack.Screen
-        name="Landing"
-        component={Tabs}
-        options={{ headerShown: false }}
-      ></Stack.Screen>
-      <Stack.Screen
-        name="Home"
-        component={HomeScreen}
-        options={{ headerShown: false }}
-      />
-      <Stack.Screen
-        options={{ headerShown: false }}
-        name="Billboardclicked"
-        component={Billboardclicked}
-      />
-      {/* <Stack.Screen
-        options={{}}
-        name="Set Advertising Duration"
-        component={SetAdvertisingDuration}
-      /> */}
 
-      <Stack.Screen
-        options={{ headerShown: false }}
-        name="ExploreMore"
-        component={ExploreMore}
-      />
-      <Stack.Screen
-        options={{ headerShown: false }}
-        name="Billboardclicked2"
-        component={Billboardclicked2}
-      />
-      {/* <Stack.Screen
-        options={{ headerShown: false }}
-        name="Notification"
-        component={Notification}
-      /> */}
-      <Stack.Screen
-        options={{}}
-        name="Set Advertising Duration"
-        component={SetAdvertisingDuration}
-      />
-      <Stack.Screen
-        options={{ headerShown: false }}
-        name="Subscription"
-        component={Subscription}
-      />
-      <Stack.Screen
-        options={{ headerShown: false }}
-        name="Advertisement"
-        component={Advertisement}
-      />
-      <Stack.Screen
-        options={{ headerShown: false }}
-        name="Maintenance Booking"
-        component={MaintenanceBooking}
-      />
-      <Stack.Screen
-        options={{ headerShown: false }}
-        name="Booking Form"
-        component={BookingForm}
-      />
-      <Stack.Screen
-        options={{ headerShown: false }}
-        name="Refferrals"
-        component={Refferrals}
-      />
-      <Stack.Screen
-        options={{ headerShown: false }}
-        name="Help and Support"
-        component={Help}
-      />
-      <Stack.Screen
-        options={{ headerShown: false }}
-        name="Contact Us"
-        component={ContactUs}
-      />
-      <Stack.Screen
-        options={{ headerShown: false }}
-        name="My Billboards"
-        component={MyBillboard}
-      />
-      <Stack.Screen
-        options={{ headerShown: false }}
-        name="My Profile"
-        component={MyProfile}
-      />
-      <Stack.Screen
-        options={{ headerShown: false }}
-        name="EventCalender"
-        component={EventCalender}
-      />
-      <Stack.Screen
-        options={{ headerShown: false }}
-        name="BillboardRequ"
-        component={BillboardRequ}
-      />
-      <Stack.Screen
-        options={{ headerShown: false }}
-        name="AddDocument"
-        component={AddDocument}
-      />
-    </Stack.Navigator>
-  );
-}
-export function Unprotected() {
-  return (
-    <Stack.Navigator>
-      <Stack.Screen
-        options={{ headerShown: false }}
-        name="Onboarding"
-        component={Onboarding}
-      />
-      <Stack.Screen
-        options={{ headerShown: false }}
-        name="CreatAccount"
-        component={CreatAccount}
-      />
-      <Stack.Screen
-        options={{ headerShown: false }}
-        name="SignIn"
-        component={SignIn}
-      />
-      <Stack.Screen
-        options={{ headerShown: false }}
-        name="About"
-        component={About}
-      />
-      <Stack.Screen
-        options={{ headerShown: false }}
-        name="About1"
-        component={About1}
-      />
-    </Stack.Navigator>
-  );
-}
 export function Navigation() {
   // show sign in and sign up (protected unprotected screens) when user is not signed
   // in.
-  const user = useSelector((state) => state.user.user);
-  console.log(user);
+  const user = useSelector((state) => state.user);
+  const token = useSelector((state) => state.user.token);
+
+  useEffect(() => {
+    function checkUserState() {
+      console.log(user, token);
+    }
+    checkUserState();
+  }, [user, token]);
 
   return (
     <NavigationContainer>
-      {user ? <Protected></Protected> : <Unprotected></Unprotected>}
+      <Stack.Navigator>
+        <Stack.Screen
+          name="Landing"
+          component={Tabs}
+          options={{ headerShown: false }}
+        ></Stack.Screen>
+        <Stack.Screen
+          name="Home"
+          component={HomeScreen}
+          options={{ headerShown: false }}
+        />
+        <Stack.Screen
+          options={{ headerShown: false }}
+          name="Billboardclicked"
+          component={Billboardclicked}
+        />
+
+        <Stack.Screen
+          options={{ headerShown: false }}
+          name="ExploreMore"
+          component={ExploreMore}
+        />
+        <Stack.Screen
+          options={{ headerShown: false }}
+          name="Billboardclicked2"
+          component={Billboardclicked2}
+        />
+        <Stack.Screen
+          options={{}}
+          name="Set Advertising Duration"
+          component={SetAdvertisingDuration}
+        />
+        <Stack.Screen
+          options={{ headerShown: false }}
+          name="Subscription"
+          component={Subscription}
+        />
+        <Stack.Screen
+          options={{ headerShown: false }}
+          name="Advertisement"
+          component={Advertisement}
+        />
+        <Stack.Screen
+          options={{ headerShown: false }}
+          name="Maintenance Booking"
+          component={MaintenanceBooking}
+        />
+        <Stack.Screen
+          options={{ headerShown: false }}
+          name="Booking Form"
+          component={BookingForm}
+        />
+        <Stack.Screen
+          options={{ headerShown: false }}
+          name="Refferrals"
+          component={Refferrals}
+        />
+        <Stack.Screen
+          options={{ headerShown: false }}
+          name="Help and Support"
+          component={Help}
+        />
+        <Stack.Screen
+          options={{ headerShown: false }}
+          name="Contact Us"
+          component={ContactUs}
+        />
+        <Stack.Screen
+          options={{ headerShown: false }}
+          name="My Billboards"
+          component={MyBillboard}
+        />
+        <Stack.Screen
+          options={{ headerShown: false }}
+          name="My Profile"
+          component={MyProfile}
+        />
+        <Stack.Screen
+          options={{ headerShown: false }}
+          name="EventCalender"
+          component={EventCalender}
+        />
+        <Stack.Screen
+          options={{ headerShown: false }}
+          name="BillboardRequ"
+          component={BillboardRequ}
+        />
+        <Stack.Screen
+          options={{ headerShown: false }}
+          name="AddDocument"
+          component={AddDocument}
+        />
+        <Stack.Screen
+          options={{ headerShown: false }}
+          name="Onboarding"
+          component={Onboarding}
+        />
+        <Stack.Screen
+          options={{ headerShown: false }}
+          name="CreatAccount"
+          component={CreatAccount}
+        />
+        <Stack.Screen
+          options={{ headerShown: false }}
+          name="SignIn"
+          component={SignIn}
+        />
+        <Stack.Screen
+          options={{ headerShown: false }}
+          name="About"
+          component={About}
+        />
+        <Stack.Screen
+          options={{ headerShown: false }}
+          name="About1"
+          component={About1}
+        />
+      </Stack.Navigator>
     </NavigationContainer>
   );
 }
