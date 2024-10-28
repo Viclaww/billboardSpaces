@@ -25,6 +25,12 @@ import { Ionicons } from "@expo/vector-icons";
 import { BASE_URL } from "../../apiConfig";
 import AsyncStorage from "@react-native-async-storage/async-storage";
 import { refreshToken } from "../utils/authUtils";
+import {
+  useGetProfileQuery,
+  useUpdateUserMutation,
+} from "../../data/api/authSlice";
+import { useSelector } from "react-redux";
+import { cloudinaryUpload } from "../../utils/cloudinaryUpload";
 
 export default function MyProfile({ navigation }) {
   const [selectedImage, setSelectedImage] = useState(null);
@@ -36,7 +42,23 @@ export default function MyProfile({ navigation }) {
   const [state, setState] = useState("");
   const [displayName, setDisplayName] = useState("");
   const [field, setField] = useState("");
+  const token = useSelector((state) => state.user.token);
+  const user = useSelector((state) => state.user.user);
 
+  const { data, isFetching, error } = useGetProfileQuery({ access: token });
+  const [updateUser, { isLoading: isUpdating }] = useUpdateUserMutation();
+  console.log(data);
+  console.log(error);
+  useEffect(() => {
+    if (data) {
+      setName(data.data["full-name"]);
+      setPhoneNumber(data.data["phone-number"]);
+      setDisplayName(data.data["display-name"]);
+      setField(data.data.field);
+      setState(data.data["State of residence"]);
+      setSelectedImage(data.data.image);
+    }
+  }, []);
   const openImagePickerAsync = async () => {
     const permissionResult =
       await ImagePicker.requestMediaLibraryPermissionsAsync();
@@ -50,14 +72,18 @@ export default function MyProfile({ navigation }) {
     if (!pickerResult.cancelled && pickerResult.assets.length > 0) {
       const selectedUri = pickerResult.assets[0].uri;
       console.log("Selected Image URI:", selectedUri); // Log selected image URI for debugging
-      setSelectedImage(selectedUri);
+      setSelectedImage({
+        name: pickerResult.assets[0].fileName,
+        type: pickerResult.assets[0].mimeType,
+        uri: pickerResult.assets[0].uri,
+      });
     }
   };
 
   console.log("Selected image:", selectedImage); // Log selected image state for debugging
 
   const backgroundImage = selectedImage
-    ? { uri: selectedImage }
+    ? { uri: selectedImage.uri || selectedImage }
     : require("../../assets/imageupload.png");
 
   const handleEditMode = () => {
@@ -119,11 +145,8 @@ export default function MyProfile({ navigation }) {
   };
 
   const handleSave = async () => {
-    const endpointUrl = `${BASE_URL}/auth/update-profile/`;
     try {
       setIsLoading(true);
-      const storedAccess = await AsyncStorage.getItem("access");
-
       // Create an object to store the fields to be updated
       const updatedFields = {};
       if (field !== undefined) updatedFields.user_field = field;
@@ -131,29 +154,27 @@ export default function MyProfile({ navigation }) {
       if (phoneNumber !== undefined) updatedFields.phone_number = phoneNumber;
       if (state !== undefined) updatedFields.state = state;
       if (displayName !== undefined) updatedFields.display_name = displayName;
+      if (selectedImage !== data.data.image)
+        updatedFields.image = await cloudinaryUpload(selectedImage).image;
 
-      const response = await fetch(endpointUrl, {
-        method: "PATCH",
-        headers: {
-          Authorization: `Bearer ${storedAccess}`,
-          "Content-Type": "application/json",
-        },
-        body: JSON.stringify(updatedFields), // Send only the fields that are defined
+      console.log("Updated fields:", updatedFields);
+      const response = await updateUser({
+        access: token,
+        body: updatedFields,
       });
 
-      if (response.ok) {
-        navigation.navigate("Home");
+      if (response.data) {
+        console.log("the guy", response.data);
+        // navigation.navigate("Home");
       } else {
         console.error("PUT request failed:", response.status);
         let errorMessage = "Failed to update user data";
         // Parse error response if available
         try {
-          const errorResponseData = await response.json();
+          const errorResponseData = response.erro;
           console.log("TEST?? ");
           console.log(errorResponseData);
-          if (errorResponseData && errorResponseData.detail) {
-            errorMessage = errorResponseData.detail;
-          }
+
           console.log("Error response data:", errorResponseData);
         } catch (jsonError) {
           console.error(
@@ -171,6 +192,35 @@ export default function MyProfile({ navigation }) {
     }
   };
 
+  if (isFetching) {
+    return (
+      <View
+        style={{
+          flex: 1,
+          justifyContent: "center",
+          alignItems: "center",
+        }}
+      >
+        <ActivityIndicator size="large" color="#0000ff" />
+        <Text>Fetching Profile</Text>
+      </View>
+    );
+  }
+
+  if (error) {
+    console.log(error);
+    return (
+      <View
+        style={{
+          flex: 1,
+          justifyContent: "center",
+          alignItems: "center",
+        }}
+      >
+        <Text>Failed to get Profile!</Text>
+      </View>
+    );
+  }
   return (
     <SafeAreaView style={{ flex: 1 }}>
       <KeyboardAvoidingView
@@ -366,7 +416,9 @@ export default function MyProfile({ navigation }) {
             style={{ marginTop: "40%", alignItems: "center", marginBottom: 20 }}
           >
             <TouchableOpacity onPress={handleSave} style={styles.buttonParent}>
-              <Text style={styles.button}>Save Changes</Text>
+              <Text style={styles.button}>
+                {isUpdating ? <ActivityIndicator /> : "Save Changes"}
+              </Text>
             </TouchableOpacity>
           </View>
         </ScrollView>

@@ -14,7 +14,6 @@ import {
 } from "react-native";
 import { AntDesign } from "@expo/vector-icons";
 import { MaterialCommunityIcons } from "@expo/vector-icons";
-import { MaterialIcons } from "@expo/vector-icons";
 import { Table, Row, Rows, Cell } from "react-native-table-component";
 import { useGetABillboardQuery } from "../../data/api/billboardSlice";
 import { useSelector } from "react-redux";
@@ -46,8 +45,8 @@ const Billboardclicked = ({ route, navigation }) => {
   ];
   const [showDetails, setShowDetails] = useState(false);
 
-  const handleLogin = () => {
-    navigation.navigate("Set Advertising Duration");
+  const handleGOToBook = () => {
+    navigation.navigate("Set Advertising Duration", { data: billboardData });
   };
 
   const handleShowDetails = () => {
@@ -126,14 +125,14 @@ const Billboardclicked = ({ route, navigation }) => {
             <Image
               style={{ width: 40, height: 40, borderRadius: 100 }}
               source={
-                billboardData?.owner.profilePicture
-                  ? billboardData.owner.profilePicture
+                billboardData?.billboard.owner.profilePicture
+                  ? billboardData.billboard.owner.profilePicture
                   : require("../../assets/profilePicture.jpeg")
               }
             />
           </TouchableOpacity>
           <Text style={{ fontSize: 16, fontWeight: "400", marginLeft: 5 }}>
-            {billboardData?.owner.name}
+            {billboardData?.billboard.owner.name}
           </Text>
           <View style={{ flex: 1, alignItems: "flex-end", paddingRight: 10 }}>
             <TouchableOpacity
@@ -225,7 +224,7 @@ const Billboardclicked = ({ route, navigation }) => {
           </View>
         )}
 
-        <TouchableOpacity onPress={handleLogin} style={styles.buttonParent}>
+        <TouchableOpacity onPress={handleGOToBook} style={styles.buttonParent}>
           <Text style={styles.button}>Book Now</Text>
         </TouchableOpacity>
       </ScrollView>

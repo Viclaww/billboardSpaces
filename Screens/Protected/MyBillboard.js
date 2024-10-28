@@ -10,6 +10,7 @@ import {
   StatusBar,
   Pressable,
   Alert,
+  ActivityIndicator,
 } from "react-native";
 import { MaterialCommunityIcons } from "@expo/vector-icons";
 import { Fontisto } from "@expo/vector-icons";
@@ -23,12 +24,47 @@ export default function MyBillboard({ navigation }) {
   // const [error, setError] = useState(null);
   const user = useSelector((state) => state.user);
   console.log(user);
-  const { data, error, isError, isFetching } = useGetBillboardsByUserQuery({
-    token: user.token
-  });
-  console.log(data);
-  console.log(error);
-  console.log("Error/FEtching:", isError, isFetching);
+  const { data, error, isError, isFetching, isSuccess } =
+    useGetBillboardsByUserQuery({
+      token: user.token,
+    });
+  console.log(useGetBillboardsByUserQuery);
+  useEffect(() => {
+    if (data) {
+      console.log(data);
+      setBillboard(data.data);
+      console.log(billboard);
+    }
+  }, [data]);
+  if (isFetching) {
+    return (
+      <View
+        style={{
+          flex: 1,
+          justifyContent: "center",
+          alignItems: "center",
+        }}
+      >
+        <ActivityIndicator size="large" color="#0000ff" />
+        <Text>Fetching Billboards</Text>
+      </View>
+    );
+  }
+
+  if (error) {
+    console.log(error);
+    return (
+      <View
+        style={{
+          flex: 1,
+          justifyContent: "center",
+          alignItems: "center",
+        }}
+      >
+        <Text>Failed tot Fetch!</Text>
+      </View>
+    );
+  }
   // if(isError) {
   //   console.log(error);
   //   Alert.alert('Error', 'Error fetching billboards')
@@ -36,6 +72,7 @@ export default function MyBillboard({ navigation }) {
   console.log("Data:", data);
   // setBillboard(data.data);
   const BillboardComp = ({ billboard }) => {
+    console.log(billboard);
     return (
       <Pressable
         onPress={() => {
@@ -126,7 +163,7 @@ export default function MyBillboard({ navigation }) {
               fontStyle: "italic",
             }}
           >
-            Aka Road, Uyo, Akwa..
+            {new Date(billboard.createdAt).toLocaleString()}
           </Text>
 
           <View
@@ -153,7 +190,7 @@ export default function MyBillboard({ navigation }) {
                 color: "#525252",
               }}
             >
-              104
+              {billboard.views.length}
             </Text>
           </View>
         </View>

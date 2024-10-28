@@ -39,11 +39,21 @@ export const billboardApiSlice = generalApiSlice.injectEndpoints({
         },
       }),
     }),
+    validateBooking: builder.mutation({
+      query: (data) => ({
+        url: "/billboards/book/validate",
+        method: "POST",
+        body: data.body,
+        headers: {
+          Authorization: `Bearer ${data.token}`,
+        },
+      }),
+    }),
     getBillboardsByUser: builder.query({
       query: (data) => {
         console.log(data);
         return {
-          url: `/billboards/user/${data.id}`,
+          url: `/billboards/user-billboards`,
           method: "GET",
           headers: {
             Authorization: `Bearer ${data.token}`,
@@ -70,4 +80,5 @@ export const {
   useGetBillboardsByUserQuery,
   useGetBillboardsInMarketPlaceQuery,
   useGetABillboardQuery,
+  useValidateBookingMutation,
 } = billboardApiSlice;

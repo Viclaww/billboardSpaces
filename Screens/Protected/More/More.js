@@ -18,10 +18,11 @@ import {
 import { FontAwesome5 } from "@expo/vector-icons";
 import { MaterialIcons } from "@expo/vector-icons";
 import { useFocusEffect } from "@react-navigation/native"; // Import useFocusEffect from React Navigation
-import { useDispatch } from "react-redux";
+import { useDispatch, useSelector } from "react-redux";
 import { setToken, setUser } from "../../../data/dataSlices/user.slice";
 
 export default function More({ navigation }) {
+  const user = useSelector((state) => state.user.user);
   const dispatch = useDispatch();
   const handleSubscription = () => {
     navigation.navigate("Subscription");
@@ -92,20 +93,10 @@ export default function More({ navigation }) {
                 }}
               >
                 <Text style={{ alignSelf: "center", color: "#ffffff" }}>
-                  Advertising Agent
+                  {user?.field}
                 </Text>
               </View>
-              <Text
-                style={{
-                  fontWeight: "500",
-                  fontSize: 14,
-                  color: "#ffffff",
-                  alignSelf: "center",
-                  marginTop: 10,
-                }}
-              >
-                Apple Advertisers
-              </Text>
+
               <TouchableOpacity
                 onPress={() => {
                   navigation.navigate("My Profile");

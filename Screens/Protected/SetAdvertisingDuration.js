@@ -13,18 +13,34 @@ import {
   TouchableWithoutFeedback,
 } from "react-native";
 import { Ionicons } from "@expo/vector-icons";
-import  { Paystack }  from 'react-native-paystack-webview';
+import { Paystack } from "react-native-paystack-webview";
 import { AntDesign } from "@expo/vector-icons";
+import { useValidateBookingMutation } from "../../data/api/billboardSlice";
+import { useSelector } from "react-redux";
 
-export default function SetAdvertisingDuration() {
+export default function SetAdvertisingDuration({ route }) {
   const [modalVisible, setModalVisible] = useState(false);
   const [selectedText, setSelectedText] = useState("");
   const [selectedState, setSelectedState] = useState("");
   const [fieldModalVisible, setFieldModalVisible] = useState(false);
   const [timelineModalVisible, settimelineModalVisible] = useState(false);
+  const [bookingFormat, setBookingFormat] = useState("monthly");
   const [mordalEmail, setMordalEmail] = useState("");
-  const [timeline, setTimeLine] = useState("");
+  const token = useSelector((state) => state.user.token);
+  const [timeline, setTimeLine] = useState(0);
 
+  console.log(route.params.data.billboard.rentPerMonth);
+  const [validateBooking] = useValidateBookingMutation();
+
+  const rentPerMonth = route.params.data.billboard.rentPerMonth;
+
+  const calculatePrice = () => {
+    if (bookingFormat == "monthly") {
+      return timeline * rentPerMonth;
+    } else {
+      return timeline * rentPerMonth * 11;
+    }
+  };
   const openFieldModal = () => {
     setFieldModalVisible(true);
   };
@@ -51,6 +67,7 @@ export default function SetAdvertisingDuration() {
 
   const handleTextSelection = (text) => {
     setSelectedText(text);
+    setBookingFormat(text.toLowerCase());
     closeFieldModal();
     if (selectedState !== "") {
       openModal(); // Open the modal if both options are selected
@@ -59,26 +76,36 @@ export default function SetAdvertisingDuration() {
 
   const handleTimeLineSelection = (text) => {
     setSelectedState(text);
+    setTimeLine(text);
     closeStateModal();
     if (selectedText !== "") {
       openModal(); // Open the modal if both options are selected
     }
   };
-  const paystackWebViewRef = useRef(); 
+  const paystackWebViewRef = useRef();
   return (
     <SafeAreaView style={styles.container}>
       <Paystack
-        paystackKey="pk_test_ea5cc760a7b2c1b3508a38fa53afad61dc9f2e0f"
+        paystackKey="pk_test_6892bd6c7ad948f65d0d583d7e23de43a0f5bb60"
         billingEmail="paystackwebview@something.com"
         channels={["card", "bank", "ussd", "qr", "mobile_money"]}
-        amount={'25000.00'}
+        amount={calculatePrice()}
         onCancel={(e) => {
           console.log(e);
           // handle response here
         }}
-        onSuccess={(res) => {
-          // handle response here
-          console.log(res);
+        onSuccess={async (res) => {
+          console.log(res.data.transactionRef.reference);
+          const response = await validateBooking({
+            body: {
+              ref: res.trxRef,
+              billboardId: route.params.data.billboard.id,
+              duration: timeline,
+              bookingFormat: bookingFormat,
+            },
+            token,
+          });
+          console.log(response);
         }}
         ref={paystackWebViewRef}
       />
@@ -141,18 +168,20 @@ export default function SetAdvertisingDuration() {
       >
         <Pressable style={styles.modalContainer2} onPress={closeStateModal}>
           <View style={styles.modalContent2}>
-            <TouchableOpacity onPress={() => handleTimeLineSelection("1 year")}>
+            <TouchableOpacity onPress={() => handleTimeLineSelection(1)}>
               <Text style={styles.billboardOwner}>1 year</Text>
             </TouchableOpacity>
-            <TouchableOpacity
-              onPress={() => handleTimeLineSelection("2 years")}
-            >
+            <TouchableOpacity onPress={() => handleTimeLineSelection(2)}>
               <Text style={styles.billboardOwner}>2 years</Text>
             </TouchableOpacity>
-            <TouchableOpacity
-              onPress={() => handleTimeLineSelection("3 years")}
-            >
+            <TouchableOpacity onPress={() => handleTimeLineSelection(3)}>
               <Text style={styles.billboardOwner}>3 years</Text>
+            </TouchableOpacity>
+            <TouchableOpacity onPress={() => handleTimeLineSelection(4)}>
+              <Text style={styles.billboardOwner}>4 years</Text>
+            </TouchableOpacity>
+            <TouchableOpacity onPress={() => handleTimeLineSelection(5)}>
+              <Text style={styles.billboardOwner}>5 years</Text>
             </TouchableOpacity>
           </View>
         </Pressable>
@@ -177,9 +206,11 @@ export default function SetAdvertisingDuration() {
                 </Text>
               </View>
               <Text style={styles.timeLine}>Price</Text>
-              <Text style={{ paddingTop: 6 }}>200,000</Text>
+              <Text style={{ paddingTop: 6 }}>
+                N{calculatePrice().toLocaleString()}
+              </Text>
               <TouchableOpacity
-              onPress={()=> paystackWebViewRef.current.startTransaction()}
+                onPress={() => paystackWebViewRef.current.startTransaction()}
                 style={{
                   width: 343,
                   height: 40,

@@ -16,6 +16,15 @@ export const authApiSlice = generalApiSlice.injectEndpoints({
         body: data,
       }),
     }),
+    getProfile: builder.query({
+      query: ({ access }) => ({
+        url: `/auth/user/profile`,
+        method: "GET",
+        headers: {
+          Authorization: `Bearer ${access}`,
+        },
+      }),
+    }),
     updateUser: builder.mutation({
       query: ({ access, data }) => ({
         url: `/auth/profile/update`,
@@ -57,4 +66,5 @@ export const {
   useChangePasswordMutation,
   useResetPasswordMutation,
   useVerifyOTPMutation,
+  useGetProfileQuery,
 } = authApiSlice;

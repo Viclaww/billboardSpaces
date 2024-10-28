@@ -75,9 +75,7 @@ const ExploreMore = ({ route, navigation }) => {
                 lineHeight: 16.94,
                 alignSelf: "center",
               }}
-            >
-              Available
-            </Text>
+            ></Text>
           </View>
           <MaterialCommunityIcons
             name="dots-vertical"
