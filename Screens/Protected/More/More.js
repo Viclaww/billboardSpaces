@@ -20,14 +20,19 @@ import { MaterialIcons } from "@expo/vector-icons";
 import { useFocusEffect } from "@react-navigation/native"; // Import useFocusEffect from React Navigation
 import { useDispatch, useSelector } from "react-redux";
 import { setToken, setUser } from "../../../data/dataSlices/user.slice";
+import { avatarImage } from "../../../data/util";
 
 export default function More({ navigation }) {
   const user = useSelector((state) => state.user.user);
+
   const dispatch = useDispatch();
   const handleSubscription = () => {
     navigation.navigate("Subscription");
   };
 
+  const handleEarnings = () => {
+    navigation.navigate("Earning");
+  };
   const handleAdvertisement = () => {
     navigation.navigate("Advertisement");
   };
@@ -79,7 +84,7 @@ export default function More({ navigation }) {
           >
             <Image
               resizeMode="cover"
-              source={require("../../../assets/profilePicture.jpeg")}
+              source={{ uri: user?.image || avatarImage }}
               style={styles.rectangleIcon}
             />
             <View style={{ flexDirection: "column", padding: 5 }}>
@@ -133,7 +138,9 @@ export default function More({ navigation }) {
         >
           <Image
             style={{ width: "7%", height: 24 }}
-            source={require("../../../assets/pin.png")}
+            source={
+              user.image ? user.image : require("../../../assets/pin.png")
+            }
           />
           <Text
             style={{
@@ -195,6 +202,26 @@ export default function More({ navigation }) {
             }}
           >
             Subscription
+          </Text>
+        </Pressable>
+        <Pressable
+          onPress={handleEarnings}
+          style={{ flexDirection: "row", marginTop: 30, marginLeft: 16 }}
+        >
+          <Image
+            resizeMode="contain"
+            style={{ width: "7.9%", height: 24 }}
+            source={require("../../../assets/subscribtion.png")}
+          />
+          <Text
+            style={{
+              paddingLeft: 20,
+              fontSize: 16,
+              fontWeight: "500",
+              alignSelf: "center",
+            }}
+          >
+            Earnings
           </Text>
         </Pressable>
         <Pressable

@@ -21,6 +21,7 @@ import slide2 from "../../../assets/slide2.png";
 import slide3 from "../../../assets/slide3.png";
 import { useSelector } from "react-redux";
 import { useGetHomeQuery } from "../../../data/api/billboardSlice";
+import { avatarImage } from "../../../data/util";
 
 const WIDTH = Dimensions.get("window").width;
 const HEIGHT = Dimensions.get("window").height;
@@ -34,28 +35,28 @@ export default function HomeScreen({ navigation }) {
     return rows;
   };
 
-  const user = useSelector((state) => state.user);
-  // console.log(user);
+  const user = useSelector((state) => state.user.user);
+  const token = useSelector((state) => state.user.token);
 
   const [popular, setPopular] = useState([]);
   const [products, setProducts] = useState([]);
   const [error, setError] = useState(null);
   const [events, setEvents] = useState([]);
 
-  const { data, error: home, isFetching } = useGetHomeQuery(user);
+  const { data, error: homeError, isFetching } = useGetHomeQuery({ token });
   useEffect(() => {
     if (data) {
+      console.log(data);
       setPopular(data.data.popular);
       setProducts(data.data.new);
     }
-    if (home) {
-      console.log("failed", home);
+    if (homeError) {
+      console.log("failed", homeError);
+      // if (home.data.status === 401) {
+      //   navigation.navigate("login");
+      // }
     }
   }, [data]);
-
-  if (error) {
-    return <Text>{error}</Text>;
-  }
 
   const images = [slide1, slide2, slide3];
 
@@ -97,11 +98,11 @@ export default function HomeScreen({ navigation }) {
           <View>
             <Image
               style={{ width: 40, height: 40, borderRadius: 100 }}
-              source={require("../../../assets/profilePicture.jpeg")}
+              source={{ uri: user?.image || avatarImage }}
             />
           </View>
           <Text style={{ fontSize: 22, marginLeft: 5 }}>
-            Welcome {user.user ? user.user["display-name"] : "User"}
+            Welcome {user ? user["display-name"] : "User"}
           </Text>
           <View style={{ flex: 1, alignItems: "flex-end", paddingRight: 10 }}>
             <TouchableOpacity

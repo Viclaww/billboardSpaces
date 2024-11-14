@@ -5,7 +5,6 @@ import {
   View,
   ScrollView,
   Platform,
-  TextInput,
   SafeAreaView,
   Image,
   StatusBar,

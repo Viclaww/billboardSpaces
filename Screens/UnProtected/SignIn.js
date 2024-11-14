@@ -238,10 +238,10 @@ export default function CreatAccount({ navigation }) {
         navigation.navigate("Home");
       } else {
         // Handle error, e.g., show an error message to the user
-        console.error("Login Error:", error.data.message);
+        console.error("Login Error:", error);
 
         // Extract and show error messages in an aler
-        alert(`Login failed. ${error.data.message}`);
+        // alert(`Login failed. ${error.data.message}`);
       }
     } catch (error) {
       // Handle other errors, e.g., network issues

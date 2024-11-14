@@ -15,7 +15,10 @@ import {
 import { Ionicons } from "@expo/vector-icons";
 import { Paystack } from "react-native-paystack-webview";
 import { AntDesign } from "@expo/vector-icons";
-import { useValidateBookingMutation } from "../../data/api/billboardSlice";
+import {
+  useInitiateBookingMutation,
+  useValidateBookingMutation,
+} from "../../data/api/billboardSlice";
 import { useSelector } from "react-redux";
 
 export default function SetAdvertisingDuration({ route }) {
@@ -30,6 +33,7 @@ export default function SetAdvertisingDuration({ route }) {
   const [timeline, setTimeLine] = useState(0);
 
   console.log(route.params.data.billboard.rentPerMonth);
+  const [initiateBooking] = useInitiateBookingMutation();
   const [validateBooking] = useValidateBookingMutation();
 
   const rentPerMonth = route.params.data.billboard.rentPerMonth;
@@ -47,6 +51,10 @@ export default function SetAdvertisingDuration({ route }) {
 
   const openStateModal = () => {
     settimelineModalVisible(true);
+  };
+
+  const handleInitiatePayment = async (billboardId) => {
+    const initiateRes = await initiateBooking({ token, body: { billboardId } });
   };
 
   const closeFieldModal = () => {

@@ -29,8 +29,9 @@ import {
   useGetProfileQuery,
   useUpdateUserMutation,
 } from "../../data/api/authSlice";
-import { useSelector } from "react-redux";
+import { useDispatch, useSelector } from "react-redux";
 import { cloudinaryUpload } from "../../utils/cloudinaryUpload";
+import { setUser } from "../../data/dataSlices/user.slice";
 
 export default function MyProfile({ navigation }) {
   const [selectedImage, setSelectedImage] = useState(null);
@@ -44,21 +45,23 @@ export default function MyProfile({ navigation }) {
   const [field, setField] = useState("");
   const token = useSelector((state) => state.user.token);
   const user = useSelector((state) => state.user.user);
-
-  const { data, isFetching, error } = useGetProfileQuery({ access: token });
+  const dispatch = useDispatch();
+  const { data, isFetching, error, refetch } = useGetProfileQuery({
+    access: token,
+  });
   const [updateUser, { isLoading: isUpdating }] = useUpdateUserMutation();
-  console.log(data);
-  console.log(error);
   useEffect(() => {
     if (data) {
+      console.log("DATA", data);
       setName(data.data["full-name"]);
       setPhoneNumber(data.data["phone-number"]);
       setDisplayName(data.data["display-name"]);
       setField(data.data.field);
       setState(data.data["State of residence"]);
       setSelectedImage(data.data.image);
+      dispatch(setUser(data.data));
     }
-  }, []);
+  }, [data]);
   const openImagePickerAsync = async () => {
     const permissionResult =
       await ImagePicker.requestMediaLibraryPermissionsAsync();
@@ -79,8 +82,6 @@ export default function MyProfile({ navigation }) {
       });
     }
   };
-
-  console.log("Selected image:", selectedImage); // Log selected image state for debugging
 
   const backgroundImage = selectedImage
     ? { uri: selectedImage.uri || selectedImage }
@@ -149,13 +150,15 @@ export default function MyProfile({ navigation }) {
       setIsLoading(true);
       // Create an object to store the fields to be updated
       const updatedFields = {};
-      if (field !== undefined) updatedFields.user_field = field;
-      if (name !== undefined) updatedFields.full_name = name;
-      if (phoneNumber !== undefined) updatedFields.phone_number = phoneNumber;
-      if (state !== undefined) updatedFields.state = state;
-      if (displayName !== undefined) updatedFields.display_name = displayName;
+      if (field != data?.data.field) updatedFields.field = field;
+      if (name !== data?.data["full-name"]) updatedFields.fullName = name;
+      if (phoneNumber !== data?.data["phone-number"])
+        updatedFields.phone = phoneNumber;
+      if (state !== data?.data["State of residence"]) updatedFields.SOR = state;
+      if (displayName !== data?.data["display-name"])
+        updatedFields.displayName = displayName;
       if (selectedImage !== data.data.image)
-        updatedFields.image = await cloudinaryUpload(selectedImage).image;
+        updatedFields.image = (await cloudinaryUpload(selectedImage)).image;
 
       console.log("Updated fields:", updatedFields);
       const response = await updateUser({
@@ -165,6 +168,8 @@ export default function MyProfile({ navigation }) {
 
       if (response.data) {
         console.log("the guy", response.data);
+        setUser(response.data.data);
+        refetch();
         // navigation.navigate("Home");
       } else {
         console.error("PUT request failed:", response.status);

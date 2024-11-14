@@ -26,6 +26,7 @@ import {
 } from "../../../data/api/adSlice";
 import { useSelector } from "react-redux";
 import { cloudinaryUpload } from "../../../utils/cloudinaryUpload";
+import { avatarImage } from "../../../data/util";
 export default function Annoucment({ navigation }) {
   const [showBillboardDetails, setShowBillboardDetails] = useState(false);
   const [showAdDetails, setShowAdDetails] = useState(true);
@@ -54,6 +55,7 @@ export default function Annoucment({ navigation }) {
     isLoading,
     refetch,
   } = useGetAdsInMarketPlaceQuery({ token: token });
+  console.log(data.ads[0]);
   const [notifyModalVisible, setNotifyModalVisible] = useState(true);
 
   const openNotifyModal = () => {
@@ -97,7 +99,6 @@ export default function Annoucment({ navigation }) {
   };
 
   const sendToBackend = async (selectedImage, modalCaption) => {
-   
     setIFileUpLoading(true);
     const adImage = await cloudinaryUpload(selectedImage);
     if (adImage.image) {
@@ -174,8 +175,16 @@ export default function Annoucment({ navigation }) {
   const [error, setError] = useState(null);
   const NotifyModal = () => {
     return (
-      <View style={{ flex: 1, backgroundColor: 'rgba(0, 0, 0, 0.5)', justifyContent: 'center', alignItems: 'center', height: '100%' }}>
-        <View style={{backgroundColor: 'white', width: '80%', height: 100}}>
+      <View
+        style={{
+          flex: 1,
+          backgroundColor: "rgba(0, 0, 0, 0.5)",
+          justifyContent: "center",
+          alignItems: "center",
+          height: "100%",
+        }}
+      >
+        <View style={{ backgroundColor: "white", width: "80%", height: 100 }}>
           <Text>Upload Ad Successful</Text>
           <TouchableOpacity onPress={closeNotifyModal}>
             <Text>Close</Text>
@@ -183,7 +192,7 @@ export default function Annoucment({ navigation }) {
         </View>
       </View>
     );
-  }
+  };
   const Post = ({ post }) => {
     return (
       <View style={{ flex: 1 }}>
@@ -191,11 +200,12 @@ export default function Annoucment({ navigation }) {
           <TouchableOpacity>
             <Image
               style={{ width: 40, height: 40, borderRadius: 100 }}
-              source={require("../../../assets/profilePicture.jpeg")}
+              source={{ uri: post.author.image || avatarImage }}
             />
           </TouchableOpacity>
           <Text style={{ fontSize: 16, marginLeft: 5, fontWeight: "500" }}>
-            {post.author.email.replace("@gmail.com", "")}
+            {post.author["display-name"] ||
+              post.author.email.replace("@gmail.com", "")}
           </Text>
         </View>
         <Text
@@ -430,7 +440,10 @@ export default function Annoucment({ navigation }) {
                             marginBottom: 10,
                           }}
                           onPress={() => {
-                            const response = sendToBackend(selectedImage, modalCaption);
+                            const response = sendToBackend(
+                              selectedImage,
+                              modalCaption
+                            );
                           }}
                         >
                           {adLoading || isFileUpLoading ? (

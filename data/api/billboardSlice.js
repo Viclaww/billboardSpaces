@@ -49,6 +49,16 @@ export const billboardApiSlice = generalApiSlice.injectEndpoints({
         },
       }),
     }),
+    initiateBooking: builder.mutation({
+      query: (data) => ({
+        url: "/billboards/book/initiate",
+        method: "POST",
+        body: data.body,
+        headers: {
+          Authorization: `Bearer ${data.token}`,
+        },
+      }),
+    }),
     getBillboardsByUser: builder.query({
       query: (data) => {
         console.log(data);
@@ -81,4 +91,5 @@ export const {
   useGetBillboardsInMarketPlaceQuery,
   useGetABillboardQuery,
   useValidateBookingMutation,
+  useInitiateBookingMutation,
 } = billboardApiSlice;

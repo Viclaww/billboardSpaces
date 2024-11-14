@@ -31,6 +31,8 @@ import EventCalender from "./Protected/EventCalender";
 import BillboardRequ from "./Protected/BillboardRequ";
 import AddDocument from "./Protected/AddDocument";
 import { useEffect } from "react";
+import Notification from "./Protected/Notification";
+import Earnings from "./Protected/Earnings";
 const Stack = createNativeStackNavigator();
 
 export function Navigation() {
@@ -65,6 +67,11 @@ export function Navigation() {
           component={Billboardclicked}
         />
 
+        <Stack.Screen
+          options={{ headerShown: false }}
+          name="Earning"
+          component={Earnings}
+        />
         <Stack.Screen
           options={{ headerShown: false }}
           name="ExploreMore"
@@ -124,6 +131,11 @@ export function Navigation() {
           options={{ headerShown: false }}
           name="My Profile"
           component={MyProfile}
+        />
+        <Stack.Screen
+          options={{ headerShown: false }}
+          name="Notification"
+          component={Notification}
         />
         <Stack.Screen
           options={{ headerShown: false }}

@@ -17,6 +17,7 @@ export const authApiSlice = generalApiSlice.injectEndpoints({
       }),
     }),
     getProfile: builder.query({
+      providesTags: ["User"],
       query: ({ access }) => ({
         url: `/auth/user/profile`,
         method: "GET",
@@ -26,6 +27,7 @@ export const authApiSlice = generalApiSlice.injectEndpoints({
       }),
     }),
     updateUser: builder.mutation({
+      invalidatesTags: ["User"],
       query: ({ access, data }) => ({
         url: `/auth/profile/update`,
         method: "PATCH",
