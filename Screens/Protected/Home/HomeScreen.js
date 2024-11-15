@@ -44,9 +44,11 @@ export default function HomeScreen({ navigation }) {
   const [events, setEvents] = useState([]);
 
   const { data, error: homeError, isFetching } = useGetHomeQuery({ token });
+
   useEffect(() => {
     if (data) {
-      console.log(data);
+      // console.log(data);
+
       setPopular(data.data.popular);
       setProducts(data.data.new);
     }

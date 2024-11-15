@@ -20,6 +20,7 @@ export const billboardApiSlice = generalApiSlice.injectEndpoints({
           Authorization: `Bearer ${data.token}`,
         },
       }),
+      providesTags: ["BillBoard"],
     }),
     createNew: builder.mutation({
       query: (data) => ({
@@ -38,6 +39,7 @@ export const billboardApiSlice = generalApiSlice.injectEndpoints({
           Authorization: `Bearer ${data.token}`,
         },
       }),
+      providesTags: ["BillBoard", "BillBoards"],
     }),
     validateBooking: builder.mutation({
       query: (data) => ({
@@ -48,6 +50,7 @@ export const billboardApiSlice = generalApiSlice.injectEndpoints({
           Authorization: `Bearer ${data.token}`,
         },
       }),
+      invalidatesTags: ["BillBoard", "BillBoards"],
     }),
     initiateBooking: builder.mutation({
       query: (data) => ({
@@ -86,6 +89,8 @@ export const billboardApiSlice = generalApiSlice.injectEndpoints({
 
 export const {
   useGetHomeQuery,
+  useGetNotificationsQuery,
+  useGetEarningQuery,
   useCreateNewMutation,
   useGetBillboardsByUserQuery,
   useGetBillboardsInMarketPlaceQuery,

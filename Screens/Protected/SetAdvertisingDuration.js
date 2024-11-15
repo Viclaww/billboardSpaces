@@ -11,6 +11,7 @@ import {
   Pressable,
   TouchableOpacity,
   TouchableWithoutFeedback,
+  Alert,
 } from "react-native";
 import { Ionicons } from "@expo/vector-icons";
 import { Paystack } from "react-native-paystack-webview";
@@ -21,7 +22,7 @@ import {
 } from "../../data/api/billboardSlice";
 import { useSelector } from "react-redux";
 
-export default function SetAdvertisingDuration({ route }) {
+export default function SetAdvertisingDuration({ navigation, route }) {
   const [modalVisible, setModalVisible] = useState(false);
   const [selectedText, setSelectedText] = useState("");
   const [selectedState, setSelectedState] = useState("");
@@ -31,7 +32,7 @@ export default function SetAdvertisingDuration({ route }) {
   const [mordalEmail, setMordalEmail] = useState("");
   const token = useSelector((state) => state.user.token);
   const [timeline, setTimeLine] = useState(0);
-
+  const [transactionId, setTransactionId] = useState("");
   console.log(route.params.data.billboard.rentPerMonth);
   const [initiateBooking] = useInitiateBookingMutation();
   const [validateBooking] = useValidateBookingMutation();
@@ -54,7 +55,19 @@ export default function SetAdvertisingDuration({ route }) {
   };
 
   const handleInitiatePayment = async (billboardId) => {
-    const initiateRes = await initiateBooking({ token, body: { billboardId } });
+    try {
+      console.log("this");
+      const response = await initiateBooking({ token, body: { billboardId } });
+
+      if (response.data) {
+        console.log(response.data);
+        setTransactionId(response.data.data.transactionId);
+        paystackWebViewRef.current.startTransaction();
+      } else {
+        Alert.alert(response.error.data.message || "Something Went Wrong!");
+        console.log(response.error);
+      }
+    } catch (error) {}
   };
 
   const closeFieldModal = () => {
@@ -95,7 +108,7 @@ export default function SetAdvertisingDuration({ route }) {
     <SafeAreaView style={styles.container}>
       <Paystack
         paystackKey="pk_test_6892bd6c7ad948f65d0d583d7e23de43a0f5bb60"
-        billingEmail="paystackwebview@something.com"
+        billingEmail="w@billboardspaces.com"
         channels={["card", "bank", "ussd", "qr", "mobile_money"]}
         amount={calculatePrice()}
         onCancel={(e) => {
@@ -104,16 +117,23 @@ export default function SetAdvertisingDuration({ route }) {
         }}
         onSuccess={async (res) => {
           console.log(res.data.transactionRef.reference);
+
           const response = await validateBooking({
             body: {
-              ref: res.trxRef,
-              billboardId: route.params.data.billboard.id,
+              ref: res.data.transactionRef.reference,
+              trxId: transactionId,
+              billboardId: route.params.data.billboard._id,
               duration: timeline,
               bookingFormat: bookingFormat,
             },
             token,
           });
           console.log(response);
+          if (response.data) {
+            navigation.navigate("Billboardclicked", {
+              data: route.params.data,
+            });
+          }
         }}
         ref={paystackWebViewRef}
       />
@@ -218,7 +238,9 @@ export default function SetAdvertisingDuration({ route }) {
                 N{calculatePrice().toLocaleString()}
               </Text>
               <TouchableOpacity
-                onPress={() => paystackWebViewRef.current.startTransaction()}
+                onPress={() => {
+                  handleInitiatePayment(route.params.data.billboard._id);
+                }}
                 style={{
                   width: 343,
                   height: 40,

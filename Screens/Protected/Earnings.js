@@ -1,4 +1,5 @@
 import {
+  ActivityIndicator,
   Modal,
   Platform,
   Pressable,
@@ -10,13 +11,17 @@ import { Text } from "react-native";
 import { SafeAreaView, ScrollView, View } from "react-native";
 import { Ionicons } from "@expo/vector-icons";
 import { TouchableOpacity } from "react-native";
-import { useState } from "react";
+import { useEffect, useState } from "react";
 import { KeyboardAvoidingView } from "react-native";
 import { TouchableWithoutFeedback } from "react-native";
-
-const AHistory = () => {
+import { useGetEarningQuery } from "../../data/api/billboardSlice";
+import { useSelector } from "react-redux";
+import { formatTimestamp } from "../utils/functions";
+import { Image } from "react-native";
+const AHistory = ({ transaction }) => {
   return (
     <View
+      key={transaction._id}
       style={{
         display: "flex",
         width: "100%",
@@ -68,7 +73,9 @@ const AHistory = () => {
               fontSize: 16,
             }}
           >
-            Edu Advertising Firm
+            {transaction.transactionType == "booking"
+              ? "Billboard Booking"
+              : "Billboard"}
           </Text>
 
           <Text
@@ -77,7 +84,7 @@ const AHistory = () => {
               color: "#999999",
             }}
           >
-            November 23th at 1PM
+            {formatTimestamp(transaction.transactionDate)}
           </Text>
         </View>
       </View>
@@ -89,6 +96,7 @@ const AHistory = () => {
             fontSize: 20,
           }}
         >
+          {transaction.amount ? "" : "unpaid"}
           +10,000
         </Text>
       </View>
@@ -97,6 +105,19 @@ const AHistory = () => {
 };
 
 export default function Earnings({ navigation }) {
+  const token = useSelector((state) => state.user.token);
+  const [history, setHistory] = useState([]);
+  const { data, error, isFetching: isLoading } = useGetEarningQuery({ token });
+
+  useEffect(() => {
+    if (data) {
+      setHistory(data.data.history);
+      console.log(history[0]);
+    }
+    if (error) {
+      console.log(error);
+    }
+  }, [data]);
   const [modalVisible, setModalVisible] = useState(false);
   return (
     <SafeAreaView style={styles.container}>
@@ -105,7 +126,7 @@ export default function Earnings({ navigation }) {
         horizontal={false}
         showsVerticalScrollIndicator={false}
       >
-        <Modal visible={!modalVisible} transparent={true} animationType="fade">
+        <Modal visible={modalVisible} transparent={true} animationType="fade">
           <KeyboardAvoidingView
             style={{ flex: 1 }}
             behavior={Platform.OS === "ios" ? "padding" : "height"}
@@ -306,7 +327,13 @@ export default function Earnings({ navigation }) {
                 paddingVertical: 5,
               }}
             >
-              N10,000.00
+              {data ? (
+                `N${data.data.balance.toLocaleString()}`
+              ) : isLoading ? (
+                <ActivityIndicator></ActivityIndicator>
+              ) : (
+                <Text>failed to get Details</Text>
+              )}
             </Text>
           </View>
         </View>
@@ -370,7 +397,7 @@ export default function Earnings({ navigation }) {
                   fontSize: 16,
                 }}
               >
-                Connect toMake withdrawals Possible
+                Connect to Make withdrawals Possible
               </Text>
             </View>
           </View>
@@ -389,7 +416,33 @@ export default function Earnings({ navigation }) {
             History
           </Text>
           <View>
-            <AHistory />
+            {history.length < 1 && isLoading ? (
+              <ActivityIndicator></ActivityIndicator>
+            ) : history.length < 1 ? (
+              <View
+                style={{
+                  marginTop: 100,
+                  paddingHorizontal: 15,
+                  paddingVertical: 30,
+                }}
+              >
+                <Image
+                  resizeMode="cover"
+                  source={require("../../assets/oops.png")}
+                  style={styles.billboardImage}
+                />
+                <Text
+                  style={{
+                    fontSize: 20,
+                    textAlign: "center",
+                  }}
+                >
+                  Oops! No Transactions yet
+                </Text>
+              </View>
+            ) : (
+              history.map((tx) => <AHistory transaction={tx} />)
+            )}
           </View>
         </View>
       </ScrollView>

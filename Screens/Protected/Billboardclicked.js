@@ -21,6 +21,7 @@ import { useSelector } from "react-redux";
 const Billboardclicked = ({ route, navigation }) => {
   const [billboardData, setBillBoardData] = useState(null);
   const token = useSelector((state) => state.user.token);
+  const user = useSelector((state) => state.user.user);
   console.log(route.params.data._id);
   const {
     data: billboardRes,
@@ -33,7 +34,7 @@ const Billboardclicked = ({ route, navigation }) => {
 
   useEffect(() => {
     if (billboardRes) {
-      console.log(billboardRes);
+      console.log(billboardRes.data);
       setBillBoardData(billboardRes.data);
     }
   }, [billboardRes]);
@@ -46,6 +47,7 @@ const Billboardclicked = ({ route, navigation }) => {
   const [showDetails, setShowDetails] = useState(false);
 
   const handleGOToBook = () => {
+    if (!billboardData.billboard.available) return;
     navigation.navigate("Set Advertising Duration", { data: billboardData });
   };
 
@@ -224,9 +226,20 @@ const Billboardclicked = ({ route, navigation }) => {
           </View>
         )}
 
-        <TouchableOpacity onPress={handleGOToBook} style={styles.buttonParent}>
-          <Text style={styles.button}>Book Now</Text>
-        </TouchableOpacity>
+        {billboardData && (
+          <TouchableOpacity
+            onPress={handleGOToBook}
+            style={styles.buttonParent(billboardData.billboard.available)}
+          >
+            <Text style={styles.button}>
+              {billboardData.billboard.available
+                ? "Book Now"
+                : billboardData.billboard.bookedBy == user.id
+                ? "Booked by You"
+                : "Booked"}
+            </Text>
+          </TouchableOpacity>
+        )}
       </ScrollView>
     </SafeAreaView>
   );
@@ -262,16 +275,16 @@ const styles = {
   boldText: {
     fontWeight: "bold",
   },
-  buttonParent: {
+  buttonParent: (available) => ({
     borderRadius: 10,
-    backgroundColor: "#0080fe",
+    backgroundColor: available ? "#0080fe" : "#aaaaaa",
     width: "90%",
     marginTop: "15%",
     height: 48,
     alignItems: "center",
     justifyContent: "center",
     alignSelf: "center",
-  },
+  }),
   button: {
     fontSize: 14,
     fontWeight: "500",

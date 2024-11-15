@@ -18,43 +18,30 @@ import { AntDesign } from "@expo/vector-icons";
 import { Zocial } from "@expo/vector-icons";
 import AsyncStorage from "@react-native-async-storage/async-storage";
 import { BASE_URL } from "../../apiConfig";
+import { useGetNotificationsQuery } from "../../data/api/billboardSlice";
+import { useSelector } from "react-redux";
 
 export default function Notification() {
   const [modalVisible, setModalVisible] = useState(false);
   const [notifications, setNotifications] = useState([]);
-
+  const token = useSelector((state) => state.user.token);
   const openModal = () => {
     setModalVisible(true);
   };
 
+  const { data, error } = useGetNotificationsQuery({ token });
+  useEffect(() => {
+    if (data) {
+      console.log(data);
+      setNotifications(data.data);
+    }
+
+    if (error) {
+      console.log(error);
+    }
+  }, [data, error]);
   const closeModal = () => {
     setModalVisible(false);
-  };
-
-  useEffect(() => {
-    fetchNotifications();
-  }, []);
-
-  const fetchNotifications = async () => {
-    const endpointUrl = `${BASE_URL}/notifications/`;
-    try {
-      const storedAccess = await AsyncStorage.getItem("access");
-      const response = await fetch(endpointUrl, {
-        headers: {
-          Authorization: `Bearer ${storedAccess}`,
-          "Content-Type": "multipart/form-data",
-        },
-      });
-
-      if (!response.ok) {
-        throw new Error("Failed to upload");
-      }
-
-      const data = await response.json();
-      setNotifications(data);
-    } catch (error) {
-      console.error("Error fetching notifications:", error);
-    }
   };
 
   const markAllAsRead = async () => {
@@ -74,8 +61,6 @@ export default function Notification() {
       if (!response.ok) {
         throw new Error("Failed to mark all as read");
       }
-
-      fetchNotifications();
     } catch (error) {
       console.error("Error marking all as read:", error);
     }
@@ -95,6 +80,7 @@ export default function Notification() {
             marginRight: 20,
             marginTop: 10,
             marginLeft: 10,
+            marginBottom: 30,
           }}
         >
           <Text
@@ -191,7 +177,7 @@ export default function Notification() {
                     fontSize: 12,
                   }}
                 >
-                  {new Date(notification.created_at).toLocaleString("en-US", {
+                  {new Date(notification.createdAt).toLocaleString("en-US", {
                     hour: "2-digit",
                     minute: "2-digit",
                   })}
