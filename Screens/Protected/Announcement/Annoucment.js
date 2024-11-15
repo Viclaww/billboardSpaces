@@ -55,7 +55,7 @@ export default function Annoucment({ navigation }) {
     isLoading,
     refetch,
   } = useGetAdsInMarketPlaceQuery({ token: token });
-  console.log(data.ads[0]);
+
   const [notifyModalVisible, setNotifyModalVisible] = useState(true);
 
   const openNotifyModal = () => {
@@ -355,6 +355,7 @@ export default function Annoucment({ navigation }) {
             <View style={{}}>
               <View style={{}}>
                 {post &&
+                  data &&
                   data?.ads.map((post, index) => (
                     <Post key={index} post={post} />
                   ))}

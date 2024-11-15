@@ -19,6 +19,7 @@ import { useSelector } from "react-redux";
 import { formatTimestamp } from "../utils/functions";
 import { Image } from "react-native";
 const AHistory = ({ transaction }) => {
+  if (transaction.status == "unpaid") return;
   return (
     <View
       key={transaction._id}
@@ -96,8 +97,9 @@ const AHistory = ({ transaction }) => {
             fontSize: 20,
           }}
         >
-          {transaction.amount ? "" : "unpaid"}
-          +10,000
+          {transaction.amount
+            ? `N${transaction.amount.toLocaleString()}`
+            : "unpaid"}
         </Text>
       </View>
     </View>

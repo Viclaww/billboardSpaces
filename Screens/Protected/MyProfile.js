@@ -168,7 +168,7 @@ export default function MyProfile({ navigation }) {
 
       if (response.data) {
         console.log("the guy", response.data);
-        setUser(response.data.data);
+        dispatch(setUser(response.data.data));
         refetch();
         // navigation.navigate("Home");
       } else {
