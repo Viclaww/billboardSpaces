@@ -56,11 +56,11 @@ export function Navigation() {
           component={Tabs}
           options={{ headerShown: false }}
         ></Stack.Screen>
-        <Stack.Screen
+        {/* <Stack.Screen
           name="Home"
           component={HomeScreen}
           options={{ headerShown: false }}
-        />
+        /> */}
         <Stack.Screen
           options={{ headerShown: false }}
           name="Billboardclicked"

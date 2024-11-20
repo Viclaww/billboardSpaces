@@ -241,7 +241,7 @@ export default function CreatAccount({ navigation }) {
         console.error("Login Error:", error);
 
         // Extract and show error messages in an aler
-        // alert(`Login failed. ${error.data.message}`);
+        alert(`Login failed. ${error.data.message || error.error || ""}`);
       }
     } catch (error) {
       // Handle other errors, e.g., network issues

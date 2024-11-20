@@ -1,5 +1,6 @@
 import {
   ActivityIndicator,
+  Dimensions,
   Modal,
   Platform,
   Pressable,
@@ -9,12 +10,17 @@ import {
 } from "react-native";
 import { Text } from "react-native";
 import { SafeAreaView, ScrollView, View } from "react-native";
-import { Ionicons } from "@expo/vector-icons";
+import { AntDesign, Ionicons } from "@expo/vector-icons";
 import { TouchableOpacity } from "react-native";
 import { useEffect, useState } from "react";
 import { KeyboardAvoidingView } from "react-native";
 import { TouchableWithoutFeedback } from "react-native";
-import { useGetEarningQuery } from "../../data/api/billboardSlice";
+import {
+  useGetEarningQuery,
+  useLazyGetBankQuery,
+  useLazyGetBanksQuery,
+  useResolveAccountMutation,
+} from "../../data/api/billboardSlice";
 import { useSelector } from "react-redux";
 import { formatTimestamp } from "../utils/functions";
 import { Image } from "react-native";
@@ -110,17 +116,60 @@ export default function Earnings({ navigation }) {
   const token = useSelector((state) => state.user.token);
   const [history, setHistory] = useState([]);
   const { data, error, isFetching: isLoading } = useGetEarningQuery({ token });
-
+  const [banks, setBanks] = useState([]);
+  const [selectedBank, setSelectedBank] = useState(null);
+  const [accountNumber, setAccountNumber] = useState("");
+  const [getBanks, { isFetching }] = useLazyGetBanksQuery();
+  const [resolveAccount] = useResolveAccountMutation();
   useEffect(() => {
     if (data) {
       setHistory(data.data.history);
-      console.log(history[0]);
+      // console.log(history[0]);
     }
     if (error) {
       console.log(error);
     }
   }, [data]);
+
+  useEffect(() => {
+    const resolve = async () => {
+      const response = await resolveAccount({
+        token,
+        body: { accountNumber, bankCode: selectedBank.code },
+      });
+      return response;
+    };
+
+    if (accountNumber.length == 10 && selectedBank) {
+      resolve();
+    }
+  }, [accountNumber, selectedBank]);
+  const openBankModal = async () => {
+    try {
+      setBanskModalVisible(true);
+      const response = await getBanks({ token });
+      // console.log(response);
+      if (response.data) {
+        setBanks(response.data.data);
+        return;
+      }
+
+      console.log("Fetching Banks", response.error);
+    } catch (error) {
+      console.log(error);
+    }
+  };
+
+  const handleAccoutNumberInput = (text) => {
+    if (accountNumber.length == 10 && text.length > 10) return;
+    setAccountNumber(text);
+  };
+  const handleSelectedBank = (bank) => {
+    setSelectedBank(bank);
+    setBanskModalVisible(false);
+  };
   const [modalVisible, setModalVisible] = useState(false);
+  const [banksModalVisible, setBanskModalVisible] = useState(false);
   return (
     <SafeAreaView style={styles.container}>
       <ScrollView
@@ -130,7 +179,12 @@ export default function Earnings({ navigation }) {
       >
         <Modal visible={modalVisible} transparent={true} animationType="fade">
           <KeyboardAvoidingView
-            style={{ flex: 1 }}
+            style={{
+              flex: 1,
+              gap: 40,
+              display: "flex",
+              flexDirection: "column",
+            }}
             behavior={Platform.OS === "ios" ? "padding" : "height"}
           >
             <Pressable
@@ -160,58 +214,101 @@ export default function Earnings({ navigation }) {
                       // },
                     }
                   >
-                    <View>
-                      <Text>Account Name</Text>
+                    <View
+                      style={{
+                        display: "flex",
+                        gap: 10,
+                        marginTop: 30,
+                      }}
+                    >
+                      <Text>Bank Name</Text>
+                      <TouchableOpacity onPress={openBankModal}>
+                        <TextInput
+                          readOnly
+                          value={selectedBank?.name}
+                          style={{
+                            fontSize: 12,
+                            textAlign: "left",
+                            // backgroundColor:'red',
+                            padding: 10,
+                            borderWidth: 1,
+                            borderColor: "#eee",
+                            borderRadius: 5,
+                            color: "black",
+                            height: 40,
+                            fontWeight: "400",
+                            width: "100%",
+                          }}
+                          placeholder="Select Bank"
+                        />
+                        <AntDesign
+                          onPress={() => {
+                            navigation.goBack();
+                          }}
+                          style={{
+                            position: "absolute",
+                            top: 12,
+                            left: "92%",
+                          }}
+                          name="right"
+                          size={16}
+                          color="#000"
+                        />
+                      </TouchableOpacity>
+                    </View>
+                    <View
+                      style={{
+                        display: "flex",
+                        gap: 10,
+                        marginTop: 30,
+                      }}
+                    >
+                      <Text>Account Number</Text>
                       <TextInput
                         style={{
                           fontSize: 12,
                           textAlign: "left",
-                          left: 10,
+                          // backgroundColor:'red',
+                          padding: 10,
+                          borderWidth: 1,
+                          borderColor: "#eee",
+                          borderRadius: 5,
+                          color: "black",
+                          height: 40,
                           fontWeight: "400",
                           width: "100%",
                         }}
-                        placeholder="Email"
-                        // value={mordalEmail}
-                        // onChangeText={(text) => setMordalEmail(text)}
+                        placeholder="Account Number"
+                        value={accountNumber}
+                        keyboardType="number-pad"
+                        onChangeText={(text) => handleAccoutNumberInput(text)}
                         // onFocus={handleModalEmailFocus}
                         // onBlur={handleInputBlur}
                       />
                     </View>
-                    <View>
+                    <View
+                      style={{
+                        display: "flex",
+                        gap: 10,
+                        marginTop: 30,
+                      }}
+                    >
                       <Text>Account Name</Text>
                       <TextInput
                         style={{
                           fontSize: 12,
                           textAlign: "left",
-                          left: 10,
+                          // backgroundColor:'red',
+                          padding: 10,
+                          borderWidth: 1,
+                          borderColor: "#eee",
+                          borderRadius: 5,
+                          color: "black",
+                          height: 40,
                           fontWeight: "400",
                           width: "100%",
                         }}
-                        placeholder="Email"
-                        // value={mordalEmail}
-                        // onChangeText={(text) => setMordalEmail(text)}
-                        // onFocus={handleModalEmailFocus}
-                        // onBlur={handleInputBlur}
-                      />
-                    </View>
-                    <View>
-                      <Text>Account Name</Text>
-                      <TextInput
-                        style={{
-                          fontSize: 12,
-                          textAlign: "left",
-                          left: 10,
-                          fontWeight: "600",
-                          shadowColor: "black",
-                          shadowOpacity: 1,
-                          shadowOffset: {
-                            width: 20,
-                            height: 20,
-                          },
-                          width: "100%",
-                          paddingVertical: 10,
-                        }}
-                        placeholder="Email"
+                        placeholder="Account Name"
                         // value={mordalEmail}
                         // onChangeText={(text) => setMordalEmail(text)}
                         // onFocus={handleModalEmailFocus}
@@ -234,6 +331,98 @@ export default function Earnings({ navigation }) {
               </TouchableWithoutFeedback>
             </Pressable>
           </KeyboardAvoidingView>
+        </Modal>
+        <Modal
+          visible={banksModalVisible}
+          transparent={true}
+          animationType="slide"
+        >
+          <>
+            <View
+              style={{
+                flex: 1,
+                gap: 40,
+                display: "flex",
+                flexDirection: "column",
+              }}
+              behavior={Platform.OS === "ios" ? "padding" : "height"}
+            >
+              <AntDesign
+                onPress={() => {
+                  setBanskModalVisible(false);
+                }}
+                style={{
+                  position: "absolute",
+                  top: 20,
+                  left: "90%",
+                  zIndex: 20,
+                }}
+                name="close"
+                size={25}
+                color="#000"
+              />
+              <Pressable
+                style={styles.modalContainer}
+                // onPress={closeModal}
+              >
+                <TouchableWithoutFeedback
+                  onPress={() => console.log("Tapped inside modal")}
+                >
+                  <View
+                    style={{
+                      backgroundColor: "#fff",
+                      padding: 20,
+                      width: "100%",
+                      height: "100%",
+                      marginTop: 100,
+                      // alignItems: "center",
+                    }}
+                  >
+                    <View>
+                      <Text
+                        style={{
+                          fontSize: 20,
+                          fontWeight: "900",
+                        }}
+                      >
+                        Select Bank
+                      </Text>
+                    </View>
+                    {isFetching ? (
+                      <ActivityIndicator />
+                    ) : (
+                      <ScrollView>
+                        {banks && banks.length > 0 ? (
+                          banks.map((bank) => (
+                            <TouchableOpacity
+                              onPress={() => handleSelectedBank(bank)}
+                              key={bank.slug}
+                            >
+                              <View
+                                style={{
+                                  marginTop: 40,
+                                }}
+                              >
+                                <Text
+                                  style={{
+                                    fontSize: 18,
+                                  }}
+                                >
+                                  {bank.name}
+                                </Text>
+                              </View>
+                            </TouchableOpacity>
+                          ))
+                        ) : (
+                          <Text>Failed To Fetch Banks</Text>
+                        )}
+                      </ScrollView>
+                    )}
+                  </View>
+                </TouchableWithoutFeedback>
+              </Pressable>
+            </View>
+          </>
         </Modal>
         <View style={{ flexDirection: "row", gap: 16, marginTop: 10 }}>
           <Ionicons
@@ -340,6 +529,7 @@ export default function Earnings({ navigation }) {
           </View>
         </View>
         <TouchableOpacity
+          onPress={() => setModalVisible(true)}
           style={{
             borderWidth: 1,
             backgroundColor: "#FAFCFF",
@@ -371,7 +561,7 @@ export default function Earnings({ navigation }) {
             >
               <Ionicons
                 onPress={() => {
-                  navigation.goBack();
+                  // navigation.goBack();
                 }}
                 name="notifications-outline"
                 size={25}
@@ -463,6 +653,8 @@ const styles = StyleSheet.create({
     flex: 1,
     justifyContent: "flex-end",
     backgroundColor: "rgba(0, 0, 0, 0.5)",
+    gap: 40,
+    display: "flex",
   },
   modalContent: {
     borderTopLeftRadius: 50,
@@ -471,6 +663,7 @@ const styles = StyleSheet.create({
     padding: 20,
     width: "100%",
     height: 431,
+    marginTop: 100,
     alignItems: "center",
   },
 });

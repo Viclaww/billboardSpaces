@@ -62,6 +62,29 @@ export const billboardApiSlice = generalApiSlice.injectEndpoints({
         },
       }),
     }),
+    getBanks: builder.query({
+      query: (data) => {
+        return {
+          url: `/getBanks`,
+          method: "GET",
+          headers: {
+            Authorization: `Bearer ${data.token}`,
+          },
+        };
+      },
+    }),
+    resolveAccount: builder.mutation({
+      query: (data) => {
+        return {
+          url: `/resolve-account`,
+          method: "POST",
+          body:data.body,
+          headers: {
+            Authorization: `Bearer ${data.token}`,
+          },
+        };
+      },
+    }),
     getBillboardsByUser: builder.query({
       query: (data) => {
         console.log(data);
@@ -97,4 +120,6 @@ export const {
   useGetABillboardQuery,
   useValidateBookingMutation,
   useInitiateBookingMutation,
+  useLazyGetBanksQuery,
+  useResolveAccountMutation,
 } = billboardApiSlice;
