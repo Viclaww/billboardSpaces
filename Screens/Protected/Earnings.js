@@ -118,6 +118,7 @@ export default function Earnings({ navigation }) {
   const token = useSelector((state) => state.user.token);
   const [history, setHistory] = useState([]);
   const { data, error, isFetching: isLoading } = useGetEarningQuery({ token });
+
   const [banks, setBanks] = useState([]);
   const [selectedBank, setSelectedBank] = useState(null);
   const [accountNumber, setAccountNumber] = useState("");
@@ -129,6 +130,7 @@ export default function Earnings({ navigation }) {
     if (data) {
       setHistory(data.data.history);
       // console.log(history[0]);
+      console.log(data);
     }
     if (error) {
       console.log(error);
@@ -141,7 +143,13 @@ export default function Earnings({ navigation }) {
     }
      try{
       const response = await addBankDetails({token,body:{accountNumber,accountName, bankName: selectedBank.name, bankCode:selectedBank.code}});
-     }catch (error) {
+    console.log(response);
+    if(response.data){
+      Alert.alert("Details Added Successfully")
+      setModalVisible(false)
+    } 
+    }catch (error) {
+
       console.error("adding details error",error);
      }
   }
@@ -232,6 +240,20 @@ export default function Earnings({ navigation }) {
                       // },
                     }
                   >
+                    <AntDesign
+                      onPress={() => {
+                        setModalVisible(false);
+                      }}
+                      style={{
+                        position: "absolute",
+                        top: 20,
+                        left: "90%",
+                        zIndex: 20,
+                      }}
+                      name="close"
+                      size={25}
+                      color="#000"
+                    />
                     <View
                       style={{
                         display: "flex",
@@ -328,7 +350,13 @@ export default function Earnings({ navigation }) {
                           width: "100%",
                         }}
                         value={accountName}
-                        placeholder={resolving ? "Resolving" :resolveError ? "failed to resolve account" : "Account Name"}
+                        placeholder={
+                          resolving
+                            ? "Resolving"
+                            : resolveError
+                            ? "failed to resolve account"
+                            : "Account Name"
+                        }
                         // value={mordalEmail}
                         // onChangeText={(text) => setMordalEmail(text)}
                         // onFocus={handleModalEmailFocus}
@@ -338,27 +366,30 @@ export default function Earnings({ navigation }) {
                   </View>
 
                   <TouchableOpacity
-                  // onPress={handleNext}
-                  style={{
-                    backgroundColor: "#0080FE", 
-                    width: "100%",
-                    display:"flex",
-                    color:"white",
-                    textAlign:"center",
-                    justifyContent:"center",
-                    padding:10,
-                    marginTop:50,
-                    borderRadius:10,
-
-                  }}
+                    onPress={handleUpdateDetails}
+                    style={{
+                      backgroundColor: "#0080FE",
+                      width: "100%",
+                      display: "flex",
+                      color: "white",
+                      textAlign: "center",
+                      justifyContent: "center",
+                      padding: 10,
+                      marginTop: 50,
+                      borderRadius: 10,
+                    }}
                   >
-                    {resolving ? (
+                    {isAdding ? (
                       <ActivityIndicator size="small" />
                     ) : (
-                      <Text style={{
-                        textAlign:"center",
-                        color:"white"
-                      }}>Updatex`</Text>
+                      <Text
+                        style={{
+                          textAlign: "center",
+                          color: "white",
+                        }}
+                      >
+                        Update
+                      </Text>
                     )}
                   </TouchableOpacity>
                 </View>
@@ -615,7 +646,9 @@ export default function Earnings({ navigation }) {
                   fontSize: 16,
                 }}
               >
-                Add Account Details
+                {data && data.data.bank_details.account_name
+                  ? data.data.bank_details.account_name
+                  : "Add Account Details"}
               </Text>
 
               <Text
@@ -623,7 +656,9 @@ export default function Earnings({ navigation }) {
                   fontSize: 16,
                 }}
               >
-                Connect to Make withdrawals Possible
+                {data && data.data.bank_details.account_number
+                  ? `${data.data.bank_details.account_number}, ${data.data.bank_details.bank_name}`
+                  : "Connect to Make withdrawals Possible"}
               </Text>
             </View>
           </View>

@@ -87,6 +87,7 @@ export const billboardApiSlice = generalApiSlice.injectEndpoints({
     }),
     addBankDetails: builder.mutation({
       query: (data) => {
+
         return {
           url: `/add-bank-details`,
           method: "POST",
@@ -96,6 +97,7 @@ export const billboardApiSlice = generalApiSlice.injectEndpoints({
           },
         };
       },
+      invalidatesTags: ["Earnings"],
     }),
     getBillboardsByUser: builder.query({
       query: (data) => {
