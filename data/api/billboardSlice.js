@@ -78,7 +78,19 @@ export const billboardApiSlice = generalApiSlice.injectEndpoints({
         return {
           url: `/resolve-account`,
           method: "POST",
-          body:data.body,
+          body: data.body,
+          headers: {
+            Authorization: `Bearer ${data.token}`,
+          },
+        };
+      },
+    }),
+    addBankDetails: builder.mutation({
+      query: (data) => {
+        return {
+          url: `/add-bank-details`,
+          method: "POST",
+          body: data.body,
           headers: {
             Authorization: `Bearer ${data.token}`,
           },
@@ -122,4 +134,5 @@ export const {
   useInitiateBookingMutation,
   useLazyGetBanksQuery,
   useResolveAccountMutation,
+  useAddBankDetailsMutation,
 } = billboardApiSlice;

@@ -1,5 +1,6 @@
 import {
   ActivityIndicator,
+  Alert,
   Dimensions,
   Modal,
   Platform,
@@ -16,6 +17,7 @@ import { useEffect, useState } from "react";
 import { KeyboardAvoidingView } from "react-native";
 import { TouchableWithoutFeedback } from "react-native";
 import {
+  useAddBankDetailsMutation,
   useGetEarningQuery,
   useLazyGetBankQuery,
   useLazyGetBanksQuery,
@@ -119,8 +121,10 @@ export default function Earnings({ navigation }) {
   const [banks, setBanks] = useState([]);
   const [selectedBank, setSelectedBank] = useState(null);
   const [accountNumber, setAccountNumber] = useState("");
+  const [accountName, setAccountName] = useState("");
   const [getBanks, { isFetching }] = useLazyGetBanksQuery();
-  const [resolveAccount] = useResolveAccountMutation();
+  const [resolveAccount, {isLoading:resolving , error: resolveError}] = useResolveAccountMutation();
+  const [addBankDetails, {isLoading:isAdding,error:addingDetailsError}] = useAddBankDetailsMutation()
   useEffect(() => {
     if (data) {
       setHistory(data.data.history);
@@ -131,17 +135,31 @@ export default function Earnings({ navigation }) {
     }
   }, [data]);
 
+  const handleUpdateDetails = async() => {
+    if(!selectedBank || !accountNumber || !accountName) {
+      Alert.alert("Add Valid Details")
+    }
+     try{
+      const response = await addBankDetails({token,body:{accountNumber,accountName, bankName: selectedBank.name, bankCode:selectedBank.code}});
+     }catch (error) {
+      console.error("adding details error",error);
+     }
+  }
   useEffect(() => {
     const resolve = async () => {
       const response = await resolveAccount({
         token,
         body: { accountNumber, bankCode: selectedBank.code },
       });
+      // console.log(response);
+      if (response.data) {
+        setAccountName(response.data.data.account_name)
+      }
       return response;
     };
 
     if (accountNumber.length == 10 && selectedBank) {
-      resolve();
+     resolve();
     }
   }, [accountNumber, selectedBank]);
   const openBankModal = async () => {
@@ -295,6 +313,7 @@ export default function Earnings({ navigation }) {
                     >
                       <Text>Account Name</Text>
                       <TextInput
+                        readonly
                         style={{
                           fontSize: 12,
                           textAlign: "left",
@@ -308,7 +327,8 @@ export default function Earnings({ navigation }) {
                           fontWeight: "400",
                           width: "100%",
                         }}
-                        placeholder="Account Name"
+                        value={accountName}
+                        placeholder={resolving ? "Resolving" :resolveError ? "failed to resolve account" : "Account Name"}
                         // value={mordalEmail}
                         // onChangeText={(text) => setMordalEmail(text)}
                         // onFocus={handleModalEmailFocus}
@@ -319,13 +339,27 @@ export default function Earnings({ navigation }) {
 
                   <TouchableOpacity
                   // onPress={handleNext}
-                  // style={styles.buttonParent}
+                  style={{
+                    backgroundColor: "#0080FE", 
+                    width: "100%",
+                    display:"flex",
+                    color:"white",
+                    textAlign:"center",
+                    justifyContent:"center",
+                    padding:10,
+                    marginTop:50,
+                    borderRadius:10,
+
+                  }}
                   >
-                    {/* {isLoading2 ? (
+                    {resolving ? (
                       <ActivityIndicator size="small" />
                     ) : (
-                      <Text style={styles.button}>Next</Text>
-                    )} */}
+                      <Text style={{
+                        textAlign:"center",
+                        color:"white"
+                      }}>Updatex`</Text>
+                    )}
                   </TouchableOpacity>
                 </View>
               </TouchableWithoutFeedback>
