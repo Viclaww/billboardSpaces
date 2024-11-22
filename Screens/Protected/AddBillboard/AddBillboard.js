@@ -16,6 +16,7 @@ import {
   ActivityIndicator,
   ScrollView,
   Button,
+  BackHandler,
 } from "react-native";
 import React, { useState, useEffect } from "react";
 import * as ImagePicker from "expo-image-picker";
@@ -27,7 +28,7 @@ import { useCreateNewMutation } from "../../../data/api/billboardSlice";
 import { cloudinaryUpload } from "../../../utils/cloudinaryUpload";
 import { useSelector } from "react-redux";
 
-export default function AddBillboard() {
+export default function AddBillboard({ navigation }) {
   const [selectedImage, setSelectedImage] = useState(null);
   const [fieldModalVisible, setFieldModalVisible] = useState(false);
   const [stateModalVisible, setStateModalVisible] = useState(false);
@@ -37,6 +38,22 @@ export default function AddBillboard() {
   const [fullName, setFullName] = useState("");
   const [phoneNumber, setPhoneNumber] = useState("");
   const [displayName, setDisplayName] = useState("");
+
+
+  useEffect(() => {
+  const backAction = () => {
+    // Your custom back action
+    navigation.goBack();
+    return true;
+  };
+
+  const backHandler = BackHandler.addEventListener(
+    'hardwareBackPress',
+    backAction
+  );
+
+  return () => backHandler.remove();
+}, []);
 
   const openFieldModal = () => {
     setFieldModalVisible(true);
@@ -108,6 +125,7 @@ export default function AddBillboard() {
       console.log(responce);
       if (responce.data) {
         console.log(responce.data);
+        navigation.navigate("Billboardclicked", {data: responce?.data.data});
         setSelectedImage(null);
       } else {
         console.log(responce.error);

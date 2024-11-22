@@ -1,6 +1,7 @@
 import {
   ActivityIndicator,
   Alert,
+  BackHandler,
   Dimensions,
   Modal,
   Platform,
@@ -19,15 +20,16 @@ import { TouchableWithoutFeedback } from "react-native";
 import {
   useAddBankDetailsMutation,
   useGetEarningQuery,
-  useLazyGetBankQuery,
   useLazyGetBanksQuery,
+  useLazyRequestQuery,
+  useLazyRequestWithdrawalQuery,
   useResolveAccountMutation,
 } from "../../data/api/billboardSlice";
 import { useSelector } from "react-redux";
 import { formatTimestamp } from "../utils/functions";
 import { Image } from "react-native";
 const AHistory = ({ transaction }) => {
-  if (transaction.status == "unpaid") return;
+  // if (transaction.status == "unpaid") return;
   return (
     <View
       key={transaction._id}
@@ -126,6 +128,21 @@ export default function Earnings({ navigation }) {
   const [getBanks, { isFetching }] = useLazyGetBanksQuery();
   const [resolveAccount, {isLoading:resolving , error: resolveError}] = useResolveAccountMutation();
   const [addBankDetails, {isLoading:isAdding,error:addingDetailsError}] = useAddBankDetailsMutation()
+  const [request] = useLazyRequestQuery()
+  useEffect(() => {
+    const backAction = () => {
+      // Your custom back action
+      navigation.goBack();
+      return true;
+    };
+
+    const backHandler = BackHandler.addEventListener(
+      "hardwareBackPress",
+      backAction
+    );
+
+    return () => backHandler.remove();
+  }, []);
   useEffect(() => {
     if (data) {
       setHistory(data.data.history);
@@ -152,6 +169,11 @@ export default function Earnings({ navigation }) {
 
       console.error("adding details error",error);
      }
+  }
+
+  const handleWithdraw = async() => {
+      const response = await request({token , amount:1000})
+      console.log(response)
   }
   useEffect(() => {
     const resolve = async () => {
@@ -555,6 +577,7 @@ export default function Earnings({ navigation }) {
             />
           </View>
           <TouchableOpacity
+            onPress={handleWithdraw}
             style={{
               backgroundColor: "#0080FE",
               width: "35%",

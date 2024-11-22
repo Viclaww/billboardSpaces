@@ -13,6 +13,7 @@ import {
   Pressable,
   TouchableOpacity,
   TouchableWithoutFeedback,
+  BackHandler,
 } from "react-native";
 import { AntDesign } from "@expo/vector-icons";
 import { MaterialCommunityIcons } from "@expo/vector-icons";
@@ -28,6 +29,20 @@ const ExploreMore = ({ route, navigation }) => {
   const { data } = route.params;
   const [showDetails, setShowDetails] = useState(false);
 
+  useEffect(() => {
+  const backAction = () => {
+    // Your custom back action
+    navigation.goBack();
+    return true;
+  };
+
+  const backHandler = BackHandler.addEventListener(
+    'hardwareBackPress',
+    backAction
+  );
+
+  return () => backHandler.remove();
+}, []);
   const handleLogin = () => {
     navigation.navigate("Set Advertising Duration");
   };

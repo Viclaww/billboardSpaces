@@ -54,9 +54,9 @@ export default function HomeScreen({ navigation }) {
     }
     if (homeError) {
       console.log("failed", homeError);
-      // if (home.data.status === 401) {
-      //   navigation.navigate("login");
-      // }
+      if (home.data.status === 401) {
+        navigation.navigate("SignIn");
+      }
     }
   }, [data]);
 
@@ -80,7 +80,7 @@ export default function HomeScreen({ navigation }) {
         style={{
           flex: 1,
           justifyContent: "center",
-          alignItems: "center",
+          alignItems:  "center",
         }}
       >
         <ActivityIndicator size="large" color="#0000ff" />

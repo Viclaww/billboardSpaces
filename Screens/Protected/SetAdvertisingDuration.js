@@ -12,6 +12,7 @@ import {
   TouchableOpacity,
   TouchableWithoutFeedback,
   Alert,
+  ActivityIndicator,
 } from "react-native";
 import { Ionicons } from "@expo/vector-icons";
 import { Paystack } from "react-native-paystack-webview";
@@ -30,6 +31,7 @@ export default function SetAdvertisingDuration({ navigation, route }) {
   const [timelineModalVisible, settimelineModalVisible] = useState(false);
   const [bookingFormat, setBookingFormat] = useState("monthly");
   const [mordalEmail, setMordalEmail] = useState("");
+  const [isLoading, setIsLoading] = useState(false);
   const token = useSelector((state) => state.user.token);
   const [timeline, setTimeLine] = useState(0);
   const [transactionId, setTransactionId] = useState("");
@@ -55,6 +57,7 @@ export default function SetAdvertisingDuration({ navigation, route }) {
   };
 
   const handleInitiatePayment = async (billboardId) => {
+    setIsLoading(true);
     try {
       console.log("this");
       const response = await initiateBooking({ token, body: { billboardId } });
@@ -68,6 +71,7 @@ export default function SetAdvertisingDuration({ navigation, route }) {
         console.log(response.error);
       }
     } catch (error) {}
+    setIsLoading(false);
   };
 
   const closeFieldModal = () => {
@@ -117,7 +121,7 @@ export default function SetAdvertisingDuration({ navigation, route }) {
         }}
         onSuccess={async (res) => {
           console.log(res.data.transactionRef.reference);
-
+          setIsLoading(true);
           const response = await validateBooking({
             body: {
               ref: res.data.transactionRef.reference,
@@ -130,10 +134,12 @@ export default function SetAdvertisingDuration({ navigation, route }) {
           });
           console.log(response);
           if (response.data) {
-            navigation.navigate("Billboardclicked", {
-              data: route.params.data,
-            });
+            navigation.navigate("Billboardclicked",{data: route.params.data.billboard});
+            setLoading(false);
+            return;
           }
+          alert("Payment Failed");
+          setLoading(false);
         }}
         ref={paystackWebViewRef}
       />
@@ -251,7 +257,9 @@ export default function SetAdvertisingDuration({ navigation, route }) {
                   marginTop: 40,
                 }}
               >
-                <Text>Proceed to Pay</Text>
+             {
+              isLoading ? <ActivityIndicator></ActivityIndicator> :<Text>Proceed to Pay</Text>
+             }   
               </TouchableOpacity>
             </View>
           </TouchableWithoutFeedback>

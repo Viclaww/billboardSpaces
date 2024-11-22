@@ -11,6 +11,7 @@ import {
   TouchableOpacity,
   TouchableWithoutFeedback,
   ActivityIndicator,
+  BackHandler,
 } from "react-native";
 import { AntDesign } from "@expo/vector-icons";
 import { MaterialCommunityIcons } from "@expo/vector-icons";
@@ -22,7 +23,22 @@ const Billboardclicked = ({ route, navigation }) => {
   const [billboardData, setBillBoardData] = useState(null);
   const token = useSelector((state) => state.user.token);
   const user = useSelector((state) => state.user.user);
-  console.log(route.params.data._id);
+  console.log(route.params)
+
+  useEffect(() => {
+  const backAction = () => {
+    // Your custom back action
+    navigation.goBack();
+    return true;
+  };
+
+  const backHandler = BackHandler.addEventListener(
+    'hardwareBackPress',
+    backAction
+  );
+
+  return () => backHandler.remove();
+}, []);
   const {
     data: billboardRes,
     error,

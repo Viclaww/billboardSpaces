@@ -14,6 +14,7 @@ import {
   TouchableWithoutFeedback,
   Modal,
   KeyboardAvoidingView,
+  BackHandler,
 } from "react-native";
 import AsyncStorage from "@react-native-async-storage/async-storage";
 import { refreshToken } from "../utils/authUtils";
@@ -29,7 +30,7 @@ export default function BookingForm({ navigation }) {
   const [preTime, setPreTime] = useState("");
   const [isLoading, setIsLoading] = useState(false);
 
-  const handleBooking = async ({ route }) => {
+  const handleBooking = async ({ navigation }) => {
     const endpointUrl = `${BASE_URL}/maintenance/`;
     try {
       const storedAccess = await AsyncStorage.getItem("access");
@@ -75,6 +76,20 @@ export default function BookingForm({ navigation }) {
     }
   };
 
+  useEffect(() => {
+  const backAction = () => {
+    // Your custom back action
+    navigation.goBack();
+    return true;
+  };
+
+  const backHandler = BackHandler.addEventListener(
+    'hardwareBackPress',
+    backAction
+  );
+
+  return () => backHandler.remove();
+}, []);
   return (
     <SafeAreaView style={{ flex: 1 }}>
       <KeyboardAvoidingView style={styles.container} behavior="height" enabled>

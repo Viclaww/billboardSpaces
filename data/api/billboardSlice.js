@@ -1,3 +1,4 @@
+import { requestCameraPermissionsAsync } from "expo-image-picker";
 import { generalApiSlice } from "./baseApiSlice";
 export const billboardApiSlice = generalApiSlice.injectEndpoints({
   endpoints: (builder) => ({
@@ -11,7 +12,6 @@ export const billboardApiSlice = generalApiSlice.injectEndpoints({
         },
       }),
     }),
-
     getABillboard: builder.query({
       query: (data) => ({
         url: `/billboards/${data.id}`,
@@ -52,6 +52,7 @@ export const billboardApiSlice = generalApiSlice.injectEndpoints({
       }),
       invalidatesTags: ["BillBoard", "BillBoards"],
     }),
+
     initiateBooking: builder.mutation({
       query: (data) => ({
         url: "/billboards/book/initiate",
@@ -73,6 +74,17 @@ export const billboardApiSlice = generalApiSlice.injectEndpoints({
         };
       },
     }),
+      request: builder.query({
+      query: (data) => {
+        return {
+          url: `/withdrawal/request?amount=${data.amount}`,
+          method: "GET",
+          headers: {
+            Authorization: `Bearer ${data.token}`,
+          },
+        };
+      },
+    }),
     resolveAccount: builder.mutation({
       query: (data) => {
         return {
@@ -87,7 +99,6 @@ export const billboardApiSlice = generalApiSlice.injectEndpoints({
     }),
     addBankDetails: builder.mutation({
       query: (data) => {
-
         return {
           url: `/add-bank-details`,
           method: "POST",
@@ -99,7 +110,7 @@ export const billboardApiSlice = generalApiSlice.injectEndpoints({
       },
       invalidatesTags: ["Earnings"],
     }),
-    getBillboardsByUser: builder.query({
+   getBillboardsByUser: builder.query({
       query: (data) => {
         console.log(data);
         return {
@@ -137,4 +148,5 @@ export const {
   useLazyGetBanksQuery,
   useResolveAccountMutation,
   useAddBankDetailsMutation,
+  useLazyRequestQuery,  
 } = billboardApiSlice;

@@ -5,7 +5,7 @@ import { createNativeStackNavigator } from "@react-navigation/native-stack";
 // import BottomTabNavigator from "./Protected/Landing";
 import { useSelector } from "react-redux";
 import { NavigationContainer, useNavigation } from "@react-navigation/native";
-
+import { BackHandler, Alert } from "react-native";
 import Onboarding from "./UnProtected/Onboarding";
 import CreatAccount from "./UnProtected/CreatAccount";
 import SignIn from "./UnProtected/SignIn";
@@ -33,6 +33,8 @@ import AddDocument from "./Protected/AddDocument";
 import { useEffect } from "react";
 import Notification from "./Protected/Notification";
 import Earnings from "./Protected/Earnings";
+
+
 const Stack = createNativeStackNavigator();
 
 export function Navigation() {
@@ -45,12 +47,35 @@ export function Navigation() {
     function checkUserState() {
       console.log(user, token);
     }
-    checkUserState();
+
+    // checkUserState();
+
+    // const backAction = () => {
+    //   Alert.alert("Hold on!", "Are you sure you want to go back?", [
+    //     {
+    //       text: "Cancel",
+    //       onPress: () => null,
+    //       style: "cancel"
+    //     },
+    //     { text: "YES", onPress: () => BackHandler.exitApp() }
+    //   ]);
+    //   return true;
+    // };
+
+    // const backHandler = BackHandler.addEventListener(
+    //   "hardwareBackPress",
+    //   backAction
+    // );
+
+    // return () => backHandler.remove();
   }, [user, token]);
+
 
   return (
     <NavigationContainer>
-      <Stack.Navigator>
+      <Stack.Navigator
+        initialRouteName={user && token ? "Home" : "CreatAccount"}
+      >
         <Stack.Screen
           name="Landing"
           component={Tabs}
