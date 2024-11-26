@@ -336,9 +336,9 @@ export default function More({ navigation }) {
 
         <Pressable
           onPress={async () => {
+            navigation.navigate("SignIn");
             dispatch(setUser(null));
             dispatch(setToken(null));
-            navigation.navigate("SignIn");
           }}
           style={{
             flexDirection: "row",

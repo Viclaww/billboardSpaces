@@ -42,30 +42,33 @@ export default function About1({ navigation }) {
   const [fullNameFocused, setFullNameFocused] = useState(false);
   const [phoneNumberFocused, setPhoneNumberFocused] = useState(false);
   const [displayNameFocused, setDisplayNameFocused] = useState(false);
-
+  const storedAccess = useSelector((state) => state.user.token);
   const [updateUser, { isSuccess, isError }] = useUpdateUserMutation();
 
   const handleDone = async () => {
-    const storedAccess = useSelector((state) => state.token);
-    setIsLoading(true);
+  
     try {
+        console.log("hello");
+      
+        setIsLoading(true);
       const body = {
         access: storedAccess,
         data: {
-          user_field: selectedText,
-          full_name: fullName,
-          phone_number: phoneNumber,
-          state: selectedState,
-          display_name: displayName,
+          field: selectedText,
+          fullName: fullName,
+          phone: phoneNumber,
+          SOR: selectedState,
+          displayName: displayName,
         },
       };
 
       const { data, error } = await updateUser(body);
       console.log(data);
       if (data) {
+        console.log(body, data.data)
         Alert.alert("Success", data.message);
-        await dispatch(setUser(data.data));
-        navigation.navigate("Home");
+        dispatch(setUser(data.data));
+        navigation.navigate("Landing");
       }
       if (error) {
         Alert.alert(error.data.message);
@@ -494,7 +497,11 @@ export default function About1({ navigation }) {
               </TouchableOpacity>
             </View>
           </View>
-          <TouchableOpacity onPress={handleDone} style={styles.rectangleView3}>
+          <TouchableOpacity onPress={() => {
+            console.log("gime")
+            handleDone()
+
+            }} style={styles.rectangleView3}>
             {isLoading ? (
               <ActivityIndicator size="small" />
             ) : (

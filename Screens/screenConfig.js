@@ -33,6 +33,7 @@ import AddDocument from "./Protected/AddDocument";
 import { useEffect } from "react";
 import Notification from "./Protected/Notification";
 import Earnings from "./Protected/Earnings";
+import { persistor } from "../data/store";
 
 
 const Stack = createNativeStackNavigator();
@@ -40,7 +41,7 @@ const Stack = createNativeStackNavigator();
 export function Navigation() {
   // show sign in and sign up (protected unprotected screens) when user is not signed
   // in.
-  const user = useSelector((state) => state.user);
+  const user = useSelector((state) => state.user.user);
   const token = useSelector((state) => state.user.token);
 
   useEffect(() => {
@@ -48,7 +49,7 @@ export function Navigation() {
       console.log(user, token);
     }
 
-    // checkUserState();
+    checkUserState();
 
     // const backAction = () => {
     //   Alert.alert("Hold on!", "Are you sure you want to go back?", [
@@ -70,11 +71,11 @@ export function Navigation() {
     // return () => backHandler.remove();
   }, [user, token]);
 
-
+    
   return (
     <NavigationContainer>
       <Stack.Navigator
-        initialRouteName={user && token ? "Home" : "CreatAccount"}
+        initialRouteName={user && token ? "Home" : user ? "SignIn": "Onboarding"}
       >
         <Stack.Screen
           name="Landing"

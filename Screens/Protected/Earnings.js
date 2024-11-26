@@ -598,7 +598,9 @@ export default function Earnings({ navigation }) {
               Withdraw
             </Text>
           </TouchableOpacity>
-          <View>
+          <View style={{
+            width:"100%"
+          }}>
             <Text
               style={{
                 fontSize: 30,

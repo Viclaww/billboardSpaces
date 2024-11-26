@@ -233,6 +233,7 @@ export default function CreatAccount({ navigation }) {
         dispatch(setUser(data.data));
         if (!data.data["display-name"]) {
           navigation.navigate("About1");
+          return;
         }
 
         navigation.navigate("Home");
@@ -241,7 +242,7 @@ export default function CreatAccount({ navigation }) {
         console.error("Login Error:", error);
 
         // Extract and show error messages in an aler
-        alert(`Login failed. ${error.data.message || error.error || ""}`);
+        alert(`Login failed. ${error.data.message || error.error || "Please Check Internet"}`);
       }
     } catch (error) {
       // Handle other errors, e.g., network issues

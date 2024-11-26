@@ -22,7 +22,7 @@ export const adApiSlice = generalApiSlice.injectEndpoints({
         }),
         createNewAd: builder.mutation({
             query: (data) => ({
-                url: "/page/advertisements",
+                url: "/advertisements",
                 body: data.body,
                 method: "POST",
                 headers: { Authorization: `Bearer ${data.token}` },
