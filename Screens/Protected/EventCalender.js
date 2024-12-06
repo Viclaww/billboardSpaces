@@ -156,7 +156,7 @@ export default function EventCalender({ navigation }) {
         horizontal={false}
         showsVerticalScrollIndicator={false}
       >
-        <View style={{ flexDirection: "row", gap: 16, marginTop: 10 }}>
+        <View style={{ flexDirection: "row", gap: 16, marginTop: 10,paddingHorizontal:16, }}>
           <Ionicons
             onPress={() => {
               navigation.goBack();

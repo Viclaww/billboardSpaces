@@ -1,4 +1,4 @@
-import React, { useState, useEffect } from "react";
+import React, { useState, useEffect } from 'react'
 import {
   StyleSheet,
   Platform,
@@ -14,185 +14,184 @@ import {
   TouchableWithoutFeedback,
   Modal,
   KeyboardAvoidingView,
-  ActivityIndicator,
-} from "react-native";
-import * as ImagePicker from "expo-image-picker";
-import { AntDesign } from "@expo/vector-icons";
-import { MaterialCommunityIcons } from "@expo/vector-icons";
-import { FontAwesome5 } from "@expo/vector-icons";
+  ActivityIndicator
+} from 'react-native'
+import * as ImagePicker from 'expo-image-picker'
+import { AntDesign } from '@expo/vector-icons'
+import { MaterialCommunityIcons } from '@expo/vector-icons'
+import { FontAwesome5 } from '@expo/vector-icons'
 import {
   useGetAdsInMarketPlaceQuery,
-  useCreateNewAdMutation,
-} from "../../../data/api/adSlice";
-import { useSelector } from "react-redux";
-import { cloudinaryUpload } from "../../../utils/cloudinaryUpload";
-import { avatarImage } from "../../../data/util";
-export default function Annoucment({ navigation }) {
-  const [showBillboardDetails, setShowBillboardDetails] = useState(false);
-  const [showAdDetails, setShowAdDetails] = useState(true);
-  const [showForumDetails, setShowForumDetails] = useState(false);
-  const [activeButton, setActiveButton] = useState("ad");
-  const [activeText, setActiveText] = useState("ad");
-  const [modalVisible, setModalVisible] = useState(false);
-  const [modalCaption, setModalCaption] = useState("");
-  const [isFileUpLoading, setIFileUpLoading] = useState(false);
-  const [selectedImage, setSelectedImage] = useState(null);
-  const [modalUp, setModal] = useState(false);
+  useCreateNewAdMutation
+} from '../../../data/api/adSlice'
+import { useSelector } from 'react-redux'
+import { cloudinaryUpload } from '../../../utils/cloudinaryUpload'
+import { avatarImage } from '../../../data/util'
+export default function Annoucment ({ navigation }) {
+  const [showBillboardDetails, setShowBillboardDetails] = useState(false)
+  const [showAdDetails, setShowAdDetails] = useState(true)
+  const [showForumDetails, setShowForumDetails] = useState(false)
+  const [activeButton, setActiveButton] = useState('ad')
+  const [activeText, setActiveText] = useState('ad')
+  const [modalVisible, setModalVisible] = useState(false)
+  const [modalCaption, setModalCaption] = useState('')
+  const [isFileUpLoading, setIFileUpLoading] = useState(false)
+  const [selectedImage, setSelectedImage] = useState(null)
+  const [modalUp, setModal] = useState(false)
   const [
     createAd,
     {
       // data: adData,
       // error: adError,
-      isLoading: adLoading,
+      isLoading: adLoading
       // isFetching: adFetching,
-    },
-  ] = useCreateNewAdMutation();
-  const token = useSelector((state) => state.user.token);
-  console.log(token);
+    }
+  ] = useCreateNewAdMutation()
+  const token = useSelector(state => state.user.token)
+  console.log(token)
   const {
     data,
     error: errorBd,
     isLoading,
-    refetch,
-  } = useGetAdsInMarketPlaceQuery({ token: token });
+    refetch
+  } = useGetAdsInMarketPlaceQuery({ token: token })
 
-  const [notifyModalVisible, setNotifyModalVisible] = useState(true);
+  const [notifyModalVisible, setNotifyModalVisible] = useState(true)
 
   const openNotifyModal = () => {
-    setNotifyModalVisible(true);
-  };
+    setNotifyModalVisible(true)
+  }
 
   const closeNotifyModal = () => {
-    setNotifyModalVisible(false);
-  };
+    setNotifyModalVisible(false)
+  }
 
   const toggleAdDetails = () => {
-    setShowAdDetails(true);
-    setShowBillboardDetails(false); // Hide Billboard details when Ad details are shown
-    setShowForumDetails(false); // Hide Forum details when Ad details are shown
-    setActiveButton("ad"); // Set active button state to 'ad' when Ad button is pressed
-    setActiveText("ad");
-  };
+    setShowAdDetails(true)
+    setShowBillboardDetails(false) // Hide Billboard details when Ad details are shown
+    setShowForumDetails(false) // Hide Forum details when Ad details are shown
+    setActiveButton('ad') // Set active button state to 'ad' when Ad button is pressed
+    setActiveText('ad')
+  }
 
   const toggleBillboardDetails = () => {
-    setShowBillboardDetails(true);
-    setShowAdDetails(false); // Hide Ad details when Billboard details are shown
-    setShowForumDetails(false); // Hide Forum details when Billboard details are shown
-    setActiveButton("billboard"); // Set active button state to 'billboard' when Billboard button is pressed
-    setActiveText("billboard");
-  };
+    setShowBillboardDetails(true)
+    setShowAdDetails(false) // Hide Ad details when Billboard details are shown
+    setShowForumDetails(false) // Hide Forum details when Billboard details are shown
+    setActiveButton('billboard') // Set active button state to 'billboard' when Billboard button is pressed
+    setActiveText('billboard')
+  }
 
   const toggleForumDetails = () => {
-    setShowForumDetails(true);
-    setShowAdDetails(false); // Hide Ad details when Forum details are shown
-    setShowBillboardDetails(false); // Hide Billboard details when Forum details are shown
-    setActiveButton("forum"); // Set active button state to 'forum' when Forum button is pressed
-    setActiveText("forum");
-  };
+    setShowForumDetails(true)
+    setShowAdDetails(false) // Hide Ad details when Forum details are shown
+    setShowBillboardDetails(false) // Hide Billboard details when Forum details are shown
+    setActiveButton('forum') // Set active button state to 'forum' when Forum button is pressed
+    setActiveText('forum')
+  }
 
   const openModal = () => {
-    setModalVisible(true);
-  };
+    setModalVisible(true)
+  }
 
   const closeModal = () => {
-    setModalVisible(false);
-  };
+    setModalVisible(false)
+  }
 
   const sendToBackend = async (selectedImage, modalCaption) => {
-    setIFileUpLoading(true);
-    const adImage = await cloudinaryUpload(selectedImage);
+    setIFileUpLoading(true)
+    const adImage = await cloudinaryUpload(selectedImage)
     if (adImage.image) {
       const res = await createAd({
         body: { message: modalCaption, image: adImage.image },
-        token,
-      });
-      console.log("Response from upload:", res);
-      setIFileUpLoading(false);
+        token
+      })
+      console.log('Response from upload:', res)
+      setIFileUpLoading(false)
       if (res.data) {
-        refetch();
-        setSelectedImage(null);
-        setModalCaption("");
-        closeModal();
-        openNotifyModal();
+        refetch()
+        setSelectedImage(null)
+        setModalCaption('')
+        closeModal()
+        openNotifyModal()
       }
     }
-  };
-  const openCameraPickerAsync = async (isCamera) => {
-    let permissionResult;
+  }
+  const openCameraPickerAsync = async isCamera => {
+    let permissionResult
     if (isCamera) {
-      permissionResult = await ImagePicker.requestCameraPermissionsAsync();
+      permissionResult = await ImagePicker.requestCameraPermissionsAsync()
     } else {
-      permissionResult =
-        await ImagePicker.requestMediaLibraryPermissionsAsync();
+      permissionResult = await ImagePicker.requestMediaLibraryPermissionsAsync()
     }
 
     if (!permissionResult.granted) {
-      Alert.alert("Permission to access camera roll is required!");
-      return;
+      Alert.alert('Permission to access camera roll is required!')
+      return
     }
 
-    let pickerResult;
+    let pickerResult
     if (isCamera) {
-      pickerResult = await ImagePicker.launchCameraAsync();
+      pickerResult = await ImagePicker.launchCameraAsync()
     } else {
-      pickerResult = await ImagePicker.launchImageLibraryAsync();
+      pickerResult = await ImagePicker.launchImageLibraryAsync()
     }
 
     if (!pickerResult.cancelled && pickerResult.assets.length > 0) {
-      const selectedUri = pickerResult.assets[0].uri;
-      console.log(pickerResult);
+      const selectedUri = pickerResult.assets[0].uri
+      console.log(pickerResult)
       setSelectedImage({
         name: pickerResult.assets[0].fileName,
         type: pickerResult.assets[0].mimeType,
-        uri: pickerResult.assets[0].uri,
-      });
+        uri: pickerResult.assets[0].uri
+      })
     }
-  };
+  }
 
   const openImagePickerAsync = async () => {
     const permissionResult =
-      await ImagePicker.requestMediaLibraryPermissionsAsync();
+      await ImagePicker.requestMediaLibraryPermissionsAsync()
     if (!permissionResult.granted) {
-      Alert.alert("Permission to access camera roll is required!");
-      return;
+      Alert.alert('Permission to access camera roll is required!')
+      return
     }
 
-    const pickerResult = await ImagePicker.launchImageLibraryAsync();
-    console.log("Picker Result:", pickerResult); // Log picker result for debugging
+    const pickerResult = await ImagePicker.launchImageLibraryAsync()
+    console.log('Picker Result:', pickerResult) // Log picker result for debugging
     if (!pickerResult.cancelled && pickerResult.assets.length > 0) {
-      const selectedUri = pickerResult.assets[0].uri;
-      console.log("Selected Image URI:", selectedUri); // Log selected image URI for debugging
-      console.log(pickerResult);
+      const selectedUri = pickerResult.assets[0].uri
+      console.log('Selected Image URI:', selectedUri) // Log selected image URI for debugging
+      console.log(pickerResult)
       setSelectedImage({
         name: pickerResult.assets[0].fileName,
         type: pickerResult.assets[0].mimeType,
-        uri: pickerResult.assets[0].uri,
-      });
+        uri: pickerResult.assets[0].uri
+      })
     }
-  };
+  }
 
-  const [post, setPost] = useState([]);
-  const [error, setError] = useState(null);
+  const [post, setPost] = useState([])
+  const [error, setError] = useState(null)
   const NotifyModal = () => {
     return (
       <View
         style={{
           flex: 1,
-          backgroundColor: "rgba(0, 0, 0, 0.5)",
-          justifyContent: "center",
-          alignItems: "center",
-          height: "100%",
+          backgroundColor: 'rgba(0, 0, 0, 0.5)',
+          justifyContent: 'center',
+          alignItems: 'center',
+          height: '100%'
         }}
       >
-        <View style={{ backgroundColor: "white", width: "80%", height: 100 }}>
+        <View style={{ backgroundColor: 'white', width: '80%', height: 100 }}>
           <Text>Upload Ad Successful</Text>
           <TouchableOpacity onPress={closeNotifyModal}>
             <Text>Close</Text>
           </TouchableOpacity>
         </View>
       </View>
-    );
-  };
+    )
+  }
   const Post = ({ post }) => {
     return (
       <View style={{ flex: 1 }}>
@@ -203,50 +202,50 @@ export default function Annoucment({ navigation }) {
               source={{ uri: post.author.image || avatarImage }}
             />
           </TouchableOpacity>
-          <Text style={{ fontSize: 16, marginLeft: 5, fontWeight: "500" }}>
-            {post.author["display-name"] ||
-              post.author.email.replace("@gmail.com", "")}
+          <Text style={{ fontSize: 16, marginLeft: 5, fontWeight: '500' }}>
+            {post.author['display-name'] ||
+              post.author.email.replace('@gmail.com', '')}
           </Text>
         </View>
         <Text
           style={{
-            fontWeight: "400",
+            fontWeight: '400',
             fontSize: 16,
             paddingLeft: 16,
             marginTop: 5,
-            color: "black",
+            color: 'black'
           }}
         >
           {post.message}
         </Text>
         <View>
           <Image
-            resizeMode="cover"
+            resizeMode='cover'
             style={{
               marginLeft: 16,
               marginTop: 20,
-              width: "90%",
+              width: '90%',
               height: 228,
-              borderRadius: 20,
+              borderRadius: 20
             }}
             source={{ uri: post.image }}
           />
         </View>
       </View>
-    );
-  };
+    )
+  }
   const BillboardRequ = () => {
-    navigation.navigate("BillboardRequ");
-  };
+    navigation.navigate('BillboardRequ')
+  }
 
   return (
     <SafeAreaView style={styles.container}>
       <ScrollView
-        style={{ marginBottom: 5, backgroundColor: "white" }}
+        style={{ marginBottom: 5, backgroundColor: 'white' }}
         horizontal={false}
         showsVerticalScrollIndicator={false}
       >
-        <Text style={{ fontSize: 28, fontWeight: "500", marginLeft: 16 }}>
+        <Text style={{ fontSize: 28, fontWeight: '500', marginLeft: 16 }}>
           Community
         </Text>
 
@@ -259,13 +258,13 @@ export default function Annoucment({ navigation }) {
             onPress={toggleAdDetails}
             style={[
               styles.buttonParent,
-              activeButton === "ad" ? styles.activeButton : null,
+              activeButton === 'ad' ? styles.activeButton : null
             ]}
           >
             <Text
               style={[
                 styles.button,
-                activeText === "ad" ? styles.activeText : null,
+                activeText === 'ad' ? styles.activeText : null
               ]}
             >
               Advertisements
@@ -275,13 +274,13 @@ export default function Annoucment({ navigation }) {
             onPress={toggleBillboardDetails}
             style={[
               styles.buttonParent2,
-              activeButton === "billboard" ? styles.activeButton : null,
+              activeButton === 'billboard' ? styles.activeButton : null
             ]}
           >
             <Text
               style={[
                 styles.button,
-                activeText === "billboard" ? styles.activeText : null,
+                activeText === 'billboard' ? styles.activeText : null
               ]}
             >
               Billboard Requirements
@@ -298,23 +297,23 @@ export default function Annoucment({ navigation }) {
               <TouchableOpacity>
                 <Image
                   style={{ width: 30, height: 30, borderRadius: 100 }}
-                  source={require("../../../assets/profilePicture.jpeg")}
+                  source={require('../../../assets/profilePicture.jpeg')}
                 />
               </TouchableOpacity>
               <View
-                style={{ flex: 1, alignItems: "flex-end", paddingRight: 10 }}
+                style={{ flex: 1, alignItems: 'flex-end', paddingRight: 10 }}
               >
                 <TouchableOpacity
                   onPress={openModal}
                   style={{
-                    justifyContent: "center",
-                    width: "auto",
-                    height: 40,
+                    justifyContent: 'center',
+                    width: 'auto',
+                    height: 40
                   }}
                 >
                   <Image
                     style={{}}
-                    source={require("../../../assets/announcement.png")}
+                    source={require('../../../assets/announcement.png')}
                   />
                 </TouchableOpacity>
               </View>
@@ -323,8 +322,8 @@ export default function Annoucment({ navigation }) {
               style={{
                 paddingTop: 10,
                 fontSize: 22,
-                fontWeight: "400",
-                marginLeft: 16,
+                fontWeight: '400',
+                marginLeft: 16
               }}
             >
               Popular Advert
@@ -333,11 +332,11 @@ export default function Annoucment({ navigation }) {
               <View
                 style={{
                   flex: 1,
-                  justifyContent: "center",
-                  alignItems: "center",
+                  justifyContent: 'center',
+                  alignItems: 'center'
                 }}
               >
-                <ActivityIndicator size="large" color="#0000ff" />
+                <ActivityIndicator size='large' color='#0080FE' />
                 <Text>Fetching marketplace</Text>
               </View>
             )}
@@ -345,8 +344,8 @@ export default function Annoucment({ navigation }) {
               <View
                 style={{
                   flex: 1,
-                  justifyContent: "center",
-                  alignItems: "center",
+                  justifyContent: 'center',
+                  alignItems: 'center'
                 }}
               >
                 <Text>No advertisements yet</Text>
@@ -365,15 +364,15 @@ export default function Annoucment({ navigation }) {
             <Modal
               visible={modalVisible}
               transparent={true}
-              animationType="fade"
+              animationType='fade'
             >
               <KeyboardAvoidingView
                 style={{ flex: 1 }}
-                behavior={Platform.OS === "ios" ? "padding" : "height"}
+                behavior={Platform.OS === 'ios' ? 'padding' : 'height'}
               >
                 <Pressable style={styles.modalContainer} onPress={closeModal}>
                   <TouchableWithoutFeedback
-                    onPress={() => console.log("Tapped inside modal")}
+                    onPress={() => console.log('Tapped inside modal')}
                   >
                     <View style={styles.modalContent}>
                       <ScrollView showsVerticalScrollIndicator={false}>
@@ -381,7 +380,7 @@ export default function Annoucment({ navigation }) {
                           style={{
                             marginLeft: 16,
                             fontSize: 22,
-                            fontWeight: "500",
+                            fontWeight: '500'
                           }}
                         >
                           Post Advertisement
@@ -389,27 +388,27 @@ export default function Annoucment({ navigation }) {
                         <View style={styles.rectangleView2}>
                           <TextInput
                             style={styles.Caption}
-                            placeholder="Write Caption"
+                            placeholder='Write Caption'
                             value={modalCaption}
-                            onChangeText={(text) => setModalCaption(text)}
+                            onChangeText={text => setModalCaption(text)}
                           />
                         </View>
 
-                        <View style={{ flexDirection: "row", marginTop: "5%" }}>
+                        <View style={{ flexDirection: 'row', marginTop: '5%' }}>
                           <TouchableOpacity
                             onPress={openImagePickerAsync}
-                            style={{ marginLeft: 16, width: "32%" }}
+                            style={{ marginLeft: 16, width: '32%' }}
                           >
                             <Image
-                              source={require("../../../assets/addImage.png")}
+                              source={require('../../../assets/addImage.png')}
                             />
                           </TouchableOpacity>
                           <TouchableOpacity
                             onPress={() => openCameraPickerAsync(true)}
-                            style={{ marginLeft: 16, width: "32%" }}
+                            style={{ marginLeft: 16, width: '32%' }}
                           >
                             <Image
-                              source={require("../../../assets/takePic.png")}
+                              source={require('../../../assets/takePic.png')}
                             />
                           </TouchableOpacity>
                         </View>
@@ -419,11 +418,11 @@ export default function Annoucment({ navigation }) {
                             <Image
                               source={{ uri: selectedImage.uri }}
                               style={{
-                                width: "90%",
+                                width: '90%',
                                 height: 250,
                                 borderRadius: 17.72,
                                 marginTop: 10,
-                                marginLeft: 16,
+                                marginLeft: 16
                               }}
                             />
                           )}
@@ -432,26 +431,26 @@ export default function Annoucment({ navigation }) {
                         <TouchableOpacity
                           style={{
                             marginTop: 20,
-                            backgroundColor: "#0080FE",
-                            width: "60%",
+                            backgroundColor: '#0080FE',
+                            width: '60%',
                             height: 48,
                             borderRadius: 10,
-                            alignSelf: "center",
-                            justifyContent: "center",
-                            marginBottom: 10,
+                            alignSelf: 'center',
+                            justifyContent: 'center',
+                            marginBottom: 10
                           }}
                           onPress={() => {
                             const response = sendToBackend(
                               selectedImage,
                               modalCaption
-                            );
+                            )
                           }}
                         >
                           {adLoading || isFileUpLoading ? (
-                            <ActivityIndicator size="small" />
+                            <ActivityIndicator size='small' />
                           ) : (
                             <Text
-                              style={{ color: "#ffff", alignSelf: "center" }}
+                              style={{ color: '#ffff', alignSelf: 'center' }}
                             >
                               Post Advertisement
                             </Text>
@@ -470,37 +469,37 @@ export default function Annoucment({ navigation }) {
           <View>
             <View
               style={{
-                flexDirection: "row",
-                alignItems: "center",
-                justifyContent: "space-between",
+                flexDirection: 'row',
+                alignItems: 'center',
+                justifyContent: 'space-between'
               }}
             >
               <View style={styles.searchContainer}>
                 <TextInput
                   style={styles.searchText}
-                  placeholder="Search State"
+                  placeholder='Search State'
                   // value={password}
                   // onChangeText={text => setPassword(text)}
                 />
                 <TouchableOpacity style={styles.passwordToggle}>
-                  <AntDesign name="search1" size={24} color="#CCCCCC" />
+                  <AntDesign name='search1' size={24} color='#CCCCCC' />
                 </TouchableOpacity>
               </View>
               <TouchableOpacity style={{ paddingRight: 10, marginTop: 12 }}>
                 <MaterialCommunityIcons
                   onPress={openNotifyModal}
-                  name="dots-vertical"
+                  name='dots-vertical'
                   size={24}
-                  color="#383838"
+                  color='#383838'
                 />
               </TouchableOpacity>
             </View>
             <Text
               style={{
                 fontSize: 22,
-                fontWeight: "500",
+                fontWeight: '500',
                 marginLeft: 16,
-                marginTop: "20%",
+                marginTop: '20%'
               }}
             >
               Available States
@@ -547,31 +546,31 @@ export default function Annoucment({ navigation }) {
             <Modal
               visible={notifyModalVisible}
               transparent={true}
-              animationType="fade"
+              animationType='fade'
             >
               <KeyboardAvoidingView
                 style={{ flex: 1 }}
-                behavior={Platform.OS === "ios" ? "padding" : "height"}
+                behavior={Platform.OS === 'ios' ? 'padding' : 'height'}
               >
                 <Pressable
                   style={styles.notifyModalContainer}
                   onPress={closeNotifyModal}
                 >
                   <TouchableWithoutFeedback
-                    onPress={() => console.log("Tapped inside modal")}
+                    onPress={() => console.log('Tapped inside modal')}
                   >
                     <View style={styles.notifyModalContent}>
                       <TouchableOpacity
-                        style={{ flexDirection: "row", gap: 16 }}
+                        style={{ flexDirection: 'row', gap: 16 }}
                         onPress={() => {
-                          navigation.navigate("AddDocument");
+                          navigation.navigate('AddDocument')
                         }}
                       >
                         <Text
                           style={{
-                            fontWeight: "400",
+                            fontWeight: '400',
                             fontSize: 16,
-                            alignSelf: "center",
+                            alignSelf: 'center'
                           }}
                         >
                           Add Document
@@ -590,31 +589,31 @@ export default function Annoucment({ navigation }) {
             <View style={styles.searchContainer2}>
               <TextInput
                 style={styles.searchText}
-                placeholder="Search State"
+                placeholder='Search State'
                 // value={password}
                 // onChangeText={text => setPassword(text)}
               />
               <TouchableOpacity style={styles.passwordToggle}>
-                <AntDesign name="search1" size={24} color="#CCCCCC" />
+                <AntDesign name='search1' size={24} color='#CCCCCC' />
               </TouchableOpacity>
             </View>
 
             <View
               style={{
-                flexDirection: "row",
-                justifyContent: "space-between",
+                flexDirection: 'row',
+                justifyContent: 'space-between',
                 marginRight: 10,
                 marginLeft: 16,
-                marginTop: 10,
+                marginTop: 10
               }}
             >
               <Text
-                style={{ fontWeight: "500", fontSize: 22, color: "#1E1E1E" }}
+                style={{ fontWeight: '500', fontSize: 22, color: '#1E1E1E' }}
               >
                 Popular Groups
               </Text>
               <Text
-                style={{ color: "#0080FE", fontWeight: "500", fontSize: 14 }}
+                style={{ color: '#0080FE', fontWeight: '500', fontSize: 14 }}
               >
                 Create New Group
               </Text>
@@ -629,20 +628,20 @@ export default function Annoucment({ navigation }) {
                   style={{
                     flex: 1,
                     marginLeft: 16,
-                    width: 122,
+                    width: 122
                   }}
                 >
                   <TouchableOpacity>
                     <Image
-                      resizeMode="cover"
-                      source={require("../../../assets/profilePicture.jpeg")}
+                      resizeMode='cover'
+                      source={require('../../../assets/profilePicture.jpeg')}
                       style={styles.rectangleIcon2}
                     />
                     <Text
                       style={{
                         fontSize: 16,
-                        fontWeight: "400",
-                        color: "#383838",
+                        fontWeight: '400',
+                        color: '#383838'
                       }}
                     >
                       Advertisement Agency Of Naija
@@ -654,11 +653,11 @@ export default function Annoucment({ navigation }) {
 
             <Text
               style={{
-                fontWeight: "500",
+                fontWeight: '500',
                 fontSize: 22,
-                color: "#1E1E1E",
+                color: '#1E1E1E',
                 marginLeft: 16,
-                marginTop: 20,
+                marginTop: 20
               }}
             >
               Around you
@@ -666,20 +665,20 @@ export default function Annoucment({ navigation }) {
             <TouchableOpacity
               style={{
                 marginLeft: 16,
-                flexDirection: "row",
+                flexDirection: 'row',
                 marginTop: 20,
-                width: "90%",
+                width: '90%'
               }}
             >
               <Image
-                resizeMode="cover"
-                source={require("../../../assets/profilePicture.jpeg")}
+                resizeMode='cover'
+                source={require('../../../assets/profilePicture.jpeg')}
                 style={styles.rectangleIcon}
               />
-              <View style={{ flexDirection: "column", padding: 5 }}>
+              <View style={{ flexDirection: 'column', padding: 5 }}>
                 <Text>Akwaibom Secreteriat Advertising Agency</Text>
-                <View style={{ flexDirection: "row" }}>
-                  <FontAwesome5 name="user-friends" size={20} color="#383838" />
+                <View style={{ flexDirection: 'row' }}>
+                  <FontAwesome5 name='user-friends' size={20} color='#383838' />
                   <Text>120k members</Text>
                 </View>
               </View>
@@ -688,183 +687,183 @@ export default function Annoucment({ navigation }) {
         )}
       </ScrollView>
     </SafeAreaView>
-  );
+  )
 }
 
 const styles = StyleSheet.create({
   container: {
     flex: 1,
-    paddingTop: Platform.OS === "android" ? StatusBar.currentHeight : 0,
+    paddingTop: Platform.OS === 'android' ? StatusBar.currentHeight : 0
   },
   buttonParent: {
     borderRadius: 10,
     borderWidth: 1,
-    borderColor: "#999999",
+    borderColor: '#999999',
     width: 161,
     height: 40,
-    alignItems: "center",
-    justifyContent: "center",
-    marginLeft: 16,
+    alignItems: 'center',
+    justifyContent: 'center',
+    marginLeft: 16
   },
   buttonParent2: {
     borderRadius: 10,
     borderWidth: 1,
-    borderColor: "#999999",
-    width: "auto",
+    borderColor: '#999999',
+    width: 'auto',
     paddingHorizontal: 15,
     height: 40,
-    alignItems: "center",
-    justifyContent: "center",
+    alignItems: 'center',
+    justifyContent: 'center',
     marginLeft: 16,
-    borderStyle: "solid",
+    borderStyle: 'solid'
   },
   buttonParent3: {
     borderRadius: 10,
     borderWidth: 1,
-    borderColor: "#999999",
+    borderColor: '#999999',
     width: 117,
     height: 40,
-    alignItems: "center",
-    justifyContent: "center",
+    alignItems: 'center',
+    justifyContent: 'center',
     marginLeft: 16,
-    marginRight: 10,
+    marginRight: 10
   },
   button: {
     fontSize: 16,
-    fontWeight: "400",
-    color: "#999999",
+    fontWeight: '400',
+    color: '#999999'
   },
   rectangle1: {
-    width: "auto",
+    width: 'auto',
     height: 40,
     paddingLeft: 20,
-    marginTop: "5%",
-    flexDirection: "row",
-    alignItems: "center",
+    marginTop: '5%',
+    flexDirection: 'row',
+    alignItems: 'center'
   },
   activeButton: {
-    borderColor: "#0080FE", // Border color when button is active
-    borderWidth: 1,
+    borderColor: '#0080FE', // Border color when button is active
+    borderWidth: 1
   },
   activeText: {
-    color: "#0080FE",
+    color: '#0080FE'
   },
   modalContainer: {
     flex: 1,
-    justifyContent: "flex-end",
-    backgroundColor: "rgba(0, 0, 0, 0.5)",
+    justifyContent: 'flex-end',
+    backgroundColor: 'rgba(0, 0, 0, 0.5)'
   },
   modalContent: {
     borderTopLeftRadius: 50,
     borderTopRightRadius: 50,
-    backgroundColor: "#fff",
+    backgroundColor: '#fff',
     padding: 20,
-    width: "100%",
-    height: 430,
+    width: '100%',
+    height: 430
   },
   rectangleView2: {
     borderRadius: 10,
-    backgroundColor: "#f5faff",
-    shadowColor: "rgba(204, 204, 204, 0.25)",
+    backgroundColor: '#f5faff',
+    shadowColor: 'rgba(204, 204, 204, 0.25)',
     shadowOffset: {
       width: 0,
-      height: 2,
+      height: 2
     },
     shadowRadius: 2,
-    marginTop: "6%",
+    marginTop: '6%',
     elevation: 2,
     shadowOpacity: 1,
-    width: "90%",
+    width: '90%',
     height: 104,
-    marginLeft: 16,
+    marginLeft: 16
   },
   Caption: {
     fontSize: 12,
-    textAlign: "left",
+    textAlign: 'left',
     left: 10,
-    fontWeight: "400",
-    width: "100%",
-    height: "100%",
+    fontWeight: '400',
+    width: '100%',
+    height: '100%'
   },
   searchContainer: {
     borderRadius: 10,
-    backgroundColor: "#F5FAFF",
-    justifyContent: "center",
-    shadowColor: "rgba(204, 204, 204, 0.25)",
+    backgroundColor: '#F5FAFF',
+    justifyContent: 'center',
+    shadowColor: 'rgba(204, 204, 204, 0.25)',
     shadowOffset: {
       width: 0,
-      height: 2,
+      height: 2
     },
     shadowRadius: 2,
     // marginTop: '5%',
     elevation: 2,
     shadowOpacity: 1,
-    width: "80%",
+    width: '80%',
     height: 40,
     marginLeft: 16,
-    marginTop: 16,
+    marginTop: 16
   },
   searchContainer2: {
     borderRadius: 10,
-    backgroundColor: "#F5FAFF",
-    justifyContent: "center",
-    shadowColor: "rgba(204, 204, 204, 0.25)",
+    backgroundColor: '#F5FAFF',
+    justifyContent: 'center',
+    shadowColor: 'rgba(204, 204, 204, 0.25)',
     shadowOffset: {
       width: 0,
-      height: 2,
+      height: 2
     },
     shadowRadius: 2,
     // marginTop: '5%',
     elevation: 2,
     shadowOpacity: 1,
-    width: "90%",
+    width: '90%',
     height: 40,
     marginLeft: 16,
-    marginTop: 16,
+    marginTop: 16
   },
   searchText: {
     fontSize: 16,
-    textAlign: "left",
+    textAlign: 'left',
     left: 10,
-    fontWeight: "400",
-    width: "100%",
+    fontWeight: '400',
+    width: '100%'
   },
   passwordToggle: {
-    position: "absolute",
+    position: 'absolute',
     right: 10,
-    top: "50%",
-    transform: [{ translateY: -12 }],
+    top: '50%',
+    transform: [{ translateY: -12 }]
   },
   state: {
     marginTop: 15,
     fontSize: 22,
-    fontWeight: "400",
+    fontWeight: '400',
     marginLeft: 16,
-    color: "#383838",
+    color: '#383838'
   },
   rectangleIcon2: {
     borderRadius: 298.18,
     height: 82,
-    width: 87.96,
+    width: 87.96
   },
   rectangleIcon: {
     borderRadius: 203.39,
     height: 55.93,
-    width: 60,
+    width: 60
   },
   notifyModalContainer: {
     flex: 1,
-    justifyContent: "flex-end",
-    backgroundColor: "rgba(0, 0, 0, 0.5)",
+    justifyContent: 'flex-end',
+    backgroundColor: 'rgba(0, 0, 0, 0.5)'
   },
   notifyModalContent: {
     borderTopLeftRadius: 10,
     borderTopRightRadius: 10,
-    backgroundColor: "#fff",
+    backgroundColor: '#fff',
     padding: 20,
-    width: "100%",
+    width: '100%',
     height: 100,
-    justifyContent: "center",
+    justifyContent: 'center'
     // alignItems: 'center'
-  },
-});
+  }
+})

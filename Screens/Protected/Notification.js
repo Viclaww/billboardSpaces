@@ -20,6 +20,7 @@ import AsyncStorage from "@react-native-async-storage/async-storage";
 import { BASE_URL } from "../../apiConfig";
 import { useGetNotificationsQuery } from "../../data/api/billboardSlice";
 import { useSelector } from "react-redux";
+import { NotificationOptionIcon } from "./components/Icons";
 
 export default function Notification() {
   const [modalVisible, setModalVisible] = useState(false);
@@ -77,10 +78,10 @@ export default function Notification() {
           style={{
             justifyContent: "space-between",
             flexDirection: "row",
-            marginRight: 20,
-            marginTop: 10,
-            marginLeft: 10,
-            marginBottom: 30,
+            itemsCenter:"center",
+
+            paddingHorizontal:25,
+            paddingVertical:10
           }}
         >
           <Text
@@ -92,8 +93,9 @@ export default function Notification() {
           >
             Notification
           </Text>
-          <TouchableOpacity onPress={openModal}>
-            <Image style={{}} source={require("../../assets/cat.png")} />
+          <TouchableOpacity onPress={openModal} style={{itemsCenter:"center", marginTop:7}} >
+
+            <NotificationOptionIcon/>
           </TouchableOpacity>
         </View>
 

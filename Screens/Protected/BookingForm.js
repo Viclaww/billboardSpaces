@@ -117,7 +117,7 @@ export default function BookingForm({ navigation }) {
 
           <View
             style={{
-              paddingLeft: 16,
+              marginTop:10
             }}
           >
             <Text style={styles.Text}>Billboard Location</Text>
@@ -138,7 +138,7 @@ export default function BookingForm({ navigation }) {
           <View
             style={{
               marginTop: 10,
-              paddingLeft: 16,
+
             }}
           >
             <Text style={styles.Text}>Description of Maintenance Request</Text>
@@ -155,7 +155,7 @@ export default function BookingForm({ navigation }) {
           <View
             style={{
               marginTop: 10,
-              paddingLeft: 16,
+
             }}
           >
             <Text style={styles.Text}>Preferred Date</Text>
@@ -176,7 +176,7 @@ export default function BookingForm({ navigation }) {
           <View
             style={{
               marginTop: 10,
-              paddingLeft: 16,
+
             }}
           >
             <Text style={styles.Text}>Preferred Time</Text>
@@ -197,7 +197,7 @@ export default function BookingForm({ navigation }) {
           <View
             style={{
               marginTop: 10,
-              paddingLeft: 16,
+
             }}
           >
             <Text style={styles.Text}>Email</Text>
@@ -218,7 +218,6 @@ export default function BookingForm({ navigation }) {
           <View
             style={{
               marginTop: 10,
-              paddingLeft: 16,
             }}
           >
             <Text style={styles.Text}>Phone Number</Text>
@@ -240,7 +239,7 @@ export default function BookingForm({ navigation }) {
             onPress={handleBooking}
             style={{
               marginTop: 50,
-              width: "90%",
+              width: "100%",
               alignSelf: "center",
               height: 40,
               backgroundColor: "#0080FE",
@@ -269,6 +268,7 @@ const styles = StyleSheet.create({
   container: {
     flex: 1,
     paddingTop: Platform.OS === "android" ? StatusBar.currentHeight : 0,
+    paddingHorizontal:16
   },
   Text: {
     fontWeight: "400",
@@ -293,7 +293,7 @@ const styles = StyleSheet.create({
     borderColor: "#f5faff",
     marginTop: "5%",
     borderWidth: 1,
-    width: "90%",
+    width: "100%",
     height: 50,
   },
   fullName: {
@@ -320,7 +320,7 @@ const styles = StyleSheet.create({
     marginTop: "5%",
     elevation: 2,
     shadowOpacity: 1,
-    width: "90%",
+    width: "100%",
     height: 104,
     borderStyle: "solid",
     borderColor: "#f5faff",

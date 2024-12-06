@@ -143,13 +143,14 @@ export default function AddBillboard({ navigation }) {
   };
 
   return (
-    <SafeAreaView style={{ flex: 1 }}>
+    <SafeAreaView style={{ flex: 1, paddingHorizontal: 16,
+}}>
       <KeyboardAvoidingView style={styles.container} behavior="height" enabled>
         <ScrollView>
           <Text
             style={{
               fontWeight: "500",
-              paddingLeft: 16,
+
               fontSize: 28,
             }}
           >
@@ -158,7 +159,7 @@ export default function AddBillboard({ navigation }) {
           <Text
             style={{
               fontWeight: "400",
-              paddingLeft: 16,
+
               top: 10,
               fontSize: 12,
             }}
@@ -174,7 +175,7 @@ export default function AddBillboard({ navigation }) {
                 height: 199,
                 alignItems: "center",
                 justifyContent: "center",
-                marginLeft: 16,
+                // marginLeft: 16,
                 marginTop: 16,
               }}
             >
@@ -185,7 +186,7 @@ export default function AddBillboard({ navigation }) {
           <View
             style={{
               marginTop: 10,
-              paddingLeft: 16,
+
             }}
           >
             <Text style={styles.Text}>Size</Text>
@@ -254,7 +255,7 @@ export default function AddBillboard({ navigation }) {
           <View
             style={{
               marginTop: 10,
-              paddingLeft: 16,
+
             }}
           >
             <Text style={styles.Text}>State of residence</Text>
@@ -495,7 +496,7 @@ export default function AddBillboard({ navigation }) {
 
           {/* <View style={{
             marginTop: 10,
-            paddingLeft: 16,
+
           }}>
             <Text style={styles.Text}>Target Audience in demographic</Text>
             <View>
@@ -515,7 +516,7 @@ export default function AddBillboard({ navigation }) {
           <View
             style={{
               marginTop: 10,
-              paddingLeft: 16,
+
             }}
           >
             <Text style={styles.Text}>Location Address</Text>
@@ -536,7 +537,7 @@ export default function AddBillboard({ navigation }) {
           <View
             style={{
               marginTop: 10,
-              paddingLeft: 16,
+
             }}
           >
             <Text style={styles.Text}>Enter Rent Price for a Month</Text>
@@ -572,7 +573,6 @@ const styles = StyleSheet.create({
     flex: 1,
     paddingTop: Platform.OS === "android" ? StatusBar.currentHeight : 0,
     backgroundColor: "white",
-    padding: 5,
   },
   Text: {
     fontWeight: "400",
@@ -597,7 +597,7 @@ const styles = StyleSheet.create({
     // borderColor: "#0080fe",
     marginTop: "5%",
     // borderWidth: 1,
-    width: "90%",
+    width: "100%",
     height: 50,
   },
   arrowContainer: {
@@ -616,7 +616,7 @@ const styles = StyleSheet.create({
     borderRadius: 10,
     backgroundColor: "#f5faff",
     padding: 15,
-    width: "90.5%",
+    width: "100%",
     height: "30%",
   },
   billboardOwner: {
@@ -644,7 +644,7 @@ const styles = StyleSheet.create({
     borderColor: "#f5faff",
     marginTop: "5%",
     borderWidth: 1,
-    width: "90.5%",
+    width: "100%",
     height: 50,
   },
   fullName: {
@@ -670,7 +670,7 @@ const styles = StyleSheet.create({
     borderColor: "#0080fe",
     marginTop: "30%",
     borderWidth: 1,
-    width: "90%",
+    width: "100%",
     height: 50,
   },
   modalContainer2: {
@@ -683,20 +683,20 @@ const styles = StyleSheet.create({
     borderBottomRightRadius: 10,
     backgroundColor: "#f5faff",
     padding: 15,
-    width: "90.5%",
+    width: "100%",
     height: "23%",
   },
   buttonParent: {
     borderRadius: 10,
     backgroundColor: "#0080fe",
-    width: "90%",
+    width: "100%",
     marginTop: "15%",
     height: 48,
     alignItems: "center",
     justifyContent: "center",
     // alignSelf: 'center',
     marginBottom: 20,
-    marginLeft: 16,
+    // marginLeft: 16,
   },
   button: {
     fontSize: 14,

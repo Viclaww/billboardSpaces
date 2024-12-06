@@ -27,7 +27,7 @@ const PopularComponent = ({ popular, navigation }) => {
 
 const styles = StyleSheet.create({
   rectangleIcon3: {
-    borderRadius: 10,
+    // borderRadius: 10,
     height: 150,
     width: 159.5,
   },

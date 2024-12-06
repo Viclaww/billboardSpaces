@@ -26,7 +26,7 @@ export default function Help({ navigation }) {
         horizontal={false}
         showsVerticalScrollIndicator={false}
       >
-        <View style={{ flexDirection: "row", gap: 16, marginTop: 10 }}>
+        <View style={{ flexDirection: "row", gap: 16, marginTop: 10, }}>
           <Ionicons
             onPress={() => {
               navigation.goBack();
@@ -53,8 +53,8 @@ export default function Help({ navigation }) {
             }}
             style={{
               flexDirection: "row",
-              marginTop: 10,
-              marginLeft: 16,
+              marginTop: 16,
+
               gap: 24,
             }}
           >
@@ -69,7 +69,7 @@ export default function Help({ navigation }) {
               Contact Us
             </Text>
           </Pressable>
-          <Pressable style={{ flexDirection: "row", marginLeft: 16, gap: 24 }}>
+          <Pressable style={{ flexDirection: "row",  gap: 24 }}>
             <Image
               resizeMode="contain"
               style={{ width: "6.5%", height: 24 }}
@@ -81,7 +81,7 @@ export default function Help({ navigation }) {
               Terms and Privacy Policy
             </Text>
           </Pressable>
-          <Pressable style={{ flexDirection: "row", marginLeft: 16, gap: 24 }}>
+          <Pressable style={{ flexDirection: "row",  gap: 24 }}>
             <Image
               resizeMode="contain"
               style={{ width: "6.5%", height: 24 }}
@@ -103,5 +103,6 @@ const styles = StyleSheet.create({
   container: {
     flex: 1,
     paddingTop: Platform.OS === "android" ? StatusBar.currentHeight : 0,
+    paddingHorizontal:16
   },
 });

@@ -43,7 +43,7 @@ export default function Advertisement({ navigation }) {
         </View>
         <TouchableOpacity
           style={{
-            width: "90%",
+            width: "100%",
             height: 76,
             borderWidth: 1,
             alignSelf: "center",
@@ -61,7 +61,7 @@ export default function Advertisement({ navigation }) {
         </TouchableOpacity>
         <TouchableOpacity
           style={{
-            width: "90%",
+            width: "100%",
             height: 76,
             borderWidth: 1,
             alignSelf: "center",
@@ -86,5 +86,6 @@ const styles = StyleSheet.create({
   container: {
     flex: 1,
     paddingTop: Platform.OS === "android" ? StatusBar.currentHeight : 0,
+    paddingHorizontal:16
   },
 });

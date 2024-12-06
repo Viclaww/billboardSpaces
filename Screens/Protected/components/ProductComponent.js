@@ -41,10 +41,11 @@ const styles = StyleSheet.create({
   productSize: {
     position: "absolute",
     backgroundColor: "#F4CAB9",
-    padding: 3,
-    borderRadius: 10,
-    top: 3,
-    right: 13,
+    paddingVertical: 1,
+    paddingHorizontal:12,
+    borderRadius: 20,
+    top: 5,
+    right: 15,
   },
   rectangleIcon2: {
     borderRadius: 10,

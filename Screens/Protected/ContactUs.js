@@ -39,7 +39,7 @@ export default function ContactUs({ navigation }) {
         horizontal={false}
         showsVerticalScrollIndicator={false}
       >
-        <View style={{ flexDirection: "row", gap: 16, marginTop: 10 }}>
+        <View style={{ flexDirection: "row", gap: 16, marginTop: 10,marginLeft:10 }}>
           <Ionicons
             onPress={() => {
               navigation.goBack();
@@ -62,9 +62,11 @@ export default function ContactUs({ navigation }) {
         <View
           style={{
             alignSelf: "center",
-            width: "80%",
-            height: 57,
+            // width: "80%",
+            justifyContent:"center",
+            // height: 57,
             marginTop: 10,
+            padding:15
           }}
         >
           <Text

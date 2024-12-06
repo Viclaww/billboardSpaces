@@ -157,7 +157,7 @@ export default function Refferrals({ navigation }) {
           onPress={shareApp}
           style={{
             marginTop: 50,
-            width: "90%",
+            width: "100%",
             alignSelf: "center",
             height: 40,
             backgroundColor: "#0080FE",
@@ -177,7 +177,7 @@ export default function Refferrals({ navigation }) {
           </Text>
         </TouchableOpacity>
 
-        <View style={{ paddingTop: "80%" }}>
+        <View style={{ paddingTop: "70%" }}>
           <Text
             style={{ fontWeight: "500", fontSize: 14, alignSelf: "center" }}
           >
@@ -214,5 +214,6 @@ const styles = StyleSheet.create({
   container: {
     flex: 1,
     paddingTop: Platform.OS === "android" ? StatusBar.currentHeight : 0,
+    paddingHorizontal:16
   },
 });
