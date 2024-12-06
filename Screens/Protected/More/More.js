@@ -61,6 +61,7 @@ export default function More({ navigation }) {
             backgroundColor: "#0080FE",
             borderBottomRightRadius: 40,
             borderBottomLeftRadius: 40,
+            paddingHorizontal:16
           }}
         >
           <Text
@@ -68,7 +69,7 @@ export default function More({ navigation }) {
               fontWeight: "500",
               fontSize: 28,
               color: "#ffffff",
-              marginLeft: 16,
+
               marginTop: 40,
             }}
           >
@@ -76,7 +77,7 @@ export default function More({ navigation }) {
           </Text>
           <View
             style={{
-              marginLeft: 16,
+
               flexDirection: "row",
               marginTop: 30,
               width: "90%",
@@ -87,20 +88,24 @@ export default function More({ navigation }) {
               source={{ uri: user?.image || avatarImage }}
               style={styles.rectangleIcon}
             />
-            <View style={{ flexDirection: "column", padding: 5 }}>
+            <View style={{ flexDirection: "column", padding: 5,marginLeft:8 }}>
               <View
                 style={{
-                  width: 105,
-                  height: 22,
-                  borderRadius: 10,
+                  width: "auto",
+                  // height: 22,
+                  borderRadius: 100,
                   backgroundColor: "#F5B800",
+                  paddingVertical:4,
+                  paddingHorizontal:15,
                   justifyContent: "center",
+                  alignItems:"center"
                 }}
               >
-                <Text style={{ alignSelf: "center", color: "#ffffff" }}>
+                <Text style={{ alignSelf: "center", color: "#ffffff",fontSize:12 }}>
                   {user?.field}
                 </Text>
               </View>
+              <Text style={{color:"white",fontSize:18,fontWeight:"500",marginTop:5}}>{user?.["display-name"]}</Text>
 
               <TouchableOpacity
                 onPress={() => {
@@ -130,11 +135,11 @@ export default function More({ navigation }) {
             </View>
           </View>
         </View>
-
+<View style={{paddingHorizontal:16}}>
         <Pressable
           onPress={handleMyBillboard}
           resizeMode="contain"
-          style={{ flexDirection: "row", marginTop: 30, marginLeft: 16 }}
+          style={{ flexDirection: "row", marginTop: 30,  }}
         >
           <Image
             style={{ width: "7%", height: 24 }}
@@ -155,7 +160,7 @@ export default function More({ navigation }) {
         </Pressable>
         <Pressable
           onPress={handleEventCalender}
-          style={{ flexDirection: "row", marginTop: 30, marginLeft: 16 }}
+          style={{ flexDirection: "row", marginTop: 30,  }}
         >
           <Image
             resizeMode="contain"
@@ -176,17 +181,18 @@ export default function More({ navigation }) {
 
         <View
           style={{
-            width: "90%",
+            width: "100%",
             marginTop: 40,
             borderWidth: 1,
             borderColor: "#0080FE",
             alignSelf: "center",
+            opacity:0.7
           }}
         ></View>
 
         <Pressable
           onPress={handleSubscription}
-          style={{ flexDirection: "row", marginTop: 30, marginLeft: 16 }}
+          style={{ flexDirection: "row", marginTop: 30,    }}
         >
           <Image
             resizeMode="contain"
@@ -206,7 +212,7 @@ export default function More({ navigation }) {
         </Pressable>
         <Pressable
           onPress={handleEarnings}
-          style={{ flexDirection: "row", marginTop: 30, marginLeft: 16 }}
+          style={{ flexDirection: "row", marginTop: 30,    }}
         >
           <Image
             resizeMode="contain"
@@ -221,12 +227,12 @@ export default function More({ navigation }) {
               alignSelf: "center",
             }}
           >
-            Earnings
+            Earning
           </Text>
         </Pressable>
         <Pressable
           onPress={handleAdvertisement}
-          style={{ flexDirection: "row", marginTop: 30, marginLeft: 16 }}
+          style={{ flexDirection: "row", marginTop: 30,    }}
         >
           <Image
             resizeMode="contain"
@@ -246,7 +252,7 @@ export default function More({ navigation }) {
         </Pressable>
         <Pressable
           onPress={handleMaintenanceBooking}
-          style={{ flexDirection: "row", marginTop: 30, marginLeft: 16 }}
+          style={{ flexDirection: "row", marginTop: 30,    }}
         >
           <Image
             resizeMode="contain"
@@ -265,7 +271,7 @@ export default function More({ navigation }) {
           </Text>
         </Pressable>
         <Pressable
-          style={{ flexDirection: "row", marginTop: 30, marginLeft: 16 }}
+          style={{ flexDirection: "row", marginTop: 30,    }}
         >
           <Image
             resizeMode="contain"
@@ -285,7 +291,7 @@ export default function More({ navigation }) {
         </Pressable>
         <Pressable
           onPress={handleRefferrals}
-          style={{ flexDirection: "row", marginTop: 30, marginLeft: 16 }}
+          style={{ flexDirection: "row", marginTop: 30,    }}
         >
           <Image
             resizeMode="contain"
@@ -305,7 +311,7 @@ export default function More({ navigation }) {
         </Pressable>
         <Pressable
           onPress={handleHelp}
-          style={{ flexDirection: "row", marginTop: 30, marginLeft: 16 }}
+          style={{ flexDirection: "row", marginTop: 30,    }}
         >
           <Image
             resizeMode="contain"
@@ -326,11 +332,12 @@ export default function More({ navigation }) {
 
         <View
           style={{
-            width: "90%",
+            width: "100%",
             marginTop: 40,
             borderWidth: 1,
             borderColor: "#0080FE",
             alignSelf: "center",
+            opacity:0.7
           }}
         ></View>
 
@@ -343,7 +350,7 @@ export default function More({ navigation }) {
           style={{
             flexDirection: "row",
             marginTop: 30,
-            marginLeft: 16,
+
             marginBottom: 20,
           }}
         >
@@ -363,6 +370,7 @@ export default function More({ navigation }) {
             Log Out
           </Text>
         </Pressable>
+        </View>
       </ScrollView>
     </SafeAreaView>
   );
@@ -377,6 +385,6 @@ const styles = StyleSheet.create({
   rectangleIcon: {
     borderRadius: 203.39,
     height: 87,
-    width: "25%",
+    width: 87,
   },
 });

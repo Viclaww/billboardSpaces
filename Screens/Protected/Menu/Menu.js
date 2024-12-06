@@ -12,61 +12,61 @@ import {
   SafeAreaView,
   ScrollView,
   ActivityIndicator
-} from "react-native";
-import React, { useState, useEffect } from "react";
-import { AntDesign } from "@expo/vector-icons";
-import axios from "axios";
-import ProductComponent from "../components/ProductComponent";
-import PopularComponent from "../components/PopularComponent";
-import { useSelector } from "react-redux";
-import { useGetBillboardsInMarketPlaceQuery } from "../../../data/api/billboardSlice";
-export default function Menu({ navigation }) {
-  const token = useSelector((state) => state.user.token);
-  console.log(token);
+} from 'react-native'
+import React, { useState, useEffect } from 'react'
+import { AntDesign } from '@expo/vector-icons'
+import axios from 'axios'
+import ProductComponent from '../components/ProductComponent'
+import PopularComponent from '../components/PopularComponent'
+import { useSelector } from 'react-redux'
+import { useGetBillboardsInMarketPlaceQuery } from '../../../data/api/billboardSlice'
+export default function Menu ({ navigation }) {
+  const token = useSelector(state => state.user.token)
+  console.log(token)
   const {
     data: marketPlaceData,
     isError,
     error,
     isLoading,
-    isFetching,
-  } = useGetBillboardsInMarketPlaceQuery({token: token});
-  const [fieldModalVisible, setFieldModalVisible] = useState(false);
-  const [stateModalVisible, setStateModalVisible] = useState(false);
-  const [selectedText, setSelectedText] = useState("");
-  const [selectedState, setSelectedState] = useState("");
-  const [searchKeyword, setSearchKeyword] = useState("");
-  const [popular, setPopular] = useState([]);
-  const [products, setProducts] = useState([]);
-  const [searchResults, setSearchResults] = useState([]);
-  const [showSearchResults, setShowSearchResults] = useState(false);
+    isFetching
+  } = useGetBillboardsInMarketPlaceQuery({ token: token })
+  const [fieldModalVisible, setFieldModalVisible] = useState(false)
+  const [stateModalVisible, setStateModalVisible] = useState(false)
+  const [selectedText, setSelectedText] = useState('')
+  const [selectedState, setSelectedState] = useState('')
+  const [searchKeyword, setSearchKeyword] = useState('')
+  const [popular, setPopular] = useState([])
+  const [products, setProducts] = useState([])
+  const [searchResults, setSearchResults] = useState([])
+  const [showSearchResults, setShowSearchResults] = useState(false)
 
   const openStateModal = () => {
-    setStateModalVisible(true);
-  };
+    setStateModalVisible(true)
+  }
   const closeStateModal = () => {
-    setStateModalVisible(false);
-  };
+    setStateModalVisible(false)
+  }
   const openFieldModal = () => {
-    setFieldModalVisible(true);
-  };
+    setFieldModalVisible(true)
+  }
   const closeFieldModal = () => {
-    setFieldModalVisible(false);
-  };
-  const handleTextSelection = (text) => {
-    setSelectedText(text);
-    closeFieldModal();
-  };
-  const handleStateSelection = (text) => {
-    setSelectedState(text);
-    closeStateModal();
-  };
-  const splitIntoRows = (data) => {
-    const rows = [];
+    setFieldModalVisible(false)
+  }
+  const handleTextSelection = text => {
+    setSelectedText(text)
+    closeFieldModal()
+  }
+  const handleStateSelection = text => {
+    setSelectedState(text)
+    closeStateModal()
+  }
+  const splitIntoRows = data => {
+    const rows = []
     for (let i = 0; i < data.length; i += 2) {
-      rows.push(data.slice(i, i + 2));
+      rows.push(data.slice(i, i + 2))
     }
-    return rows;
-  };
+    return rows
+  }
   return (
     <SafeAreaView style={styles.container}>
       <ScrollView
@@ -76,15 +76,15 @@ export default function Menu({ navigation }) {
       >
         <View
           style={{
-            flexDirection: "row",
-            justifyContent: "space-between",
-            paddingLeft: 25,
+            flexDirection: 'row',
+            justifyContent: 'space-between',
+            // paddingLeft: 25
           }}
         >
           <Text
             style={{
               fontSize: 28,
-              fontWeight: "500",
+              fontWeight: '500'
             }}
           >
             Marketplace
@@ -94,11 +94,11 @@ export default function Menu({ navigation }) {
         <View style={styles.searchContainer}>
           <TextInput
             style={styles.searchText}
-            placeholder="Search"
-            onChangeText={(text) => setSearchKeyword(text)}
+            placeholder='Search'
+            onChangeText={text => setSearchKeyword(text)}
           />
           <TouchableOpacity style={styles.passwordToggle}>
-            <AntDesign name="search1" size={24} color="#CCCCCC" />
+            <AntDesign name='search1' size={24} color='#CCCCCC' />
           </TouchableOpacity>
         </View>
 
@@ -120,7 +120,7 @@ export default function Menu({ navigation }) {
               // Display image when no search results
               <View style={styles.noResultContainer}>
                 <Image
-                  source={require("../../../assets/marketError.png")}
+                  source={require('../../../assets/marketError.png')}
                   style={styles.noResultImage}
                 />
                 <Text style={styles.noResultText}>No results found</Text>
@@ -133,9 +133,9 @@ export default function Menu({ navigation }) {
             <Text
               style={{
                 fontSize: 16,
-                paddingLeft: 25,
-                fontWeight: "500",
-                marginTop: 10,
+                // paddingLeft: 25,
+                fontWeight: '500',
+                marginTop: 10
               }}
             >
               Filter By
@@ -143,50 +143,52 @@ export default function Menu({ navigation }) {
 
             <View
               style={{
-                flexDirection: "row",
-                paddingLeft: 25,
-                alignItems: "center",
+                flexDirection: 'row',
+                // paddingLeft: 25,
+                alignItems: 'center'
               }}
             >
               <Text
                 style={{
-                  fontSize: 16,
-                  fontWeight: "500",
+                  fontSize: 14,
+                  fontWeight: '500',
                   marginTop: 10,
+                  color:"#383838"
                 }}
               >
-                {selectedState !== "" ? selectedState : "Location"}
+                {selectedState !== '' ? selectedState : 'Location'}
               </Text>
               <AntDesign
                 onPress={openStateModal}
                 style={styles.arrow}
-                name="down"
+                name='down'
                 size={16}
-                color="black"
+                color='black'
               />
               <Text
                 style={{
-                  fontSize: 16,
-                  fontWeight: "500",
+                  fontSize: 14,
+                  fontWeight: '500',
                   marginTop: 10,
                   paddingLeft: 20,
+                  color:"#383838"
                 }}
               >
-                {selectedText !== "" ? selectedText : "Size"}
+                {selectedText !== '' ? selectedText : 'Size'}
               </Text>
               <AntDesign
                 onPress={openFieldModal}
                 style={styles.arrow}
-                name="down"
+                name='down'
                 size={16}
-                color="black"
+                color='black'
               />
             </View>
 
             <Modal
               visible={stateModalVisible}
               transparent={true}
-              animationType="slide"
+              animationType='slide'
             >
               <Pressable
                 style={styles.modalContainer2}
@@ -195,32 +197,32 @@ export default function Menu({ navigation }) {
                 <View style={styles.modalContent2}>
                   <ScrollView>
                     <TouchableOpacity
-                      onPress={() => handleStateSelection("abia")}
+                      onPress={() => handleStateSelection('abia')}
                     >
                       <Text style={styles.billboardOwner}>Abia</Text>
                     </TouchableOpacity>
                     <TouchableOpacity
-                      onPress={() => handleStateSelection("  Adamawa")}
+                      onPress={() => handleStateSelection('  Adamawa')}
                     >
                       <Text style={styles.billboardOwner}>Adamawa</Text>
                     </TouchableOpacity>
                     <TouchableOpacity
-                      onPress={() => handleStateSelection("  Akwaibom")}
+                      onPress={() => handleStateSelection('  Akwaibom')}
                     >
                       <Text style={styles.billboardOwner}>Akwaibom</Text>
                     </TouchableOpacity>
                     <TouchableOpacity
-                      onPress={() => handleStateSelection("  Anambra")}
+                      onPress={() => handleStateSelection('  Anambra')}
                     >
                       <Text style={styles.billboardOwner}>Anambra</Text>
                     </TouchableOpacity>
                     <TouchableOpacity
-                      onPress={() => handleStateSelection("  Bauchi")}
+                      onPress={() => handleStateSelection('  Bauchi')}
                     >
                       <Text style={styles.billboardOwner}>Bauchi</Text>
                     </TouchableOpacity>
                     <TouchableOpacity
-                      onPress={() => handleStateSelection("  Benue")}
+                      onPress={() => handleStateSelection('  Benue')}
                     >
                       <Text style={styles.billboardOwner}>Benue</Text>
                     </TouchableOpacity>
@@ -232,7 +234,7 @@ export default function Menu({ navigation }) {
             <Modal
               visible={fieldModalVisible}
               transparent={true}
-              animationType="slide"
+              animationType='slide'
             >
               <Pressable
                 style={styles.modalContainer}
@@ -240,34 +242,34 @@ export default function Menu({ navigation }) {
               >
                 <View style={styles.modalContent}>
                   <TouchableOpacity
-                    onPress={() => handleTextSelection("Potrait")}
+                    onPress={() => handleTextSelection('Potrait')}
                   >
                     <Text style={styles.billboardOwner}>Potrait</Text>
                   </TouchableOpacity>
                   <TouchableOpacity
-                    onPress={() => handleTextSelection("Large Format")}
+                    onPress={() => handleTextSelection('Large Format')}
                   >
                     <Text style={styles.billboardOwner}>Large Format</Text>
                   </TouchableOpacity>
                   <TouchableOpacity
-                    onPress={() => handleTextSelection("48 Sheet")}
+                    onPress={() => handleTextSelection('48 Sheet')}
                   >
                     <Text style={styles.billboardOwner}>48 Sheet</Text>
                   </TouchableOpacity>
                   <TouchableOpacity
-                    onPress={() => handleTextSelection("Spectacular Billboard")}
+                    onPress={() => handleTextSelection('Spectacular Billboard')}
                   >
                     <Text style={styles.billboardOwner}>
                       Spectacular Billboard
                     </Text>
                   </TouchableOpacity>
                   <TouchableOpacity
-                    onPress={() => handleTextSelection("Gantry")}
+                    onPress={() => handleTextSelection('Gantry')}
                   >
                     <Text style={styles.billboardOwner}>Gantry</Text>
                   </TouchableOpacity>
                   <TouchableOpacity
-                    onPress={() => handleTextSelection("Unipole")}
+                    onPress={() => handleTextSelection('Unipole')}
                   >
                     <Text style={styles.billboardOwner}>Unipole</Text>
                   </TouchableOpacity>
@@ -278,15 +280,15 @@ export default function Menu({ navigation }) {
               <View
                 style={{
                   flex: 1,
-                  justifyContent: "center",
-                  alignItems: "center",
+                  justifyContent: 'center',
+                  alignItems: 'center'
                 }}
               >
-                <ActivityIndicator size="large" color="#0000ff" />
+                <ActivityIndicator size='large' color='#0080FE' />
                 <Text>Fetching marketplace</Text>
               </View>
             )}
-            {(marketPlaceData && marketPlaceData?.length !== 0) && (
+            {marketPlaceData && marketPlaceData?.length !== 0 && (
               <>
                 <Text style={styles.newlyAdded}>Featured</Text>
                 <View style={styles.newlyAddedScroll}>
@@ -296,21 +298,33 @@ export default function Menu({ navigation }) {
                   >
                     <View style={styles.img2}>
                       {products &&
-                        marketPlaceData.data['featured'].map((product, index) => (
-                          <ProductComponent navigation={navigation} key={index} product={product} />
-                        ))}
+                        marketPlaceData.data['featured'].map(
+                          (product, index) => (
+                            <ProductComponent
+                              navigation={navigation}
+                              key={index}
+                              product={product}
+                            />
+                          )
+                        )}
                     </View>
                   </ScrollView>
                 </View>
                 <Text style={styles.newlyAdded}>Popular</Text>
                 <View style={styles.popularContainer}>
-                  {splitIntoRows(marketPlaceData.data['explore']).map((row, rowIndex) => (
-                    <View key={rowIndex} style={styles.popularRow}>
-                      {row.map((item, itemIndex) => (
-                        <PopularComponent key={itemIndex} navigation={navigation} popular={item} />
-                      ))}
-                    </View>
-                  ))}
+                  {splitIntoRows(marketPlaceData.data['explore']).map(
+                    (row, rowIndex) => (
+                      <View key={rowIndex} style={styles.popularRow}>
+                        {row.map((item, itemIndex) => (
+                          <PopularComponent
+                            key={itemIndex}
+                            navigation={navigation}
+                            popular={item}
+                          />
+                        ))}
+                      </View>
+                    )
+                  )}
                 </View>
               </>
             )}
@@ -318,126 +332,129 @@ export default function Menu({ navigation }) {
         )}
       </ScrollView>
     </SafeAreaView>
-  );
+  )
 }
 
 const styles = StyleSheet.create({
   container: {
     flex: 1,
-    paddingTop: Platform.OS === "android" ? StatusBar.currentHeight : 0,
-    backgroundColor: "white",
+    paddingTop: Platform.OS === 'android' ? StatusBar.currentHeight : 0,
+    backgroundColor: 'white',
+    paddingHorizontal:16
   },
   searchContainer: {
     borderRadius: 10,
-    backgroundColor: "#F5FAFF",
-    justifyContent: "center",
-    shadowColor: "rgba(204, 204, 204, 0.25)",
+    backgroundColor: '#F5FAFF',
+    justifyContent: 'center',
+    shadowColor: 'rgba(204, 204, 204, 0.25)',
     shadowOffset: {
       width: 0,
-      height: 2,
+      height: 2
     },
     shadowRadius: 2,
     // marginTop: '5%',
     elevation: 2,
     shadowOpacity: 1,
-    width: "90%",
+    width: '100%',
     height: 40,
-    marginLeft: 25,
-    marginTop: 16,
+    // marginLeft: 25,
+    marginTop: 16
   },
   searchText: {
     fontSize: 16,
-    textAlign: "left",
+    textAlign: 'left',
     left: 10,
-    fontWeight: "400",
-    width: "100%",
+    fontWeight: '400',
+    width: '100%'
   },
   passwordToggle: {
-    position: "absolute",
+    position: 'absolute',
     right: 15,
-    top: "50%",
-    transform: [{ translateY: -12 }],
+    top: '50%',
+    transform: [{ translateY: -12 }]
   },
   arrow: {
     marginTop: 12,
-    paddingLeft: 5,
+    paddingLeft: 5
   },
   newlyAdded: {
     fontSize: 22,
-    fontWeight: "500",
-    color: "#1e1e1e",
-    paddingLeft: 25,
-    marginTop: 20,
+    fontWeight: '500',
+    color: '#1e1e1e',
+    marginBottom:15,
+    marginTop: 20
   },
   newlyAddedScroll: {
-    alignItems: "center",
+    // alignItems: 'center',
+    // gap:0
   },
   img2: {
-    flexDirection: "row",
-    paddingLeft: 25,
+    flexDirection: 'row',
+    // paddingLeft: 25
   },
   popularContainer: {
-    paddingLeft: 25,
+    // paddingLeft: 25
   },
   rectangleIcon2: {
     borderRadius: 10,
     height: 150,
-    width: 159.5,
+    width: 159.5
   },
   rectangleIcon3: {
     borderRadius: 10,
     height: 150,
-    width: 159.5,
+    width: 159.5
   },
   popularRow: {
-    flexDirection: "row",
-    justifyContent: "space-between",
-    marginBottom: 10,
+    flexDirection: 'row',
+    justifyContent: 'space-between',
+    // gap:20,
+    marginBottom: 10
   },
   modalContainer2: {
     flex: 1,
-    paddingLeft: 25,
+    paddingLeft: 25
     // alignItems: 'center',
   },
   modalContent2: {
-    marginTop: "42%",
+    marginTop: '42%',
     borderRadius: 10,
-    backgroundColor: "#f5faff",
+    backgroundColor: '#f5faff',
     padding: 15,
     width: 243,
-    height: "30%",
+    height: '30%'
   },
   modalContainer: {
     flex: 1,
-    paddingLeft: "32%",
+    paddingLeft: '32%'
   },
   modalContent: {
-    marginTop: "57.5%",
+    marginTop: '57.5%',
     borderRadius: 10,
-    backgroundColor: "#f5faff",
+    backgroundColor: '#f5faff',
     padding: 15,
-    width: "90%",
-    height: "30%",
+    width: '90%',
+    height: '30%'
   },
   billboardOwner: {
     fontSize: 14,
-    fontWeight: "500",
-    color: "#383838",
-    padding: 10,
+    fontWeight: '500',
+    color: '#383838',
+    padding: 10
   },
   noResultContainer: {
-    alignContent: "center",
-    alignSelf: "center",
+    alignContent: 'center',
+    alignSelf: 'center'
   },
   noResultImage: {
-    marginTop: 30,
+    marginTop: 30
   },
   noResultText: {
-    fontWeight: "500",
+    fontWeight: '500',
     fontSize: 22,
     lineHeight: 26.63,
-    color: "#1E1E1E",
-    alignSelf: "center",
-    paddingTop: 50,
-  },
-});
+    color: '#1E1E1E',
+    alignSelf: 'center',
+    paddingTop: 50
+  }
+})

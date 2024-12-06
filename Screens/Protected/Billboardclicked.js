@@ -1,4 +1,4 @@
-import React, { useState, useEffect } from "react";
+import React, { useState, useEffect } from 'react'
 import {
   Platform,
   Text,
@@ -11,128 +11,128 @@ import {
   TouchableOpacity,
   TouchableWithoutFeedback,
   ActivityIndicator,
-  BackHandler,
-} from "react-native";
-import { AntDesign } from "@expo/vector-icons";
-import { MaterialCommunityIcons } from "@expo/vector-icons";
-import { Table, Row, Rows, Cell } from "react-native-table-component";
-import { useGetABillboardQuery } from "../../data/api/billboardSlice";
-import { useSelector } from "react-redux";
+  BackHandler
+} from 'react-native'
+import { AntDesign } from '@expo/vector-icons'
+import { MaterialCommunityIcons } from '@expo/vector-icons'
+import { Table, Row, Rows, Cell } from 'react-native-table-component'
+import { useGetABillboardQuery } from '../../data/api/billboardSlice'
+import { useSelector } from 'react-redux'
 
 const Billboardclicked = ({ route, navigation }) => {
-  const [billboardData, setBillBoardData] = useState(null);
-  const token = useSelector((state) => state.user.token);
-  const user = useSelector((state) => state.user.user);
+  const [billboardData, setBillBoardData] = useState(null)
+  const token = useSelector(state => state.user.token)
+  const user = useSelector(state => state.user.user)
   console.log(route.params)
 
   useEffect(() => {
-  const backAction = () => {
-    // Your custom back action
-    navigation.goBack();
-    return true;
-  };
+    const backAction = () => {
+      // Your custom back action
+      navigation.goBack()
+      return true
+    }
 
-  const backHandler = BackHandler.addEventListener(
-    'hardwareBackPress',
-    backAction
-  );
+    const backHandler = BackHandler.addEventListener(
+      'hardwareBackPress',
+      backAction
+    )
 
-  return () => backHandler.remove();
-}, []);
+    return () => backHandler.remove()
+  }, [])
   const {
     data: billboardRes,
     error,
-    isFetching,
+    isFetching
   } = useGetABillboardQuery({
     id: route.params.data._id,
-    token,
-  });
+    token
+  })
 
   useEffect(() => {
     if (billboardRes) {
-      console.log(billboardRes.data);
-      setBillBoardData(billboardRes.data);
+      console.log(billboardRes.data)
+      setBillBoardData(billboardRes.data)
     }
-  }, [billboardRes]);
+  }, [billboardRes])
 
   const tableData = [
-    ["Location", billboardData?.billboard.location],
-    ["Size", billboardData?.billboard.size],
-    ["Price", `${billboardData?.billboard.rentPerMonth}`],
-  ];
-  const [showDetails, setShowDetails] = useState(false);
+    ['Location', billboardData?.billboard.location],
+    ['Size', billboardData?.billboard.size],
+    ['Price', `${billboardData?.billboard.rentPerMonth}`]
+  ]
+  const [showDetails, setShowDetails] = useState(false)
 
   const handleGOToBook = () => {
-    if (!billboardData.billboard.available) return;
-    navigation.navigate("Set Advertising Duration", { data: billboardData });
-  };
+    if (!billboardData.billboard.available) return
+    navigation.navigate('Set Advertising Duration', { data: billboardData })
+  }
 
   const handleShowDetails = () => {
-    setShowDetails((currentState) => !currentState);
-  };
+    setShowDetails(currentState => !currentState)
+  }
 
   if (isFetching) {
     return (
       <View
         style={{
           flex: 1,
-          justifyContent: "center",
-          alignItems: "center",
+          justifyContent: 'center',
+          alignItems: 'center'
         }}
       >
-        <ActivityIndicator size="large" color="#0000ff" />
+        <ActivityIndicator size='large' color='#0080FE' />
         <Text>Fetching Billboard</Text>
       </View>
-    );
+    )
   }
 
   if (error) {
-    console.log(error);
+    console.log(error)
     return (
       <View
         style={{
           flex: 1,
-          justifyContent: "center",
-          alignItems: "center",
+          justifyContent: 'center',
+          alignItems: 'center'
         }}
       >
         <Text>Failed tot Fetch!</Text>
       </View>
-    );
+    )
   }
   return (
     <SafeAreaView style={styles.container}>
       <ScrollView
-        style={{ marginBottom: 5, backgroundColor: "white" }}
+        style={{ marginBottom: 5, backgroundColor: 'white' }}
         horizontal={false}
         showsVerticalScrollIndicator={false}
       >
         <View
           style={{
-            flexDirection: "row",
-            justifyContent: "space-between",
+            flexDirection: 'row',
+            justifyContent: 'space-between',
             paddingLeft: 16,
             paddingRight: 10,
             paddingTop: 10,
-            backgroundColor: "white",
+            backgroundColor: 'white'
           }}
         >
           <AntDesign
             onPress={() => navigation.goBack()}
-            name="arrowleft"
+            name='arrowleft'
             size={30}
-            color="#383838"
+            color='#383838'
           />
           <MaterialCommunityIcons
-            name="dots-vertical"
+            name='dots-vertical'
             size={24}
-            color="#383838"
+            color='#383838'
           />
         </View>
 
-        <View style={{ alignItems: "center", marginTop: 10 }}>
+        <View style={{ alignItems: 'center', marginTop: 10 }}>
           <Image
-            resizeMode="cover"
+            resizeMode='cover'
             source={{ uri: billboardData?.billboard.image }}
             style={styles.billboardImage}
           />
@@ -145,28 +145,30 @@ const Billboardclicked = ({ route, navigation }) => {
               source={
                 billboardData?.billboard.owner.profilePicture
                   ? billboardData.billboard.owner.profilePicture
-                  : require("../../assets/profilePicture.jpeg")
+                  : require('../../assets/profilePicture.jpeg')
               }
             />
           </TouchableOpacity>
-          <Text style={{ fontSize: 16, fontWeight: "400", marginLeft: 5 }}>
+          <Text style={{ fontSize: 16, fontWeight: '400', marginLeft: 5 }}>
             {billboardData?.billboard.owner.name}
           </Text>
-          <View style={{ flex: 1, alignItems: "flex-end", paddingRight: 10 }}>
+          <View style={{ flex: 1, alignItems: 'flex-end', paddingRight: 10 }}>
             <TouchableOpacity
               onPress={() => {
-                navigation.navigate("ExploreMore", { billboardData });
+                navigation.navigate('ExploreMore', { billboardData })
               }}
               style={{
-                justifyContent: "center",
+                justifyContent: 'center',
                 borderRadius: 10,
-                width: "50%",
+                width: 'auto',
                 height: 40,
                 borderWidth: 1,
-                borderColor: "#0080FE",
+                borderColor: '#0080FE',
+                paddingHorizontal: 10,
+                paddingVertical: 5
               }}
             >
-              <Text style={{ color: "#0080FE", alignSelf: "center" }}>
+              <Text style={{ color: '#0080FE', alignSelf: 'center' }}>
                 Explore More
               </Text>
             </TouchableOpacity>
@@ -175,44 +177,44 @@ const Billboardclicked = ({ route, navigation }) => {
 
         <Text
           style={{
-            fontWeight: "400",
+            fontWeight: '400',
             fontSize: 22,
             marginTop: 10,
-            paddingLeft: 20,
+            paddingLeft: 20
           }}
         >
           Description
         </Text>
         <Table
           style={{
-            width: "90%",
+            width: '90%',
             borderRadius: 10,
-            overflow: "hidden",
+            overflow: 'hidden',
             marginLeft: 20,
-            marginTop: 10,
+            marginTop: 10
           }}
-          borderStyle={{ borderWidth: 1, borderColor: "#999999" }}
+          borderStyle={{ borderWidth: 1, borderColor: '#999999' }}
         >
           <Rows data={tableData} textStyle={styles.tableText} />
         </Table>
 
         <View
           style={{
-            flexDirection: "row",
-            justifyContent: "space-between",
+            flexDirection: 'row',
+            justifyContent: 'space-between',
             paddingLeft: 16,
             paddingRight: 10,
-            marginTop: 10,
+            marginTop: 10
           }}
         >
-          <Text style={{ fontSize: 16, marginBottom: 10, fontWeight: "400" }}>
+          <Text style={{ fontSize: 16, marginBottom: 10, fontWeight: '400' }}>
             Design and Services
           </Text>
           <AntDesign
             onPress={handleShowDetails}
-            name={showDetails ? "up" : "down"}
+            name={showDetails ? 'up' : 'down'}
             size={20}
-            color="black"
+            color='black'
           />
         </View>
 
@@ -222,9 +224,9 @@ const Billboardclicked = ({ route, navigation }) => {
               style={{
                 fontSize: 14,
                 paddingLeft: 16,
-                color: "#0080FE",
+                color: '#0080FE',
                 padding: 10,
-                fontWeight: "500",
+                fontWeight: '500'
               }}
             >
               DIY Design with Canva API
@@ -233,8 +235,8 @@ const Billboardclicked = ({ route, navigation }) => {
               style={{
                 fontSize: 14,
                 paddingLeft: 16,
-                color: "#0080FE",
-                fontWeight: "500",
+                color: '#0080FE',
+                fontWeight: '500'
               }}
             >
               Book Professional Design Services
@@ -249,68 +251,68 @@ const Billboardclicked = ({ route, navigation }) => {
           >
             <Text style={styles.button}>
               {billboardData.billboard.available
-                ? "Book Now"
+                ? 'Book Now'
                 : billboardData.billboard.bookedBy == user.id
-                ? "Booked by You"
-                : "Booked"}
+                ? 'Booked by You'
+                : 'Booked'}
             </Text>
           </TouchableOpacity>
         )}
       </ScrollView>
     </SafeAreaView>
-  );
-};
+  )
+}
 
 const styles = {
   container: {
     flex: 1,
-    paddingTop: Platform.OS === "android" ? StatusBar.currentHeight : 0,
+    paddingTop: Platform.OS === 'android' ? StatusBar.currentHeight : 0
   },
   billboardImage: {
-    width: "90%",
+    width: '90%',
     height: 274,
-    borderRadius: 10,
+    borderRadius: 10
   },
   rectangle1: {
-    width: "100%",
+    width: '100%',
     height: 40,
     // backgroundColor: "blu/e",
     paddingLeft: 20,
-    marginTop: "5%",
-    flexDirection: "row",
-    alignItems: "center",
+    marginTop: '5%',
+    flexDirection: 'row',
+    alignItems: 'center'
   },
   tableContainer: {
-    overflow: "hidden",
+    overflow: 'hidden',
     paddingLeft: 20,
-    marginTop: 10,
+    marginTop: 10
   },
   tableText: {
-    margin: 10,
+    margin: 10
   },
   boldText: {
-    fontWeight: "bold",
+    fontWeight: 'bold'
   },
-  buttonParent: (available) => ({
+  buttonParent: available => ({
     borderRadius: 10,
-    backgroundColor: available ? "#0080fe" : "#aaaaaa",
-    width: "90%",
-    marginTop: "15%",
+    backgroundColor: available ? '#0080fe' : '#aaaaaa',
+    width: '90%',
+    marginTop: '15%',
     height: 48,
-    alignItems: "center",
-    justifyContent: "center",
-    alignSelf: "center",
+    alignItems: 'center',
+    justifyContent: 'center',
+    alignSelf: 'center'
   }),
   button: {
     fontSize: 14,
-    fontWeight: "500",
-    color: "#fff",
+    fontWeight: '500',
+    color: '#fff'
   },
   cellText: {
     fontSize: 14,
-    fontWeight: "500",
-    color: "#0080FE",
-  },
-};
+    fontWeight: '500',
+    color: '#0080FE'
+  }
+}
 
-export default Billboardclicked;
+export default Billboardclicked

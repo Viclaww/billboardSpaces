@@ -45,7 +45,6 @@ export default function MaintenanceBooking({ navigation }) {
           style={{
             paddingTop: 10,
             fontWeight: "500",
-            marginLeft: 16,
             fontSize: 18,
           }}
         >
@@ -55,8 +54,6 @@ export default function MaintenanceBooking({ navigation }) {
           style={{
             marginTop: 10,
             width: "85%",
-            height: 76,
-            marginLeft: 16,
             flexDirection: "row",
           }}
         >
@@ -72,11 +69,12 @@ export default function MaintenanceBooking({ navigation }) {
 
         <View
           style={{
-            width: "90%",
+            width: "100%",
             marginTop: 10,
             borderWidth: 1,
             borderColor: "#66B3FF",
             alignSelf: "center",
+            opacity:0.7
           }}
         ></View>
 
@@ -84,8 +82,6 @@ export default function MaintenanceBooking({ navigation }) {
           style={{
             marginTop: 20,
             width: "85%",
-            height: 76,
-            marginLeft: 16,
             flexDirection: "row",
           }}
         >
@@ -101,11 +97,12 @@ export default function MaintenanceBooking({ navigation }) {
 
         <View
           style={{
-            width: "90%",
+            width: "100%",
             marginTop: 10,
             borderWidth: 1,
             borderColor: "#66B3FF",
             alignSelf: "center",
+            opacity:0.7
           }}
         ></View>
 
@@ -113,8 +110,7 @@ export default function MaintenanceBooking({ navigation }) {
           style={{
             marginTop: 20,
             width: "85%",
-            height: 76,
-            marginLeft: 16,
+            // height: 76,
             flexDirection: "row",
           }}
         >
@@ -134,7 +130,7 @@ export default function MaintenanceBooking({ navigation }) {
           }}
           style={{
             marginTop: 50,
-            width: "90%",
+            width: "100%",
             alignSelf: "center",
             height: 40,
             backgroundColor: "#0080FE",
@@ -162,5 +158,6 @@ const styles = StyleSheet.create({
   container: {
     flex: 1,
     paddingTop: Platform.OS === "android" ? StatusBar.currentHeight : 0,
+    paddingHorizontal:16
   },
 });
