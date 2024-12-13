@@ -23,7 +23,7 @@ const Billboardclicked = ({ route, navigation }) => {
   const [billboardData, setBillBoardData] = useState(null)
   const token = useSelector(state => state.user.token)
   const user = useSelector(state => state.user.user)
-  console.log(route.params)
+  // console.log(route.params)
 
   useEffect(() => {
     const backAction = () => {

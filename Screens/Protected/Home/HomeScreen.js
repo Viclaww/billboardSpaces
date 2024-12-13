@@ -23,9 +23,11 @@ import { useSelector } from 'react-redux'
 import { useGetHomeQuery } from '../../../data/api/billboardSlice'
 import { avatarImage } from '../../../data/util'
 import { NotificationIcon } from '../components/Icons'
+import DiscoverLists from '../components/DiscoverLists'
 
 const WIDTH = Dimensions.get('window').width
 const HEIGHT = Dimensions.get('window').height
+const RESPONSIVEWIDTH = (WIDTH - 16 * 2) * 0.48
 
 export default function HomeScreen ({ navigation }) {
   const splitIntoRows = data => {
@@ -45,6 +47,7 @@ export default function HomeScreen ({ navigation }) {
   const [events, setEvents] = useState([])
 
   const { data, error: homeError, isFetching } = useGetHomeQuery({ token })
+  // console.log(data)
 
   const scrollViewRef = React.createRef()
   useEffect(() => {
@@ -56,7 +59,7 @@ export default function HomeScreen ({ navigation }) {
     }
     if (homeError) {
       console.log('failed', homeError)
-      if (home.data.status === 401) {
+      if (home?.data.status === 401) {
         navigation.navigate('SignIn')
       }
     }
@@ -71,7 +74,10 @@ export default function HomeScreen ({ navigation }) {
       const slide = Math.ceil(
         nativeEvent.contentOffset.x / nativeEvent.layoutMeasurement.width
       )
-      // console.log(slide)
+      // console.log('contentOffset:', nativeEvent.contentOffset.x)
+      // console.log('layoutMeasurement', nativeEvent.layoutMeasurement.width)
+
+      // console.log('Slide', slide)
       if (slide != imgActive) {
         setimgActive(slide)
       }
@@ -79,17 +85,26 @@ export default function HomeScreen ({ navigation }) {
   }
 
   useEffect(() => {
+    let slideIndex = 0
+
     const timer = setInterval(() => {
-      setimgActive(prev => (prev == images.length - 1 ? 0 : prev + 1))
+      slideIndex = (slideIndex + 1) % images.length
+
+      setimgActive(slideIndex)
+      scrollViewRef?.current?.scrollTo({
+        x: slideIndex * WIDTH,
+        animated: true
+      })
+      // setimgActive(prev => (prev == images.length - 1 ? 0 : prev + 1))
     }, 3000)
     return () => {
       clearInterval(timer)
     }
-  }, [images])
+  }, [imgActive])
 
   useEffect(() => {
     scrollViewRef?.current?.scrollTo({
-      x: imgActive * WIDTH * 0.9,
+      x: imgActive * WIDTH,
       animated: true
     }) //if screenwidth is 300 and it's on the first image, x:0*300*0.9, making it 0
     //if it's index is 1, x:1*300*0.9 =298, so it will move the image 298px to the right
@@ -118,7 +133,13 @@ export default function HomeScreen ({ navigation }) {
         showsVerticalScrollIndicator={false}
       >
         <View style={styles.rectangle1}>
-          <View style={{ flexDirection: 'row', alignItems: 'center', gap: 8 }}>
+          <View
+            style={{
+              flexDirection: 'row',
+              alignItems: 'center',
+              gap: 8
+            }}
+          >
             <Image
               style={{ width: 40, height: 40, borderRadius: 100 }}
               source={{ uri: user?.image || avatarImage }}
@@ -138,9 +159,7 @@ export default function HomeScreen ({ navigation }) {
           </View>
         </View>
 
-        <View
-        // style={{flex:1}}
-        >
+        <View style={{ paddingHorizontal: 0 }}>
           <ScrollView
             onScroll={({ nativeEvent }) => onchange(nativeEvent)}
             showsHorizontalScrollIndicator={false}
@@ -152,13 +171,21 @@ export default function HomeScreen ({ navigation }) {
             scrollEventThrottle={16}
           >
             {images.map((image, index) => (
-              <Image
+              <View
+                style={{
+                  width: WIDTH
+                  // height: WIDTH / 1.92,
+                }}
                 key={index}
-                resizeMode='contain'
-                style={styles.wrap2}
-                source={image}
-                contentFit='contain'
-              />
+              >
+                <Image
+                  // key={index}
+                  resizeMode='cover'
+                  style={[styles.wrap2]}
+                  source={image}
+                  // contentFit='cover'
+                />
+              </View>
             ))}
           </ScrollView>
           <View style={styles.wrapDot}>
@@ -172,7 +199,7 @@ export default function HomeScreen ({ navigation }) {
             ))}
           </View>
         </View>
-        <View style={{ paddingHorizontal: 15 }}>
+        <View style={{ paddingHorizontal: 16 }}>
           <Text style={styles.newlyAdded}>Newly Added</Text>
           <View style={styles.newlyAddedScroll}>
             <ScrollView
@@ -193,15 +220,7 @@ export default function HomeScreen ({ navigation }) {
           </View>
           <Text style={styles.newlyAdded}>Discover</Text>
 
-          <Image
-            resizeMode='contain'
-            source={require('../../../assets/Discover.png')}
-            style={{
-              marginLeft: 25,
-              width: '90%',
-              marginTop: 10
-            }}
-          />
+          <DiscoverLists navigation={navigation} />
           {/* noevents api found
         <Text style={styles.newlyAdded}>Upcoming Events</Text>
 
@@ -257,18 +276,35 @@ const styles = StyleSheet.create({
   },
   wrap: {
     marginTop: 20,
-    borderRadius: 10,
-    width: WIDTH * 0.9,
+
+    // flexDirection: 'row',
+    // maxWidth: '100%',
     flex: 1,
-    margin: 'auto'
-    // marginHorizontal:10
+    // width: '100%',
+    // margin: 'auto',
+    // borderWidth: 1,
+    // borderColor: 'red',
+    overflow: 'hidden',
+    // marginHorizontal: 10,
+    height: WIDTH / 1.92 //This is gotten by dividing the original width by the original height i.e the aspect ratio 343/179
   },
-  wrapScroll: {},
+  wrapScroll: {
+    // alignItems: 'center',
+    // justifyContent: 'center',
+    flexGrow: 1
+  },
 
   wrap2: {
-    justifyContent: 'center',
-    width: WIDTH,
-    maxWidth: '100%'
+    // justifyContent: 'center',
+    width: '100%',
+    flex: 1,
+    height: WIDTH / 1.916
+    // aspectRatio: 343 / 179
+    // height: 179,
+    // alignItems: 'center'
+    // objectFit: 'cover',
+    // aspectRatio: 16 / 9,
+    // maxWidth: '100%'
   },
   wrapDot: {
     position: 'absolute',
@@ -320,23 +356,27 @@ const styles = StyleSheet.create({
   },
   img2: {
     // padding: 5,
-    flexDirection: 'row'
+    flexDirection: 'row',
     // backgroundColor: 'red',
     //paddingLeft: 25,
-
+    gap: 8
     // flex: 1,
   },
   popularContainer: {
-    // padding: 5,
+    gap: 10
+    // padding: 5
     // flexDirection: 'row',
     // backgroundColor: 'red',
     //paddingLeft: 25,
-    // flex: 1,
+    // flex: 1
   },
   popularRow: {
     flexDirection: 'row',
     justifyContent: 'space-between',
-    marginBottom: 10
+    flex: 1,
+    width: '100%'
+    // gap: 10
+    // marginBottom: 10
   },
   discover: {
     width: 344,

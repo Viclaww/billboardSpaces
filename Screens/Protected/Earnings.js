@@ -54,11 +54,12 @@ const AHistory = ({ transaction }) => {
         <View
           style={{
             backgroundColor: '#EBF8FE',
-            // width: "10%",
+            width: 50,
+            height: 50,
             justifyContent: 'center',
             alignItems: 'center',
             padding: 10,
-            borderRadius: 30
+            borderRadius: 25
             // transform: [{ rotate: "30deg" }],
           }}
         >
@@ -645,7 +646,7 @@ export default function Earnings ({ navigation }) {
             width: '100%',
             padding: 14,
             borderColor: '#F2F2F2',
-           flexWrap:"wrap"
+            flexWrap: 'wrap'
           }}
         >
           <View
@@ -653,7 +654,7 @@ export default function Earnings ({ navigation }) {
               display: 'flex',
               flexDirection: 'row',
               width: '100%',
-              gap: 15,
+              gap: 15
             }}
           >
             <View
@@ -663,7 +664,7 @@ export default function Earnings ({ navigation }) {
                 height: 47,
                 justifyContent: 'center',
                 alignSelf: 'center',
-                alignItems:"center",
+                alignItems: 'center',
                 padding: 10,
                 borderRadius: 30
               }}
@@ -691,15 +692,14 @@ export default function Earnings ({ navigation }) {
                 fontSize: 20,
                 display: 'flex',
                 flexDirection: 'column',
-                gap: 5,
-
+                gap: 5
               }}
             >
               <Text
                 style={{
                   fontSize: 15,
-                  fontWeight:"500",
-                  color:"#383838"
+                  fontWeight: '500',
+                  color: '#383838'
                 }}
               >
                 {data && data?.data.bank_details.account_name
@@ -711,7 +711,6 @@ export default function Earnings ({ navigation }) {
                 style={{
                   fontSize: 15,
                   color: '#383838'
-
                 }}
               >
                 {data && data.data.bank_details.account_number
@@ -760,7 +759,9 @@ export default function Earnings ({ navigation }) {
                 </Text>
               </View>
             ) : (
-              history.map(tx => <AHistory transaction={tx} />)
+              history.map((tx, index) => (
+                <AHistory transaction={tx} key={index} />
+              ))
             )}
           </View>
         </View>

@@ -1,35 +1,58 @@
-import { View, TouchableOpacity, Text, Image, StyleSheet } from "react-native";
+import {
+  View,
+  TouchableOpacity,
+  Text,
+  Image,
+  StyleSheet,
+  Dimensions
+} from 'react-native'
+
+const WIDTH = Dimensions.get('window').width
+const RESPONSIVEWIDTH = (WIDTH - 16 * 2) * 0.48
+
 const PopularComponent = ({ popular, navigation }) => {
   return (
     <View
       style={{
-        padding: 5,
-        flex: 1,
-
-        width: 180,
+        // padding: 5,
+        // flex: 1,
+        // borderWidth: 1,
+        // borderColor: 'red',
+        width: RESPONSIVEWIDTH
       }}
     >
       <TouchableOpacity
         onPress={() =>
-          navigation.navigate("Billboardclicked", { data: popular })
+          navigation.navigate('Billboardclicked', { data: popular })
         }
+        style={styles.imageContainer}
       >
         <Image
-          resizeMode="cover"
+          resizeMode='cover'
           source={{ uri: popular.image }}
-          style={styles.rectangleIcon3}
+          style={styles.image}
         />
         <Text>{popular.location}</Text>
       </TouchableOpacity>
     </View>
-  );
-};
+  )
+}
 
 const styles = StyleSheet.create({
-  rectangleIcon3: {
+  image: {
     // borderRadius: 10,
-    height: 150,
-    width: 159.5,
+    // height: 150,
+    // width: 159.5,
+    width: '100%',
+    flex: 1,
+    aspectRatio: 1
   },
-});
-export default PopularComponent;
+  imageContainer: {
+    maxWidth: '100%',
+    width: RESPONSIVEWIDTH,
+    flex: 1,
+    borderColor: 'blue'
+    // borderWidth: 3
+  }
+})
+export default PopularComponent
