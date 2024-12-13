@@ -199,6 +199,6 @@ const styles = StyleSheet.create({
   },
   blurOverlay: {
     ...StyleSheet.absoluteFillObject, // Overlay to cover the image
-    backgroundColor: 'rgba(0, 0, 0, 0.65)'
+    backgroundColor: 'rgba(0, 0, 0, 0.75)'
   }
 })

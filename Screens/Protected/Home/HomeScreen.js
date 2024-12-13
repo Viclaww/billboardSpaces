@@ -85,26 +85,17 @@ export default function HomeScreen ({ navigation }) {
   }
 
   useEffect(() => {
-    let slideIndex = 0
-
     const timer = setInterval(() => {
-      slideIndex = (slideIndex + 1) % images.length
-
-      setimgActive(slideIndex)
-      scrollViewRef?.current?.scrollTo({
-        x: slideIndex * WIDTH,
-        animated: true
-      })
-      // setimgActive(prev => (prev == images.length - 1 ? 0 : prev + 1))
+      setimgActive(prev => (prev == images.length - 1 ? 0 : prev + 1))
     }, 3000)
     return () => {
       clearInterval(timer)
     }
-  }, [imgActive])
+  }, [images])
 
   useEffect(() => {
     scrollViewRef?.current?.scrollTo({
-      x: imgActive * WIDTH,
+      x: imgActive * WIDTH * 0.9,
       animated: true
     }) //if screenwidth is 300 and it's on the first image, x:0*300*0.9, making it 0
     //if it's index is 1, x:1*300*0.9 =298, so it will move the image 298px to the right
@@ -159,7 +150,7 @@ export default function HomeScreen ({ navigation }) {
           </View>
         </View>
 
-        <View style={{ paddingHorizontal: 0 }}>
+        <View style={{ paddingHorizontal: -10 }}>
           <ScrollView
             onScroll={({ nativeEvent }) => onchange(nativeEvent)}
             showsHorizontalScrollIndicator={false}
@@ -171,21 +162,24 @@ export default function HomeScreen ({ navigation }) {
             scrollEventThrottle={16}
           >
             {images.map((image, index) => (
-              <View
-                style={{
-                  width: WIDTH
-                  // height: WIDTH / 1.92,
-                }}
+              // <View
+              //   style={{
+              //     width: WIDTH
+              //     // height: WIDTH / 1.92,
+              //   }}
+              //   key={index}
+              // >
+              <Image
                 key={index}
-              >
-                <Image
-                  // key={index}
-                  resizeMode='cover'
-                  style={[styles.wrap2]}
-                  source={image}
-                  // contentFit='cover'
-                />
-              </View>
+                resizeMode='stretch'
+                style={[
+                  styles.wrap2,
+                  imgActive == index + 1 && { paddingHorizontal: 80 }
+                ]}
+                source={image}
+                contentFit='stretch'
+              />
+              // {/* </View> */}
             ))}
           </ScrollView>
           <View style={styles.wrapDot}>
@@ -199,7 +193,7 @@ export default function HomeScreen ({ navigation }) {
             ))}
           </View>
         </View>
-        <View style={{ paddingHorizontal: 16 }}>
+        <View style={{ paddingHorizontal: 18 }}>
           <Text style={styles.newlyAdded}>Newly Added</Text>
           <View style={styles.newlyAddedScroll}>
             <ScrollView
@@ -275,29 +269,46 @@ const styles = StyleSheet.create({
     width: 343
   },
   wrap: {
-    marginTop: 20,
+    // marginTop: 20,
 
     // flexDirection: 'row',
     // maxWidth: '100%',
-    flex: 1,
+    // flex: 1,
     // width: '100%',
     // margin: 'auto',
     // borderWidth: 1,
     // borderColor: 'red',
-    overflow: 'hidden',
+    // overflow: 'hidden',
     // marginHorizontal: 10,
-    height: WIDTH / 1.92 //This is gotten by dividing the original width by the original height i.e the aspect ratio 343/179
+    // height: WIDTH / 1.92, //This is gotten by dividing the original width by the original height i.e the aspect ratio 343/179
+
+    marginTop: 20,
+    borderRadius: 10,
+    width: WIDTH * 0.9,
+    flex: 1,
+    margin: 'auto',
+    // borderWidth: 5,
+    borderColor: '#0080FE',
+    flexGrow: 1
   },
   wrapScroll: {
-    // alignItems: 'center',
-    // justifyContent: 'center',
-    flexGrow: 1
+    alignItems: 'center',
+    justifyContent: 'stretch'
+    // flex: 1
   },
 
   wrap2: {
+    justifyContent: 'center',
+    width: WIDTH,
+
+    maxWidth: '100%',
+    aspectRatio: 343 / 179,
+    // borderWidth: 3,
+    // borderColor: 'transparent'
+
     // justifyContent: 'center',
-    width: '100%',
-    flex: 1,
+    // width: '100%',
+    // flex: 1,
     height: WIDTH / 1.916
     // aspectRatio: 343 / 179
     // height: 179,
