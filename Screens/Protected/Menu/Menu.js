@@ -77,7 +77,7 @@ export default function Menu ({ navigation }) {
         <View
           style={{
             flexDirection: 'row',
-            justifyContent: 'space-between',
+            justifyContent: 'space-between'
             // paddingLeft: 25
           }}
         >
@@ -153,7 +153,7 @@ export default function Menu ({ navigation }) {
                   fontSize: 14,
                   fontWeight: '500',
                   marginTop: 10,
-                  color:"#383838"
+                  color: '#383838'
                 }}
               >
                 {selectedState !== '' ? selectedState : 'Location'}
@@ -171,7 +171,7 @@ export default function Menu ({ navigation }) {
                   fontWeight: '500',
                   marginTop: 10,
                   paddingLeft: 20,
-                  color:"#383838"
+                  color: '#383838'
                 }}
               >
                 {selectedText !== '' ? selectedText : 'Size'}
@@ -340,7 +340,7 @@ const styles = StyleSheet.create({
     flex: 1,
     paddingTop: Platform.OS === 'android' ? StatusBar.currentHeight : 0,
     backgroundColor: 'white',
-    paddingHorizontal:16
+    paddingHorizontal: 16
   },
   searchContainer: {
     borderRadius: 10,
@@ -381,7 +381,7 @@ const styles = StyleSheet.create({
     fontSize: 22,
     fontWeight: '500',
     color: '#1e1e1e',
-    marginBottom:15,
+    marginBottom: 15,
     marginTop: 20
   },
   newlyAddedScroll: {
@@ -390,6 +390,7 @@ const styles = StyleSheet.create({
   },
   img2: {
     flexDirection: 'row',
+    gap: 10
     // paddingLeft: 25
   },
   popularContainer: {
