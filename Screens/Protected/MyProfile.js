@@ -227,7 +227,7 @@ export default function MyProfile ({ navigation }) {
     )
   }
   return (
-    <SafeAreaView style={{ flex: 1,paddingHorizontal:16 }}>
+    <SafeAreaView style={{ flex: 1, paddingHorizontal: 16 }}>
       <KeyboardAvoidingView
         style={styles.container}
         behavior={Platform.OS === 'ios' ? 'padding' : 'height'}
@@ -307,7 +307,9 @@ export default function MyProfile ({ navigation }) {
               backgroundColor: '#E2F3FD',
               borderRadius: 10,
               marginTop: 10,
-              padding: 16,
+              paddingVertical: 16,
+              justifyContent: 'center',
+              paddingHorizontal: 15,
               boxShadow: '0px 4px 6px rgba(0, 0, 0, 0.1)'
             }}
           >
@@ -420,7 +422,11 @@ export default function MyProfile ({ navigation }) {
           >
             <TouchableOpacity onPress={handleSave} style={styles.buttonParent}>
               <Text style={styles.button}>
-                {isUpdating ? <ActivityIndicator color="white"/> : 'Save Changes'}
+                {isUpdating ? (
+                  <ActivityIndicator color='white' />
+                ) : (
+                  'Save Changes'
+                )}
               </Text>
             </TouchableOpacity>
           </View>
@@ -433,10 +439,10 @@ export default function MyProfile ({ navigation }) {
 const styles = StyleSheet.create({
   container: {
     flex: 1,
-    paddingTop: Platform.OS === 'android' ? StatusBar.currentHeight : 0,
+    paddingTop: Platform.OS === 'android' ? StatusBar.currentHeight : 0
   },
   editInput: {
-    width: 152
+    // width: 152
   },
   email: {
     fontSize: 12,
@@ -456,7 +462,8 @@ const styles = StyleSheet.create({
   inputView: {
     flexDirection: 'row',
     justifyContent: 'space-between',
-    width: '100%'
+    width: '100%',
+    alignItems: 'center'
   },
   button: {
     fontSize: 14,
