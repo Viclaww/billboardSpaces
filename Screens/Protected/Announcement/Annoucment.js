@@ -14,7 +14,8 @@ import {
   TouchableWithoutFeedback,
   Modal,
   KeyboardAvoidingView,
-  ActivityIndicator
+  ActivityIndicator,
+  useWindowDimensions
 } from 'react-native'
 import * as ImagePicker from 'expo-image-picker'
 import { AntDesign } from '@expo/vector-icons'
@@ -27,6 +28,7 @@ import {
 import { useSelector } from 'react-redux'
 import { cloudinaryUpload } from '../../../utils/cloudinaryUpload'
 import { avatarImage } from '../../../data/util'
+import { ImageIcon } from '../components/Icons'
 export default function Annoucment ({ navigation }) {
   const [showBillboardDetails, setShowBillboardDetails] = useState(false)
   const [showAdDetails, setShowAdDetails] = useState(true)
@@ -57,7 +59,7 @@ export default function Annoucment ({ navigation }) {
   } = useGetAdsInMarketPlaceQuery({ token: token })
 
   const [notifyModalVisible, setNotifyModalVisible] = useState(true)
-
+  const { width } = useWindowDimensions()
   const openNotifyModal = () => {
     setNotifyModalVisible(true)
   }
@@ -293,7 +295,7 @@ export default function Annoucment ({ navigation }) {
 
         {showAdDetails && (
           <View>
-            <View style={styles.rectangle1}>
+            <View style={[styles.rectangle1, { flex: 1 }]}>
               <TouchableOpacity>
                 <Image
                   style={{ width: 30, height: 30, borderRadius: 100 }}
@@ -301,20 +303,48 @@ export default function Annoucment ({ navigation }) {
                 />
               </TouchableOpacity>
               <View
-                style={{ flex: 1, alignItems: 'flex-end', paddingRight: 10 }}
+              // style={{ flex: 1, alignItems: 'flex-end', paddingRight: 10 }}
               >
                 <TouchableOpacity
                   onPress={openModal}
                   style={{
                     justifyContent: 'center',
-                    width: 'auto',
-                    height: 40
+                    // borderWidth: 2,
+                    flex: 1
+                    // height: 40
                   }}
                 >
-                  <Image
-                    style={{}}
+                  {/* <Image
+                    // style={{ width: width * 0.9 }}
                     source={require('../../../assets/announcement.png')}
-                  />
+                  /> */}
+                  <View
+                    style={{
+                      flex: 1,
+
+                      borderRadius: 10,
+                      flexDirection: 'row',
+                      justifyContent: 'space-between',
+                      backgroundColor: '#f5faff',
+                      shadowColor: 'rgba(204, 204, 204, 0.25)',
+                      shadowOffset: {
+                        width: 0,
+                        height: 2
+                      },
+                      paddingVertical: 4,
+                      paddingHorizontal: '10%',
+                      shadowRadius: 2,
+                      alignItems: 'center',
+                      elevation: 2,
+                      shadowOpacity: 1,
+                      gap: 30
+                    }}
+                  >
+                    <Text style={{ color: 'gray', opacity: 0.45 }}>
+                      Add Advertisement
+                    </Text>
+                    <ImageIcon color='#686868' size={35} />
+                  </View>
                 </TouchableOpacity>
               </View>
             </View>
@@ -735,11 +765,12 @@ const styles = StyleSheet.create({
   },
   rectangle1: {
     width: 'auto',
-    height: 40,
-    paddingLeft: 20,
+    // height: 40,
+    paddingHorizontal: 20,
     marginTop: '5%',
     flexDirection: 'row',
-    alignItems: 'center'
+    alignItems: 'center',
+    justifyContent: 'space-between'
   },
   activeButton: {
     borderColor: '#0080FE', // Border color when button is active
