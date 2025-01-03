@@ -24,6 +24,7 @@ import { useGetHomeQuery } from '../../../data/api/billboardSlice'
 import { avatarImage } from '../../../data/util'
 import { NotificationIcon } from '../components/Icons'
 import DiscoverLists from '../components/DiscoverLists'
+import CustomCarousel from '../components/carousel/CustomCarousel'
 
 const WIDTH = Dimensions.get('window').width
 const HEIGHT = Dimensions.get('window').height
@@ -101,20 +102,20 @@ export default function HomeScreen ({ navigation }) {
     //if it's index is 1, x:1*300*0.9 =298, so it will move the image 298px to the right
   }, [imgActive])
 
-  if (isFetching) {
-    return (
-      <View
-        style={{
-          flex: 1,
-          justifyContent: 'center',
-          alignItems: 'center'
-        }}
-      >
-        <ActivityIndicator size='large' color='#0080FE' />
-        <Text>Fetching Billboards</Text>
-      </View>
-    )
-  }
+  // if (isFetching) {
+  //   return (
+  //     <View
+  //       style={{
+  //         flex: 1,
+  //         justifyContent: 'center',
+  //         alignItems: 'center'
+  //       }}
+  //     >
+  //       <ActivityIndicator size='large' color='#0080FE' />
+  //       <Text>Fetching Billboards</Text>
+  //     </View>
+  //   )
+  // }
 
   return (
     <SafeAreaView style={styles.container}>
@@ -150,6 +151,8 @@ export default function HomeScreen ({ navigation }) {
           </View>
         </View>
 
+        <CustomCarousel />
+        {/*
         <View style={{ paddingHorizontal: -10 }}>
           <ScrollView
             onScroll={({ nativeEvent }) => onchange(nativeEvent)}
@@ -179,8 +182,8 @@ export default function HomeScreen ({ navigation }) {
                 source={image}
                 contentFit='stretch'
               />
-              // {/* </View> */}
-            ))}
+               {/* </View>
+             ))}
           </ScrollView>
           <View style={styles.wrapDot}>
             {images.map((e, index) => (
@@ -188,11 +191,11 @@ export default function HomeScreen ({ navigation }) {
                 key={e}
                 style={imgActive == index ? styles.dotActive : styles.dot}
               >
-                {/* <View style={{, }}/> */}
+                 <View style={{, }}/>
               </Text>
             ))}
           </View>
-        </View>
+        </View> */}
         <View style={{ paddingHorizontal: 18 }}>
           <Text style={styles.newlyAdded}>Newly Added</Text>
           <View style={styles.newlyAddedScroll}>
