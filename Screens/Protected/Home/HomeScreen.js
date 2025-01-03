@@ -102,20 +102,20 @@ export default function HomeScreen ({ navigation }) {
     //if it's index is 1, x:1*300*0.9 =298, so it will move the image 298px to the right
   }, [imgActive])
 
-  // if (isFetching) {
-  //   return (
-  //     <View
-  //       style={{
-  //         flex: 1,
-  //         justifyContent: 'center',
-  //         alignItems: 'center'
-  //       }}
-  //     >
-  //       <ActivityIndicator size='large' color='#0080FE' />
-  //       <Text>Fetching Billboards</Text>
-  //     </View>
-  //   )
-  // }
+  if (isFetching) {
+    return (
+      <View
+        style={{
+          flex: 1,
+          justifyContent: 'center',
+          alignItems: 'center'
+        }}
+      >
+        <ActivityIndicator size='large' color='#0080FE' />
+        <Text>Fetching Billboards</Text>
+      </View>
+    )
+  }
 
   return (
     <SafeAreaView style={styles.container}>
