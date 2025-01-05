@@ -24,6 +24,7 @@ import { useGetHomeQuery } from '../../../data/api/billboardSlice'
 import { avatarImage } from '../../../data/util'
 import { NotificationIcon } from '../components/Icons'
 import DiscoverLists from '../components/DiscoverLists'
+import CustomCarousel from '../components/carousel/CustomCarousel'
 
 const WIDTH = Dimensions.get('window').width
 const HEIGHT = Dimensions.get('window').height
@@ -150,6 +151,8 @@ export default function HomeScreen ({ navigation }) {
           </View>
         </View>
 
+        <CustomCarousel />
+        {/*
         <View style={{ paddingHorizontal: -10 }}>
           <ScrollView
             onScroll={({ nativeEvent }) => onchange(nativeEvent)}
@@ -179,8 +182,8 @@ export default function HomeScreen ({ navigation }) {
                 source={image}
                 contentFit='stretch'
               />
-              // {/* </View> */}
-            ))}
+               {/* </View>
+             ))}
           </ScrollView>
           <View style={styles.wrapDot}>
             {images.map((e, index) => (
@@ -188,11 +191,11 @@ export default function HomeScreen ({ navigation }) {
                 key={e}
                 style={imgActive == index ? styles.dotActive : styles.dot}
               >
-                {/* <View style={{, }}/> */}
+                 <View style={{, }}/>
               </Text>
             ))}
           </View>
-        </View>
+        </View> */}
         <View style={{ paddingHorizontal: 18 }}>
           <Text style={styles.newlyAdded}>Newly Added</Text>
           <View style={styles.newlyAddedScroll}>
