@@ -1,10 +1,11 @@
 import { createApi, fetchBaseQuery } from "@reduxjs/toolkit/query/react";
 const baseQuery = fetchBaseQuery({
-  baseUrl: "https://billboardspaces-api.onrender.com/api/v1",
+  // baseUrl: "https://billboardspaces-api.onrender.com/api/v1",
+  baseUrl: "https://billboardspaces-api-production.up.railway.app/api/v1",
 });
 export const generalApiSlice = createApi({
   baseQuery,
-  tagTypes: ["User", "BillBoards", "Ads", "BillBoard","Earnings"],
+  tagTypes: ["User", "BillBoards", "Ads", "BillBoard", "Earnings"],
   endpoints: (builder) => ({
     getHome: builder.query({
       query: (data) => ({
@@ -24,7 +25,7 @@ export const generalApiSlice = createApi({
           Authorization: `Bearer ${data.token}`,
         },
       }),
-      providesTags: ["BillBoards","Earnings"],
+      providesTags: ["BillBoards", "Earnings"],
     }),
     getNotifications: builder.query({
       query: (data) => ({
