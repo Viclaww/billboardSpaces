@@ -1,6 +1,7 @@
 // import { authorize } from "react-native-app-auth";
 // apiConfig.js
-export const BASE_URL = "https://bb-spaces.onrender.com";
+// export const BASE_URL = "https://bb-spaces.onrender.com";
+export const BASE_URL = "https://billboardspaces-api-production.up.railway.app";
 
 export const config = {
   issuer: "https://accounts.google.com",
