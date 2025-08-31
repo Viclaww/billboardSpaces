@@ -1,7 +1,7 @@
 {
   "expo": {
     "name": "BillboardSpaces",
-    "slug": "BillboardSpaces",
+    "slug": "bbspaces",
     "version": "1.0.1",
     "orientation": "portrait",
     "icon": "./assets/icon.png",
@@ -30,7 +30,7 @@
     },
     "extra": {
       "eas": {
-        "projectId": "2b94cb8d-15dd-4434-a0da-12f606c204aa"
+        "projectId": "7c2d20cd-37a9-4332-be64-42d95fb0d9d4"
       }
     },
     "plugins": [
@@ -46,6 +46,7 @@
     },
     "updates": {
       "url": "https://u.expo.dev/759cf1cf-45cb-40fd-bfcb-40677dd4a2ab"
-    }
+    },
+    "owner": "yuishaku"
   }
 }
