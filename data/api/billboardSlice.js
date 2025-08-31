@@ -1,4 +1,4 @@
-import { requestCameraPermissionsAsync } from "expo-image-picker";
+// import { requestCameraPermissionsAsync } from "expo-image-picker";
 import { generalApiSlice } from "./baseApiSlice";
 export const billboardApiSlice = generalApiSlice.injectEndpoints({
   endpoints: (builder) => ({

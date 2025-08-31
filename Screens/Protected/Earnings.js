@@ -181,9 +181,33 @@ export default function Earnings ({ navigation }) {
     }
   }
 
+  const [withdrawalModalVisible, setWithdrawalModalVisible] = useState(false);
+  const [withdrawalAmount, setWithdrawalAmount] = useState('');
+
   const handleWithdraw = async () => {
-    const response = await request({ token, amount: 1000 })
-    console.log(response)
+    const amount = parseFloat(withdrawalAmount);
+    if (!amount || isNaN(amount) || amount <= 0) {
+      Alert.alert('Invalid Amount', 'Please enter a valid withdrawal amount');
+      return;
+    }
+
+    if (amount > data?.data.balance) {
+      Alert.alert('Insufficient Balance', 'Withdrawal amount cannot be greater than your balance');
+      return;
+    }
+
+    try {
+      const response = await request({ token, amount });
+      console.log("withdrawal request:", response);
+      if (response.data) {
+        Alert.alert('Success', 'Withdrawal request submitted successfully');
+        setWithdrawalModalVisible(false);
+        setWithdrawalAmount('');
+      }
+    } catch (error) {
+      Alert.alert('Error', 'Failed to process withdrawal request');
+      console.error('withdrawal error:', error);
+    }
   }
   useEffect(() => {
     const resolve = async () => {
@@ -430,6 +454,97 @@ export default function Earnings ({ navigation }) {
           </KeyboardAvoidingView>
         </Modal>
         <Modal
+          visible={withdrawalModalVisible}
+          transparent={true}
+          animationType='fade'
+        >
+          <KeyboardAvoidingView
+            style={{
+              flex: 1,
+              gap: 40,
+              display: 'flex',
+              flexDirection: 'column'
+            }}
+            behavior={Platform.OS === 'ios' ? 'padding' : 'height'}
+          >
+            <Pressable style={styles.modalContainer}>
+              <TouchableWithoutFeedback>
+                <View style={styles.modalContent}>
+                  <AntDesign
+                    onPress={() => {
+                      setWithdrawalModalVisible(false);
+                      setWithdrawalAmount('');
+                    }}
+                    style={{
+                      position: 'absolute',
+                      top: 20,
+                      left: '90%',
+                      zIndex: 20
+                    }}
+                    name='close'
+                    size={25}
+                    color='#000'
+                  />
+                  <View style={{ width: '100%', marginTop: 30 }}>
+                    <Text style={{ fontSize: 20, fontWeight: '700', marginBottom: 20 }}>
+                      Withdraw Funds
+                    </Text>
+                    <View style={{ marginBottom: 10 }}>
+                      <Text>Available Balance: ₦{data?.data.balance.toLocaleString()}</Text>
+                    </View>
+                    <View style={{ marginBottom: 20 }}>
+                      <Text>Amount to Withdraw</Text>
+                      <TextInput
+                        style={{
+                          fontSize: 16,
+                          textAlign: 'left',
+                          padding: 10,
+                          borderWidth: 1,
+                          borderColor: '#eee',
+                          borderRadius: 5,
+                          color: 'black',
+                          height: 40,
+                          fontWeight: '400',
+                          width: '100%',
+                          marginTop: 10
+                        }}
+                        placeholder="Enter amount"
+                        value={withdrawalAmount}
+                        keyboardType="numeric"
+                        onChangeText={text => setWithdrawalAmount(text)}
+                      />
+                    </View>
+                  </View>
+
+                  <TouchableOpacity
+                    onPress={handleWithdraw}
+                    style={{
+                      backgroundColor: '#0080FE',
+                      width: '100%',
+                      display: 'flex',
+                      color: 'white',
+                      textAlign: 'center',
+                      justifyContent: 'center',
+                      padding: 10,
+                      marginTop: 20,
+                      borderRadius: 10
+                    }}
+                  >
+                    <Text
+                      style={{
+                        textAlign: 'center',
+                        color: 'white'
+                      }}
+                    >
+                      Withdraw
+                    </Text>
+                  </TouchableOpacity>
+                </View>
+              </TouchableWithoutFeedback>
+            </Pressable>
+          </KeyboardAvoidingView>
+        </Modal>
+        <Modal
           visible={banksModalVisible}
           transparent={true}
           animationType='slide'
@@ -591,7 +706,7 @@ export default function Earnings ({ navigation }) {
           </View>
           {data?.data?.bank_details?.account_name && (
             <TouchableOpacity
-              onPress={handleWithdraw}
+              onPress={() => setWithdrawalModalVisible(true)}
               style={{
                 backgroundColor: '#0080FE',
                 width: 'auto',
